@@ -1,0 +1,87 @@
+package com.djq.springGarden.controller;
+
+import java.util.List;
+
+import com.djq.springGarden.entity.Product;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestParam;
+import com.djq.springGarden.service.ProductService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import com.github.pagehelper.PageHelper;
+import com.djq.springGarden.vo.ResultVO;
+
+import javax.annotation.Resource;
+
+
+/**
+ * 客房;商品信息相关：分类，商品图片，商品规格，商品参数Controller
+ *
+ * @author duanjiaqi
+ */
+@Api(tags = "客房;商品信息相关：分类，商品图片，商品规格，商品参数控制器" )
+@RestController
+@RequestMapping("/system/product" )
+public class ProductController {
+    @Resource
+    private ProductService productService;
+
+    /**
+     * 查询客房;商品信息相关：分类，商品图片，商品规格，商品参数列表
+     */
+    @GetMapping("/list" )
+    @ApiOperation("查询客房;商品信息相关：分类，商品图片，商品规格，商品参数列表" )
+    public ResultVO<Map<String,Object>> list(Product product,
+                                             @RequestParam(value = "pageNum" , required = false, defaultValue = "1" ) Integer pageNum,
+                                             @RequestParam(value = "pageSize" , required = false, defaultValue = "10" ) Integer pageSize) {
+        HashMap<String, Object> map = new HashMap<>();
+        PageHelper.startPage(pageNum, pageSize);
+        List<Product> list = productService.select(product);
+        map.put("total" , list.size());
+        map.put("list" , list);
+        return ResultVO.ok(map,"查询成功");
+    }
+
+    /**
+     * 获取客房;商品信息相关：分类，商品图片，商品规格，商品参数详细信息
+     */
+    @ApiOperation("获取客房;商品信息相关：分类，商品图片，商品规格，商品参数详细信息" )
+    @GetMapping(value = "/searchOne" )
+    public ResultVO<Product> searchOne(Product product) {
+        return ResultVO.ok(productService.selectOne(product));
+    }
+
+    /**
+     * 新增客房;商品信息相关：分类，商品图片，商品规格，商品参数
+     */
+    @ApiOperation("新增客房;商品信息相关：分类，商品图片，商品规格，商品参数" )
+    @PostMapping("/add" )
+    public ResultVO<Product> add(Product product) {
+        return productService.insertProduct(product) > 0 ? ResultVO.ok("新增成功" ) : ResultVO.error("新增失败" );
+    }
+
+    /**
+     * 修改客房;商品信息相关：分类，商品图片，商品规格，商品参数
+     */
+    @ApiOperation("修改客房;商品信息相关：分类，商品图片，商品规格，商品参数" )
+    @PostMapping("/update" )
+    public ResultVO<Product> edit(Product product) {
+        return productService.updateProduct(product) > 0 ? ResultVO.ok("更新成功" ) : ResultVO.error("更新失败" );
+    }
+
+    /**
+     * 删除客房;商品信息相关：分类，商品图片，商品规格，商品参数
+     */
+    @ApiOperation("删除客房;商品信息相关：分类，商品图片，商品规格，商品参数" )
+    @PostMapping("/delete" )
+    public ResultVO<Product> remove(@RequestParam(value = "id" ) Integer id) {
+        return productService.deleteProductById(id) > 0 ? ResultVO.ok("删除成功" ) : ResultVO.error("删除失败" );
+    }
+}

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <!-- 引⼊数据库连接配置 -->
+    <!-- <properties resource="jdbc.properties"/>-->
+    <context id="Mysql" targetRuntime="MyBatis3Simple" defaultModelType="flat">
+        <property name="beginningDelimiter" value="`"/>
+        <property name="endingDelimiter" value="`"/>
+        <!-- 配置 GeneralDAO -->
+        <plugin type="tk.mybatis.mapper.generator.MapperPlugin">
+            <property name="mappers" value="com.djq.springGarden.general.GeneralDAO"/>
+        </plugin>
+        <!-- 配置数据库连接 -->
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://localhost:3306/springgarden?useSSL=false"
+                        userId="root" password="root">
+        </jdbcConnection>
+        <!-- 配置实体类存放路径 -->
+        <javaModelGenerator targetPackage="com.djq.springGarden.entity"
+                            targetProject="src/main/java">
+            <!-- 是否对modal添加构造函数 -->
+            <property name="constructorBased" value="false"/>
+            <!-- 是否清理从数据库中查询出的字符串左右两边的空白字符 -->
+            <property name="trimStrings" value="true"/>
+            <!-- 建立modal对象是否不可改变 即生成的modal对象不会有setter方法，只有构造方法 -->
+            <property name="immutable" value="false"/>
+        </javaModelGenerator>
+        <!-- 配置 XML 存放路径 -->
+        <sqlMapGenerator targetPackage="/" targetProject="src/main/resources/mapper"/>
+        <!-- 配置 DAO 存放路径 -->
+        <javaClientGenerator targetPackage="com.djq.springGarden.mapper"
+                             targetProject="src/main/java" type="XMLMAPPER"/>
+        <!-- 配置需要指定⽣成的数据库和表，% 代表所有表 -->
+<!--        <table tableName="%">-->
+<!--            &lt;!&ndash; mysql 配置 &ndash;&gt;-->
+<!--            &lt;!&ndash; 如果设置为true，生成的model类会直接使用column本身的名字，而不会再使用驼峰命名方法，比如BORN_DATE，生成的属性名字就是BORN_DATE,而不会是bornDate &ndash;&gt;-->
+<!--            <property name="useActualColumnNames" value="false"/>-->
+<!--            &lt;!&ndash; JDBC      :相当于在生成的insert元素上添加useGeneratedKeys="true"和keyProperty属性&ndash;&gt;-->
+<!--            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>-->
+<!--        </table>-->
+        <table tableName="category">
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
+        </table>
+        <table tableName="order">
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
+            <columnOverride column="p_id" property="productId"/>
+            <columnOverride column="p_id" property="productId"/>
+            <columnOverride column="u_id" property="userId"/>
+            <columnOverride column="r_id" property="residentId"/>
+        </table>
+        <table tableName="orderitem">
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
+            <columnOverride column="o_id" property="orderId"/>
+        </table>
+        <table tableName="product">
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
+            <columnOverride column="c_id" property="categoryId"/>
+        </table>
+        <table tableName="productimage">
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
+            <columnOverride column="p_id" property="productId"/>
+        </table>
+        <table tableName="property">
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
+            <columnOverride column="c_id" property="categoryId"/>
+        </table>
+        <table tableName="propertyvalue">
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
+            <columnOverride column="p_id" property="productId"/>
+            <columnOverride column="pt_id" property="propertyId"/>
+        </table>
+        <table tableName="review">
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
+            <columnOverride column="p_id" property="productId"/>
+            <columnOverride column="u_id" property="userId"/>
+        </table>
+        <table tableName="user">
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
+            <columnOverride column="r_id" property="roleId"/>
+        </table>
+    </context>
+</generatorConfiguration>

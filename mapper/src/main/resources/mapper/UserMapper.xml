@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.djq.springGarden.mapper.UserMapper">
+  <resultMap id="BaseResultMap" type="com.djq.springGarden.entity.User">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="r_id" jdbcType="INTEGER" property="roleId" />
+    <result column="realname" jdbcType="VARCHAR" property="realname" />
+    <result column="telphone" jdbcType="VARCHAR" property="telphone" />
+    <result column="eamil" jdbcType="VARCHAR" property="eamil" />
+    <result column="cardID" jdbcType="VARCHAR" property="cardid" />
+  </resultMap>
+</mapper>

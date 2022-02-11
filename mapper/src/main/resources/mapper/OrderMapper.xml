@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.djq.springGarden.mapper.OrderMapper">
+  <resultMap id="BaseResultMap" type="com.djq.springGarden.entity.Order">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="p_id" jdbcType="INTEGER" property="productId" />
+    <result column="u_id" jdbcType="INTEGER" property="userId" />
+    <result column="order_code" jdbcType="VARCHAR" property="orderCode" />
+    <result column="number" jdbcType="INTEGER" property="number" />
+    <result column="r_id" jdbcType="VARCHAR" property="residentId" />
+    <result column="user_message" jdbcType="VARCHAR" property="userMessage" />
+    <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
+    <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="pay_date" jdbcType="TIMESTAMP" property="payDate" />
+    <result column="delivery_date" jdbcType="TIMESTAMP" property="deliveryDate" />
+    <result column="confirm_date" jdbcType="TIMESTAMP" property="confirmDate" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="total" jdbcType="DECIMAL" property="total" />
+  </resultMap>
+</mapper>
