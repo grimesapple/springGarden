@@ -1,77 +1,40 @@
 package com.djq.springGarden.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import java.util.Date;
+import java.math.BigDecimal;
 import javax.persistence.*;
 
+/**
+ * 房间属性字典对象 property
+ *
+ * @author duanjiaqi
+ * @date 2022-02-02
+ */
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@ApiModel("房间属性字典对象")
 public class Property {
-    /**
-     * 主键
-     */
+
+    /** 主键 */
+    @ApiModelProperty("主键" )
     @Id
-    @GeneratedValue(generator = "JDBC")
+    @GeneratedValue(generator = "JDBC" )
     private Integer id;
-
-    /**
-     * 房间类型id
-     */
-    @Column(name = "c_id")
+    /** 房间类型id */
+    @ApiModelProperty("房间类型id" )
+    @Column(name = "c_id" )
     private Integer categoryId;
-
-    /**
-     * 属性
-     */
+    /** 属性 */
+    @ApiModelProperty("属性" )
+    @Column(name = "name" )
     private String name;
 
-    /**
-     * 获取主键
-     *
-     * @return id - 主键
-     */
-    public Integer getId() {
-        return id;
-    }
-
-    /**
-     * 设置主键
-     *
-     * @param id 主键
-     */
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    /**
-     * 获取房间类型id
-     *
-     * @return c_id - 房间类型id
-     */
-    public Integer getCategoryId() {
-        return categoryId;
-    }
-
-    /**
-     * 设置房间类型id
-     *
-     * @param categoryId 房间类型id
-     */
-    public void setCategoryId(Integer categoryId) {
-        this.categoryId = categoryId;
-    }
-
-    /**
-     * 获取属性
-     *
-     * @return name - 属性
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * 设置属性
-     *
-     * @param name 属性
-     */
-    public void setName(String name) {
-        this.name = name == null ? null : name.trim();
-    }
 }

@@ -1,77 +1,40 @@
 package com.djq.springGarden.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import java.util.Date;
+import java.math.BigDecimal;
 import javax.persistence.*;
 
+/**
+ * 客房图片对象 productimage
+ *
+ * @author duanjiaqi
+ * @date 2022-02-02
+ */
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@ApiModel("客房图片对象")
 public class Productimage {
-    /**
-     * 主键;
-     */
+
+    /** 主键; */
+    @ApiModelProperty("主键;" )
     @Id
-    @GeneratedValue(generator = "JDBC")
+    @GeneratedValue(generator = "JDBC" )
     private Integer id;
-
-    /**
-     * 客房id;
-     */
-    @Column(name = "p_id")
+    /** 客房id; */
+    @ApiModelProperty("客房id;" )
+    @Column(name = "p_id" )
     private Integer productId;
-
-    /**
-     * 图片链接;
-     */
+    /** 图片链接; */
+    @ApiModelProperty("图片链接;" )
+    @Column(name = "url" )
     private String url;
 
-    /**
-     * 获取主键;
-     *
-     * @return id - 主键;
-     */
-    public Integer getId() {
-        return id;
-    }
-
-    /**
-     * 设置主键;
-     *
-     * @param id 主键;
-     */
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    /**
-     * 获取客房id;
-     *
-     * @return p_id - 客房id;
-     */
-    public Integer getProductId() {
-        return productId;
-    }
-
-    /**
-     * 设置客房id;
-     *
-     * @param productId 客房id;
-     */
-    public void setProductId(Integer productId) {
-        this.productId = productId;
-    }
-
-    /**
-     * 获取图片链接;
-     *
-     * @return url - 图片链接;
-     */
-    public String getUrl() {
-        return url;
-    }
-
-    /**
-     * 设置图片链接;
-     *
-     * @param url 图片链接;
-     */
-    public void setUrl(String url) {
-        this.url = url == null ? null : url.trim();
-    }
 }
