@@ -1,8 +1,8 @@
 const ApiRootUrl = 'http://localhost:8010/';
 
 const API = {
-  SendMsg: ApiRootUrl + 'user/sendMsg/', //发送短信数据接口，+/phoneNumber
-  Login: ApiRootUrl + 'system/user/login/',  //登录接口，+this.phoneNumber+'/null/'+this.passWord
+  Register: ApiRootUrl + 'user/register/', //注册：id，name，password，realname，telphone，eamil，cardid
+  Login: ApiRootUrl + 'user/login/',  //登录接口，+this.phoneNumber+'/null/'+this.passWord
   UpdateUser: ApiRootUrl + 'user/updateUser',  // 修改用户接口,User
 
   GetRegion:ApiRootUrl + 'region/getRegion/',//地区接口，+cityName+"/"+type

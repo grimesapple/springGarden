@@ -10,6 +10,5 @@
     <result column="reply" jdbcType="VARCHAR" property="reply" />
     <result column="u_id" jdbcType="INTEGER" property="userId" />
     <result column="p_id" jdbcType="INTEGER" property="productId" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
 </mapper>

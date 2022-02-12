@@ -88,12 +88,22 @@ public class UserServiceImpl implements UserService {
      * @return 返回结果
      */
     @Override
-    public boolean login(User user) {
+    public User login(User user) {
         List<User> users = userMapper.select(user);
         if (users == null || users.size() == 0) {
-            return false;
+            return null;
         }
         User userNew = users.get(0);
-        return user.getName().equals(userNew.getName()) && user.getPassword().equals(userNew.getPassword());
+        return  userNew;
+    }
+
+    /**
+     * 用户退出登录
+     * @param user 对应账号
+     */
+    @Override
+    public int loginOut(User user){
+        //将token失效，发现不需要
+        return 0;
     }
 }

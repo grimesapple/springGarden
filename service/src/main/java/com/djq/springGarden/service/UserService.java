@@ -57,7 +57,7 @@ public interface UserService {
      * @param user 封装条件
      * @return 返回结果
      */
-    boolean login(User user);
+    User login(User user);
 
     /**
      * 用户注册
@@ -65,5 +65,13 @@ public interface UserService {
      * @return 插入数量
      */
     int register(User user);
+
+    /**
+     * 用户退出登录
+     * @param user 对应账号
+     */
+    int loginOut(User user);
+
+
 
 }

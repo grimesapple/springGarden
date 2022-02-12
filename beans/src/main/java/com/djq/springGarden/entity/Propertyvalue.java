@@ -32,7 +32,7 @@ public class Propertyvalue {
     /** 房间属性id */
     @ApiModelProperty("房间属性id" )
     @Column(name = "pt_id" )
-    private Integer ptId;
+    private Integer propertyId;
     /** 对应的属性情况：1正常、0损坏 */
     @ApiModelProperty("对应的属性情况：1正常、0损坏" )
     @Column(name = "status" )

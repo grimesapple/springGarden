@@ -7,51 +7,59 @@
 					<div class="m-login-wrap">
 						<div class="login-tabs">
 							<a :class="{'isActive ':toggleLoginBody}"
-								@click="toggleLoginBody=true,phoneNumber='',passWord='',showError=false">注册</a>
+								@click="toggleLoginBody=true,rgst_username='zhangsan',rgst_password='123456', rgst_repassword = '123456' ,showError=false">注册</a>
 							<a :class="{'isActive':!toggleLoginBody}"
-								@click="toggleLoginBody=false,phoneNumber='',passWord='',showError=false">登录</a>
+								@click="toggleLoginBody=false,username='zhangsan',passWord='123456',showError=false">登录</a>
 						</div>
 						<div class="login-body" v-show="toggleLoginBody">
 							<div class="control-group">
-								<el-input placeholder="账号" v-model="phoneNumber">
-									<template slot="prepend"><i class="el-icon-user"></i></template>
-								</el-input>
-							</div>
-							<div class="control-group">
-								<el-input placeholder="密码" v-model="phoneNumber">
-									<template slot="prepend"><i class="el-icon-lock"></i></template>
-								</el-input>
-							</div>
-							<div class="control-group">
-								<el-input placeholder="请再次输入密码" v-model="phoneNumber">
-									<template slot="prepend"><i class="el-icon-lock"></i></template>
-								</el-input>
-							</div>
-							<div class="control-group">
-								<el-input placeholder="姓名" v-model="phoneNumber">
-									<template slot="prepend"><i class="el-icon-user"></i></template>
-								</el-input>
-							</div>
-							<div class="control-group">
-								<el-input placeholder="身份证号码" v-model="phoneNumber">
-									<template slot="prepend"><i class="el-icon-document"></i></template>
-								</el-input>
-							</div>
-							<div class="control-group">
-								<el-input placeholder="手机号码" v-model="phoneNumber">
-									<template slot="prepend"><i class="el-icon-phone"></i></template>
-								</el-input>
-							</div>
-							<el-button type="warning" class="login-btn" @click="loginOrRegister(false)">注册</el-button>
-						</div>
-						<div class="login-body" v-show="!toggleLoginBody">
-							<div class="control-group">
-								<el-input placeholder="请输入账号" v-model="phoneNumber" > 
+								<el-input placeholder="账号" v-model="rgst_username">
 									<template slot="prepend"><i class="el-icon-user"></i></template>
 								</el-input>
 							</div>
 							<div class="controls">
-								<el-input placeholder="输入密码" v-model="passWord" show-password value="123456">
+								<el-input placeholder="密码" v-model="rgst_password" show-password>
+									<template slot="prepend"><i class="el-icon-lock"></i></template>
+								</el-input>
+							</div>
+							<div class="controls">
+								<el-input placeholder="请再次输入密码" v-model="rgst_repassword" show-password>
+									<template slot="prepend"><i class="el-icon-lock"></i></template>
+								</el-input>
+							</div>
+							<div class="control-group">
+								<el-input placeholder="真实姓名" v-model="rgst_realname">
+									<template slot="prepend"><i class="el-icon-user"></i></template>
+								</el-input>
+							</div>
+							<div class="control-group">
+								<el-input placeholder="身份证号码" v-model="rgst_carid">
+									<template slot="prepend"><i class="el-icon-document"></i></template>
+								</el-input>
+							</div>
+							<div class="control-group">
+								<el-input placeholder="手机号码" v-model="rgst_phonenumber">
+									<template slot="prepend"><i class="el-icon-phone"></i></template>
+								</el-input>
+							</div>
+							<div class="control-group">
+								<el-input placeholder="电子邮件" v-model="rgst_mail">
+									<template slot="prepend"><i class="el-icon-s-promotion"></i></template>
+								</el-input>
+							</div>
+							<el-alert :title="errorInfo" type="error" v-if="showError" style="margin-bottom: 20px"
+								:closable="false">
+							</el-alert>
+							<el-button type="warning" class="login-btn" @click="loginOrRegister(false)">注册</el-button>
+						</div>
+						<div class="login-body" v-show="!toggleLoginBody">
+							<div class="control-group">
+								<el-input placeholder="请输入账号" v-model="username">
+									<template slot="prepend"><i class="el-icon-user"></i></template>
+								</el-input>
+							</div>
+							<div class="controls">
+								<el-input placeholder="输入密码" v-model="passWord" show-password>
 									<template slot="prepend"><i class="el-icon-lock"></i></template>
 								</el-input>
 							</div>
@@ -267,7 +275,16 @@
 		},
 		data() {
 			return {
-				phoneNumber: 'zhangsan', //用户名
+				//注册相关
+				rgst_username: '',
+				rgst_password: '',
+				rgst_repassword: '',
+				rgst_realname: '',
+				rgst_carid: '',
+				rgst_phonenumber: '',
+				rgst_mail: '',
+				//登录相关
+				username: 'zhangsan', //用户名
 				passWord: '123456', //密码
 				errorInfo: '错误', //错误提示
 				showError: false,
@@ -325,30 +342,10 @@
 			window.removeEventListener('keydown', this.keyDown, false);
 		},
 		methods: {
-			async sendCode() {
-				/*发送验证码*/
-				const _this = this
-				if (this.phoneNumber.trim() == '') {
-					this.$message.error('手机号不能为空!')
-					return false
-				}
-				await axios.get(this.API.SendMsg + this.phoneNumber).then(function(resp) {
-					if (resp.data == "error") {
-						_this.errorInfo = "验证码发送失败，手机号错误"
-						_this.showError = true
-						_this.passWord = ''
-						console.log(resp.data);
-						return false
-					}
-					_this.$message("验证码已发送");
-				}).catch(function(error) {
-					console.log(error)
-				});
-			},
 			async loginOrRegister(onlyLogin) { //点击登录或者注册
 				const _this = this
-				if (this.phoneNumber.trim() == '') {
-					this.$message.error('手机号不能为空!')
+				if (this.username.trim() == '') {
+					this.$message.error('账号不能为空!')
 					return false
 				}
 				let isSuccess = false;
@@ -367,65 +364,98 @@
 					}
 					//根据用户名和密码查询用户信息
 					await axios.post(this.API.Login, Qs.stringify({
-						username: this.phoneNumber,
+						username: this.username,
 						password: this.passWord
 					})).then(function(resp) {
 						// console.log(resp);
-						let result = resp.data;
-						if (result.code != 200){
-							_this.errorInfo="手机号或密码错误"
-							_this.showError=true;
-							_this.passWord=''
+						let data = resp.data;
+						if (data.code != 200) {
+							_this.errorInfo = data.msg
+							_this.showError = true;
+							_this.passWord = ''
 							return false
 						}
-						_this.$store.state.token= result.result.token;
-						_this.$store.state.userInfo= result.result.username;
-						isSuccess=true;
+						_this.$store.state.token = data.result.token;
+						_this.$store.state.userInfo = data.result.user;
+						isSuccess = true;
 					}).catch(function(error) {
 						console.log(error)
 					});
 
 				} else { //登录或者注册
-					if (this.passWord.trim() == '') {
-						this.$message.error('验证码不能为空!')
+					if (this.rgst_password.trim() == '') {
+						this.$message.error('密码不能为空!')
 						loading.close();
 						return false
 					}
-					//根据用户名和验证码查询用户信息
-					await axios.get(this.API.Login + this.phoneNumber + '/' + this.passWord + "/null").then(function(
-						resp) {
-						if (resp.data == "") {
-							_this.errorInfo = "手机号或验证码错误"
+					if (this.rgst_password != this.rgst_repassword) {
+						this.$message.error('密码不一致!')
+						loading.close();
+						return false
+					}
+
+					//注册
+					await axios.post(this.API.Register, Qs.stringify({
+						name: this.rgst_username,
+						password: this.rgst_password,
+						realname: this.rgst_realname,
+						telphone: this.rgst_phonenumber,
+						eamil: this.rgst_mail,
+						cardid: this.rgst_carid,
+					})).then(function(resp) {
+						let data = resp.data;
+						// console.log(resp.data)
+						if (data.code != 200) {
+							_this.errorInfo = data.msg
 							_this.showError = true;
-							_this.passWord = ''
+							_this.rgst_password = ''
+							_this.rgst_repassword = ''
 							return false
 						}
-						_this.$store.state.userInfo = resp.data
-						isSuccess = true;
+						_this.$message("注册成功，请到登录页面进行登录");
+
 					}).catch(function(error) {
 						console.log(error)
 					});
+
+
+					// //根据用户名和验证码查询用户信息
+					// await axios.get(this.API.Login + this.username + '/' + this.passWord + "/null").then(function(
+					// 	resp) {
+					// 	if (resp.data == "") {
+					// 		_this.errorInfo = "手机号或验证码错误"
+					// 		_this.showError = true;
+					// 		_this.passWord = ''
+					// 		return false
+					// 	}
+					// 	_this.$store.state.userInfo = resp.data
+					// 	isSuccess = true;
+					// }).catch(function(error) {
+					// 	console.log(error)
+					// });
 				}
 				if (isSuccess) {
-					
+
 					//登录成功
 					this.$store.state.isLogin = true
 					this.showLogin = false
 					localStorage.setItem('store', JSON.stringify(this.$store.state)) //把json解析成字符串存入session
-					console.log(sessionStorage.getItem('store'))
+					_this.$message("登录成功");
+					console.log(localStorage.getItem('store'))
+					console.log(this.$store.state)
 					// //修改用户在线状态
-					// _this.$store.state.userInfo.isOnline = 'true'
+					_this.$store.state.userInfo.isOnline = 'true'
 					// await axios.put(this.API.UpdateUser, _this.$store.state.userInfo)
 					// this.getUserNotice(this.$store.state.userInfo.username) //得到用户通知
-					// this.passWord = ''
-					// this.phoneNumber = ''
-					// if (_this.$store.state.userInfo.role == 'admin') { //如果是管理员
-					// 	await _this.$router.push({
-					// 		path: "/Administrator",
-					// 		query: {}
-					// 	})
-					// }
-					
+					this.passWord = ''
+					this.username = ''
+					if (_this.$store.state.userInfo.role == 'admin') { //如果是管理员
+						await _this.$router.push({
+							path: "/Administrator",
+							query: {}
+						})
+					}
+
 				}
 				loading.close();
 			},

@@ -30,15 +30,16 @@
 				</div>
 				<div class="tools-item" v-if="this.$store.state.isLogin">
 					<el-dropdown trigger="click">
-						<div class="el-dropdown-link header-avatar">
-							<img :src="$store.state.userInfo.headImg">
+						<!-- <div class="el-dropdown-link header-avatar"> -->
+						<div class="el-dropdown-link">
+							<span>{{$store.state.userInfo.username}}</span>
 						</div>
 						<el-dropdown-menu slot="dropdown">
 							<el-dropdown-item @click.native="toPersonalCenter">个人中心</el-dropdown-item>
 							<el-dropdown-item @click.native="loginOut">退出登录</el-dropdown-item>
 						</el-dropdown-menu>
 					</el-dropdown>
-					
+
 				</div>
 				<div class="tools-item" v-if="$store.state.isLogin">
 					<el-dropdown trigger="click">
@@ -100,21 +101,28 @@
 				console.log(key, keyPath);
 			},
 			async loginOut() { //退出登录
-				//修改用户在线状态
-				let user;
-				await axios.get(this.API.Login + this.$store.state.userInfo.username + '/null/null').then((resp) => {
-					user = resp.data
-				})
-				user.isOnline = 'false'
-				await axios.put(this.API.UpdateUser, user)
+				//清除token即可
+
+
+				// //修改用户在线状态
+				// let user;
+				// await axios.get(this.API.Login + this.$store.state.userInfo.username + '/null/null').then((resp) => {
+				// 	user = resp.data
+				// })
+				// user.isOnline = 'false'
+				// await axios.put(this.API.UpdateUser, user)
 				//清除数据
 				this.$store.state.isLogin = false
 				this.$store.state.userInfo = []
+				this.$store.state.token = ''
 				this.notice = []
-				sessionStorage.setItem('store', null)
-				await this.$router.push({
-					path: "/",
-				})
+				localStorage.setItem('store', null)
+				// console.log(this.$route.path)
+				if (this.$route.path != '/') {
+					await this.$router.push({
+						path: "/",
+					})
+				}
 			},
 			dateFormat(date) { //格式化日期
 				var date = new Date(date);

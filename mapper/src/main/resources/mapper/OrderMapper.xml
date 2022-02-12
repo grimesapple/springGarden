@@ -14,7 +14,6 @@
     <result column="user_message" jdbcType="VARCHAR" property="userMessage" />
     <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
     <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="pay_date" jdbcType="TIMESTAMP" property="payDate" />
     <result column="delivery_date" jdbcType="TIMESTAMP" property="deliveryDate" />
     <result column="confirm_date" jdbcType="TIMESTAMP" property="confirmDate" />

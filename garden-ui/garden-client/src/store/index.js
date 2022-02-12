@@ -12,7 +12,7 @@ export default new Vuex.Store({
   mutations: {//存全局的同步方法
     getInitData(state){
     },
-	setToken(){};
+	setToken(){}
   },
   actions: {
   },

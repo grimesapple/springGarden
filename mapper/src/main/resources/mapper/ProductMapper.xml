@@ -12,6 +12,5 @@
     <result column="promote_price" jdbcType="DECIMAL" property="promotePrice" />
     <result column="stock" jdbcType="INTEGER" property="stock" />
     <result column="c_id" jdbcType="INTEGER" property="categoryId" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
 </mapper>

@@ -36,7 +36,7 @@ public class User {
     /** 权限表id */
     @ApiModelProperty("权限表id" )
     @Column(name = "r_id" )
-    private Integer residentId;
+    private Integer roleId;
     /** 真实姓名 */
     @ApiModelProperty("真实姓名" )
     @Column(name = "realname" )
