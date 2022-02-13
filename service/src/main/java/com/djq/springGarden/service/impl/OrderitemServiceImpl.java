@@ -9,9 +9,6 @@ import com.djq.springGarden.entity.Orderitem;
 import com.djq.springGarden.service.OrderitemService;
 
 
-import javax.annotation.Resource;
-
-
 /**
  * 订单详情-入住人信息Service业务层处理
  *

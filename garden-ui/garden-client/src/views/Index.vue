@@ -83,11 +83,13 @@
 			<Header :thatnotice.sync="notice" :thatshow-login.sync="showLogin"></Header>
 			<!--大搜索框-->
 			<div class="hc-home-search-wrapper animate__animated " :class="!showLogin?'animate__bounceIn':''">
-				<section class="city-search-wrapper">
+				<!-- 选择城市 -->
+				<!-- <section class="city-search-wrapper">
 					<div class="city-wrap" @click="toggleClass()">
 						{{currentCityName}}<span
 							:class="{'el-icon-caret-bottom':toggle,'el-icon-caret-top':!toggle}"></span>
 					</div>
+					
 					<section class="search-city-panel-wrap" v-show="!toggle">
 						<div class="city-search-input">
 							<el-autocomplete class="inline-input" :fetch-suggestions="querySuggestedCities"
@@ -107,9 +109,10 @@
 							</ul>
 						</section>
 					</section>
-				</section>
-				<div class="divider"></div>
-				<section class="keyword-search-wrapper">
+				</section> -->
+				<!-- 位置 -->
+				<!-- <div class="divider"></div> -->
+				<!-- <section class="keyword-search-wrapper">
 					<section @click="toggleKeywordClass()">
 						<el-input class="keyword-search-input" v-model="currentRegion" placeholder="位置位置关键字" clearable>
 						</el-input>
@@ -152,8 +155,7 @@
 							</ul>
 						</section>
 					</section>
-				</section>
-				<div class="divider"></div>
+				</section> -->
 				<section class="date-search-wrapper">
 					<div class="block">
 						<el-date-picker style="" v-model="chooseDate" value-format="yyyy-MM-dd" type="daterange"
@@ -161,6 +163,34 @@
 							:picker-options="pickerOptions">
 						</el-date-picker>
 					</div>
+				</section>
+				<div class="divider"></div>
+				<!-- 选择人数 -->
+				<section class="city-search-wrapper">
+					<div class="city-wrap" @click="toggleClass()">
+						{{currentCityName}}<span
+							:class="{'el-icon-caret-bottom':toggle,'el-icon-caret-top':!toggle}"></span>
+					</div>
+
+					<section class="search-city-panel-wrap" v-show="!toggle">
+						<div class="city-search-input">
+							<el-autocomplete class="inline-input" :fetch-suggestions="querySuggestedCities"
+								placeholder="请输入城市名称" :trigger-on-focus="false" v-model="queryCityName"
+								style="width: 100%" prefix-icon="el-icon-search" @select="citySelect"></el-autocomplete>
+						</div>
+						<section class="hc-search-group-tabs">
+							<ul class="search-group-tab-list">
+								<li class="search-group-tab-list-item active">热门城市</li>
+								<li class="search-group-tab-list-item">按字母排序</li>
+							</ul>
+							<ul class="group-list" v-loading="loadingCity">
+								<li class="search-group-tab-list-item group-list-item" v-for="(item,key) in cities"
+									@click="currentCityName=item.value,toggle=true,getRegionAsync(item.value,'hotsearch')">
+									{{item.value}}
+								</li>
+							</ul>
+						</section>
+					</section>
 				</section>
 				<el-button class="search" @click="toCityHotel">搜索</el-button>
 			</div>
