@@ -65,7 +65,7 @@ const routes = [
       }
     },
     beforeEnter: (to, from, next) => {//在访问之前，路由守卫
-      if(JSON.parse(sessionStorage.getItem('store')).userInfo.isCertified=='false'){
+      if(JSON.parse(localStorage.getItem('store')).userInfo.isCertified=='false'){
         alert("请先实名！")
         next({path:"/PersonalCenter"})
       }
@@ -149,7 +149,7 @@ const routes = [
       }
     ],
     beforeEnter: (to, from, next) => {//在访问之前，路由守卫
-      if(JSON.parse(sessionStorage.getItem('store')).userInfo.isCertified=='false'){
+      if(JSON.parse(localStorage.getItem('store')).userInfo.isCertified=='false'){
         alert("请先实名！")
         next({path:"/PersonalCenter"})
       }
@@ -162,7 +162,7 @@ const routes = [
     component: Administrator,
     redirect:"/HouseList/examine",
     beforeEnter: (to, from, next) => {//在访问之前，路由守卫
-      if(JSON.parse(sessionStorage.getItem('store')).userInfo.role!='admin'){
+      if(JSON.parse(localStorage.getItem('store')).userInfo.role!='admin'){
         alert("您没有权限访问！")
         next({path:"/"})
       }
@@ -204,8 +204,8 @@ const router = new VueRouter({
 })
 router.beforeEach((to,from,next)=>{//跳转之前，全局所有页面跳转都会触发
   let isLogin=false;
-  if(JSON.parse(sessionStorage.getItem('store'))!=null){
-     isLogin=JSON.parse(sessionStorage.getItem('store')).isLogin
+  if(JSON.parse(localStorage.getItem('store'))!=null){
+     isLogin=JSON.parse(localStorage.getItem('store')).isLogin
 	 // isLogin = true;
   }
   if(isLogin || to.path=='/'){next()}//next控制跳转至下一个页面

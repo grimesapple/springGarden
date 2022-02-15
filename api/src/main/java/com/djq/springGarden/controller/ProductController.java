@@ -28,7 +28,7 @@ import javax.annotation.Resource;
  */
 @Api(tags = "客房;商品信息相关：分类，商品图片，商品规格，商品参数控制器" )
 @RestController
-@RequestMapping("/system/product" )
+@RequestMapping("/product" )
 public class ProductController {
     @Resource
     private ProductService productService;

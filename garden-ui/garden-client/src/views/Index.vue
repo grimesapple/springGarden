@@ -1,5 +1,5 @@
 <template>
-	<el-container>
+	<el-container  >
 		<el-header class="header-wrapper">
 			<!--登录-->
 			<div class="login-dialog">
@@ -168,18 +168,27 @@
 				<!-- 选择人数 -->
 				<section class="city-search-wrapper">
 					<div class="city-wrap" @click="toggleClass()">
-						{{currentCityName}}<span
+						{{personNumber}}<span
 							:class="{'el-icon-caret-bottom':toggle,'el-icon-caret-top':!toggle}"></span>
 					</div>
 
 					<section class="search-city-panel-wrap" v-show="!toggle">
-						<div class="city-search-input">
-							<el-autocomplete class="inline-input" :fetch-suggestions="querySuggestedCities"
-								placeholder="请输入城市名称" :trigger-on-focus="false" v-model="queryCityName"
-								style="width: 100%" prefix-icon="el-icon-search" @select="citySelect"></el-autocomplete>
-						</div>
 						<section class="hc-search-group-tabs">
-							<ul class="search-group-tab-list">
+							<div class="search-group-tab-list">
+								<label class="city-wrap">成人</label>
+								<el-input-number v-model="adults" @change="personNumber=adults+kids+'   人'" size="small"  :min="1" :max="10" ></el-input-number>
+							</div>
+							<div class="search-group-tab-list">
+								<label class="city-wrap">孩子</label>
+								<el-input-number v-model="kids" size="small" @change="personNumber=adults+kids+'   人'" :min="0" :max="10" ></el-input-number>
+							</div>
+							<dev style = "margin: 10px 0; padding: 20px;">
+								<el-button type="info" @click="adults=1,kids=0"  round>清除</el-button>
+								<el-button type="success" @click = "personNumber = adults+kids+'   人', toggle=true" round>确定</el-button>
+							</dev>
+
+							
+							<!-- <ul class="search-group-tab-list">
 								<li class="search-group-tab-list-item active">热门城市</li>
 								<li class="search-group-tab-list-item">按字母排序</li>
 							</ul>
@@ -188,17 +197,18 @@
 									@click="currentCityName=item.value,toggle=true,getRegionAsync(item.value,'hotsearch')">
 									{{item.value}}
 								</li>
-							</ul>
+							</ul> -->
 						</section>
 					</section>
 				</section>
 				<el-button class="search" @click="toCityHotel">搜索</el-button>
 			</div>
 		</el-header>
+		<!-- 主要内容 -->
 		<el-main class="hc-main">
 			<div class="g-home-hot-layout">
 				<div class="g-home-hot-wrapper">
-					<h2>热门城市</h2>
+					<h2>热门客房</h2>
 					<ul class="hot-module">
 						<li class="hot-item">
 							<a href="">
@@ -324,8 +334,16 @@
 				showLogin: !this.$store.state.isLogin,
 				/*是否显示登录界面*/
 				queryCityName: '',
+				
+				// 显示人数
+				personNumber: "请选择人数",
+				//成人数量
+				adults:1,
+				//小孩数量
+				kids:0,
+				
 				/*建议的城市名称*/
-				currentCityName: "北京",
+				currentCityName: "选择人数",
 				/*当前选择的城市*/
 				loadingCity: true,
 				/*是否显示城市正在加载界面*/
@@ -755,9 +773,10 @@
 		position: relative;
 		bottom: 144px;
 		margin: 0 auto;
+		/* text-align:center; */
 		z-index: 99;
 		height: 64px;
-		width: 950px;
+		width: 750px;
 		display: flex;
 		align-items: center;
 		border-radius: 50px;
@@ -794,11 +813,11 @@
 	.search-city-panel-wrap,
 	.hc-search-keyword-panel {
 		position: absolute;
-		min-height: 152px;
+		min-height: 50px;
 		background: #fff;
 		top: 115%;
-		left: 0;
-		width: 100%;
+		/* left: 0; */
+		width: 35%;
 		box-shadow: 0 8px 20px 0 rgba(0, 0, 0, .1);
 		border-radius: 12px;
 	}
@@ -817,8 +836,8 @@
 		width: 100%;
 		height: 35px;
 		background-color: white;
-		margin: 0;
-		padding: 0;
+		margin: 10px 0;
+		padding: 2px;
 		display: flex;
 		justify-content: flex-start;
 	}
@@ -911,7 +930,7 @@
 
 	/*日期选择*/
 	.date-search-wrapper {
-		margin-left: 5px;
+		margin-left: 25px;
 		margin-right: 10px;
 		position: static;
 		width: 380px;
@@ -923,7 +942,7 @@
 		line-height: 50px;
 		font-size: 20px;
 		color: #fff;
-		background-image: linear-gradient(90deg, #ff7632, #ffa819);
+		background-image: linear-gradient(90deg, #85ce61,#67c23a );
 		-webkit-box-shadow: 0 20px 22px -13px rgba(229, 100, 0, .2);
 		box-shadow: 0 20px 22px -13px rgba(229, 100, 0, .2);
 		border-radius: 25px;
@@ -935,7 +954,7 @@
 	.search:hover {
 		color: #fff;
 		;
-		background-image: linear-gradient(90deg, #ff7632, #ffa819);
+		background-image: linear-gradient(90deg, #67c23a,#85ce61);
 	}
 
 	/*内容区域*/

@@ -1,8 +1,11 @@
 const ApiRootUrl = 'http://localhost:8010/';
 
 const API = {
-  Register: ApiRootUrl + 'user/register/', //注册：id，name，password，realname，telphone，eamil，cardid
-  Login: ApiRootUrl + 'user/login/',  //登录接口，+this.phoneNumber+'/null/'+this.passWord
+	//注册：id，name，password，realname，telphone，eamil，cardid
+  Register: ApiRootUrl + 'user/register/', 
+  //登录接口，+this.phoneNumber+'/null/'+this.passWord
+  Login: ApiRootUrl + 'user/login/',  
+  
   UpdateUser: ApiRootUrl + 'user/updateUser',  // 修改用户接口,User
 
   GetRegion:ApiRootUrl + 'region/getRegion/',//地区接口，+cityName+"/"+type
@@ -13,8 +16,9 @@ const API = {
   GetHouseTotal:ApiRootUrl + 'house/getHouseTotal',//得到房屋总数量接口,allFilters
   GetHouseList:ApiRootUrl + 'house/getHouseList/',//得到房屋列表接口，1/'+this.pageSize,this.allFilters
   GetHouse:ApiRootUrl +'house/getHouse/',//得到单个房屋接口，+this.$store.state.userInfo.username+'/null'
-  GetHouseByAdmin:ApiRootUrl +'house/getHouseByAdmin/',//管理员得到房屋接口，+state
-  GetHouseTotalByAdmin:ApiRootUrl + 'house/getHouseTotalByAdmin/',//管理员得到得到房屋数量，+state
+  GetHouseByAdmin:ApiRootUrl +'product/list/',//管理员得到房屋接口，+state
+  
+  // GetHouseTotalByAdmin:ApiRootUrl + 'product/list/',//管理员得到得到房屋数量，+state
   UpdateHouse:ApiRootUrl +'house/updateHouse',//修改房屋接口，house
   AddHouse:ApiRootUrl + 'house/addHouse',//添加房屋接口,house
 

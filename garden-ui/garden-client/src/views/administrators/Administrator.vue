@@ -3,11 +3,11 @@
         <el-menu
                 class="el-menu-demo"
                 mode="horizontal"
-                background-color="#545c64"
-                text-color="#fff"
+                background-color="#edf4ed"
+                text-color="#111111"
                 active-text-color="#ffd04b"
                 style="display: flex;justify-content: flex-end;">
-            <h2 class="title">欢迎红尘客栈管理员{{$store.state.userInfo.username}}</h2>
+            <h2 class="title">欢迎青庭民宿管理员&nbsp; {{$store.state.userInfo.username}}</h2>
            <!--  <el-menu-item index="1"><a href="/">主页</a></el-menu-item>-->
           <el-menu-item index="1">
               <el-dropdown trigger="click">
@@ -24,9 +24,9 @@
             <!--侧边栏-->
             <el-aside width="201px" style="background-color: rgb(238, 241, 246)">
                 <el-menu router :default-openeds="['0','1']"
-                         background-color="#545c64"
-                         text-color="#fff"
-                         active-text-color="#ffd04b"><!--默认打开菜单0,1--->
+                         background-color="#edf4ed"
+                         text-color="#111111"
+                         active-text-color="#005b43"><!--默认打开菜单0,1--->
                     <el-submenu index="0">
                         <template slot="title">
                             <i class="el-icon-menu"></i>
@@ -111,6 +111,6 @@
     }
     .title{
         margin-right: 40%;
-        color: #fff;
+        color: #2e963d;
     }
 </style>
