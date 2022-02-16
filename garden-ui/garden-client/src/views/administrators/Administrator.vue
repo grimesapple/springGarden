@@ -20,7 +20,7 @@
               </el-dropdown>
           </el-menu-item>
         </el-menu>
-        <el-container style="height: 650px; border-bottom: 1px solid #eee">
+        <el-container style="height: 900px; border-bottom: 1px solid #eee">
             <!--侧边栏-->
             <el-aside width="201px" style="background-color: rgb(238, 241, 246)">
                 <el-menu router :default-openeds="['0','1']"

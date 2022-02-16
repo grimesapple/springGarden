@@ -3,6 +3,9 @@ package com.djq.springGarden.controller;
 import java.util.List;
 
 import com.djq.springGarden.entity.Product;
+import com.djq.springGarden.vo.ProductVO;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageInfo;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,6 +51,25 @@ public class ProductController {
         map.put("list" , list);
         return ResultVO.ok(map,"查询成功");
     }
+
+    /**
+     * 管理员查询所有房屋列表
+     * @return 返回结果
+     */
+    @GetMapping("/listByAdmin" )
+    @ApiOperation("管理员查询客房" )
+    public ResultVO<Map<String,Object>> listByAdmin(Product product,
+                                             @RequestParam(value = "pageNum" , required = false, defaultValue = "1" ) Integer pageNum,
+                                             @RequestParam(value = "pageSize" , required = false, defaultValue = "10" ) Integer pageSize) {
+        HashMap<String, Object> map = new HashMap<>();
+        Page page = PageHelper.startPage(pageNum, pageSize);
+        List<ProductVO> list = productService.listByAdmin(product);
+        PageInfo info = new PageInfo<>(page.getResult());
+        map.put("total" , info.getTotal());
+        map.put("list" , list);
+        return ResultVO.ok(map,"查询成功");
+    }
+
 
     /**
      * 获取客房;商品信息相关：分类，商品图片，商品规格，商品参数详细信息

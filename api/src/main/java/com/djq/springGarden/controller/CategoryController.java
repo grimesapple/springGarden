@@ -28,7 +28,7 @@ import javax.annotation.Resource;
  */
 @Api(tags = "房间类型控制器" )
 @RestController
-@RequestMapping("/system/category" )
+@RequestMapping("/category" )
 public class CategoryController {
     @Resource
     private CategoryService categoryService;

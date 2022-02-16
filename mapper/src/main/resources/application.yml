@@ -18,7 +18,7 @@ mybatis:
 
 logging:
   level:
-    com.yr.rongmall: debug
+    com.djq.springGarden: debug
 # 分页框架
 pagehelper:
   #指定数据库，可以不配置，pagehelper插件会自动检测数据库的类型。

@@ -1,8 +1,10 @@
 package com.djq.springGarden.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.djq.springGarden.entity.Product;
+import com.djq.springGarden.vo.ProductVO;
 
 /**
  * 客房;商品信息相关：分类，商品图片，商品规格，商品参数Service接口
@@ -26,6 +28,12 @@ public interface ProductService {
      * @return 客房;商品信息相关：分类，商品图片，商品规格，商品参数
      */
      Product selectOne(Product product);
+
+    /**
+     * 管理员查询所有房屋列表
+     * @return 返回结果
+     */
+    List<ProductVO> listByAdmin(Product product);
 
 
     /**

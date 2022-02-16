@@ -1,16 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.djq.springGarden.mapper.ProductMapper">
-  <resultMap id="BaseResultMap" type="com.djq.springGarden.entity.Product">
-    <!--
-      WARNING - @mbg.generated
-    -->
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="sub_title" jdbcType="VARCHAR" property="subTitle" />
-    <result column="orignal_price" jdbcType="DECIMAL" property="orignalPrice" />
-    <result column="promote_price" jdbcType="DECIMAL" property="promotePrice" />
-    <result column="stock" jdbcType="INTEGER" property="stock" />
-    <result column="c_id" jdbcType="INTEGER" property="categoryId" />
-  </resultMap>
+    <resultMap id="BaseResultMap" type="com.djq.springGarden.entity.Product">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="sub_title" jdbcType="VARCHAR" property="subTitle"/>
+        <result column="orignal_price" jdbcType="DECIMAL" property="orignalPrice"/>
+        <result column="promote_price" jdbcType="DECIMAL" property="promotePrice"/>
+        <result column="stock" jdbcType="INTEGER" property="stock"/>
+        <result column="c_id" jdbcType="INTEGER" property="categoryId"/>
+    </resultMap>
+
+
+    <!--=========================sql配置==============================-->
+
+<!--    <select id="selectAllMap" resultType="java.util.Map">-->
+<!--        select-->
+<!--        tp.id ,-->
+<!--        tp.name ,-->
+<!--        tp.sub_title subTitle,-->
+<!--        tp.orignal_price orignalPrice,-->
+<!--        tp.promote_price promotePrice,-->
+<!--        tp.stock ,-->
+<!--        tp.c_id categoryId,-->
+<!--        tp.create_time,-->
+<!--        tc.type_name typeName-->
+<!--        from `product` tp-->
+<!--        left join category tc on tp.c_id = tc.id-->
+<!--        <where>-->
+<!--            <if test="id != null">and id = #{id}</if>-->
+<!--            <if test="name != null  and name != ''">and name like concat('%',#{name},'%')</if>-->
+<!--            <if test="subTitle != null  and subTitle != ''">and sub_title=#{subTitle})</if>-->
+<!--            <if test="orignalPrice != null">and orignal_price=#{orignalPrice})</if>-->
+<!--            <if test="promotePrice != null">and promote_price=#{promotePrice})</if>-->
+<!--            <if test="stock != null">and stock=#{stock})</if>-->
+<!--            <if test="stock != null">and stock=#{stock})</if>-->
+<!--            <if test="subTitle != null  and subTitle != ''">and sub_title=#{subTitle})</if>-->
+<!--        </where>-->
+<!--    </select>-->
+
+
 </mapper>

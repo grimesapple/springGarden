@@ -16,11 +16,17 @@ const API = {
   GetHouseTotal:ApiRootUrl + 'house/getHouseTotal',//得到房屋总数量接口,allFilters
   GetHouseList:ApiRootUrl + 'house/getHouseList/',//得到房屋列表接口，1/'+this.pageSize,this.allFilters
   GetHouse:ApiRootUrl +'house/getHouse/',//得到单个房屋接口，+this.$store.state.userInfo.username+'/null'
-  GetHouseByAdmin:ApiRootUrl +'product/list/',//管理员得到房屋接口，+state
+  GetHouseByAdmin:ApiRootUrl +'product/listByAdmin/',//管理员得到房屋接口，+state
   
   // GetHouseTotalByAdmin:ApiRootUrl + 'product/list/',//管理员得到得到房屋数量，+state
-  UpdateHouse:ApiRootUrl +'house/updateHouse',//修改房屋接口，house
-  AddHouse:ApiRootUrl + 'house/addHouse',//添加房屋接口,house
+  //修改房屋接口，house
+  UpdateHouse:ApiRootUrl +'product/update',
+  //添加房屋接口,house
+  AddHouse:ApiRootUrl + 'product/add',
+  //删除房屋
+  delHouse:ApiRootUrl + 'product/delete',
+  //所有房屋类型
+  GetCategory:ApiRootUrl + 'category/list',
 
   GetCollect:ApiRootUrl + 'collect/getCollect/',//得到收藏接口，+this.$store.state.userInfo.username
   AddCollect:ApiRootUrl + 'collect/addCollect/',//添加收藏接口，collect
