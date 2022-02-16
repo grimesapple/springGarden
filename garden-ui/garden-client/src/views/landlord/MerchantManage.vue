@@ -21,7 +21,7 @@
                 </el-dropdown>
             </el-menu-item>
             <el-menu-item index="2"><router-link to="/">回到主页</router-link></el-menu-item>
-            <el-menu-item index="3"><router-link to="/MerchantManage">商户系统</router-link></el-menu-item>
+            <el-menu-item index="4"><router-link to="/MerchantManage">商户系统</router-link></el-menu-item>
         </el-menu>
         <el-container style="height: 650px; border-bottom: 1px solid #eee">
             <!--侧边栏-->

@@ -20,6 +20,7 @@
                 </el-dropdown>
             </el-menu-item>
             <el-menu-item index="2"><a href="/">回到主页</a></el-menu-item>
+			<el-menu-item index="3"><router-link to="/Administrator">管理系统</router-link></el-menu-item>
             <el-menu-item index="3"><a href="/MerchantManage" >商户系统</a></el-menu-item>
         </el-menu>
         <el-container style="height: 650px; border-bottom: 1px solid #eee">
