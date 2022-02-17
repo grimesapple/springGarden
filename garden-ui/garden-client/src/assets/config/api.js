@@ -1,7 +1,7 @@
 const ApiRootUrl = 'http://localhost:8010/';
 
 const API = {
-	//注册：id，name，password，realname，telphone，eamil，cardid
+  //注册：id，name，password，realname，telphone，eamil，cardid
   Register: ApiRootUrl + 'user/register/', 
   //登录接口，+this.phoneNumber+'/null/'+this.passWord
   Login: ApiRootUrl + 'user/login/',  
@@ -16,7 +16,10 @@ const API = {
   GetHouseTotal:ApiRootUrl + 'house/getHouseTotal',//得到房屋总数量接口,allFilters
   GetHouseList:ApiRootUrl + 'house/getHouseList/',//得到房屋列表接口，1/'+this.pageSize,this.allFilters
   GetHouse:ApiRootUrl +'house/getHouse/',//得到单个房屋接口，+this.$store.state.userInfo.username+'/null'
-  GetHouseByAdmin:ApiRootUrl +'product/listByAdmin/',//管理员得到房屋接口，+state
+  //管理员得到房屋接口
+  GetHouseByAdmin:ApiRootUrl +'product/listByAdmin/',
+  //上传图片
+  UploadImage:ApiRootUrl +'util/upload/',
   
   // GetHouseTotalByAdmin:ApiRootUrl + 'product/list/',//管理员得到得到房屋数量，+state
   //修改房屋接口，house

@@ -2,7 +2,7 @@
 <template>
 	<article style="height: 90%">
 		<div style="height: 50px;">
-			<el-page-header  content="房源管理">
+			<el-page-header content="房源管理">
 			</el-page-header>
 		</div>
 		<div class="loading" v-loading="loading" v-show="loading"></div>
@@ -86,7 +86,15 @@
 						</el-option>
 					</el-select>
 				</el-form-item>
-
+				
+				<el-form-item label="上传图片">
+					<el-upload class="upload-demo" ref="upload" :action=actionurl :http-request=uploadImage
+						:file-list="fileList" list-type="picture-card" :before-upload="beforeUpload" multiple>
+						<i class="el-icon-plus"></i>
+						<div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
+					</el-upload>
+				</el-form-item>
+				
 			</el-form>
 			<span slot="footer" class="dialog-footer">
 				<el-button @click="dialogVisible = false">取 消</el-button>
@@ -137,6 +145,9 @@
 				},
 				//房间类型
 				categorys: [],
+				//图片上传地址
+				actionurl: "",
+				//
 
 			}
 		},
@@ -217,7 +228,7 @@
 						_this.total = resp.data.result.total
 						_this.tableData = resp.data.result.list
 					})
-					
+
 					// let data = _this.requestSend(this.API.GetCategory,null,"get");
 					// console.log(data);
 				}
@@ -273,7 +284,35 @@
 				let data = {}
 				data.id = row.id;
 				this.requestSend(this.API.delHouse, data, "post");
-			}
+			},
+			
+			//图片上传
+			
+			async uploadImage(req) {
+			  const config = {
+			      headers: {'Content-Type': 'multipart/form-data'}
+			  };
+			  let filetype = ''
+			  if (req.file.type === 'image/png') {
+			      filetype = 'png'
+			  } else {
+			      filetype = 'jpg'
+			  }
+			  // const keyName = this.bucket +  "-" + Types.ObjectId().toString() +  '.' + fileType;
+			  const formdata = new FormData();
+			  formdata.append('picture', req.file);
+			  axios.post(this.API.UploadImage, formdata, config)
+			  .then(res => {
+			      this.fileList.push({
+			          name: res.data.result.name,
+			          url: res.data.result.url,
+			      });
+			      console.log('image upload succeed.');
+			  })
+			  .catch(err => {
+			      console.log(err.message)
+			  })
+			},
 		},
 	}
 </script>
