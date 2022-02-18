@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
+import java.util.List;
 import javax.persistence.*;
 
 /**
@@ -50,5 +51,7 @@ public class Product {
     @ApiModelProperty("房间类型" )
     @Column(name = "c_id" )
     private Integer categoryId;
+
+    private List<String> fileList;
 
 }

@@ -20,12 +20,15 @@ const API = {
   GetHouseByAdmin:ApiRootUrl +'product/listByAdmin/',
   //上传图片
   UploadImage:ApiRootUrl +'util/upload/',
+  //回显图片路径
+  ShowImage:ApiRootUrl +'api/upload/',
+
   
   // GetHouseTotalByAdmin:ApiRootUrl + 'product/list/',//管理员得到得到房屋数量，+state
   //修改房屋接口，house
   UpdateHouse:ApiRootUrl +'product/update',
   //添加房屋接口,house
-  AddHouse:ApiRootUrl + 'product/add',
+  AddHouse:ApiRootUrl + 'product/add/1',
   //删除房屋
   delHouse:ApiRootUrl + 'product/delete',
   //所有房屋类型

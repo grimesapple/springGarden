@@ -62,7 +62,8 @@ public class UtilController {
             picture.transferTo(targetFile);
             log.info("上传成功");
             HashMap<String, String> map = new HashMap<>();
-            map.put("path",path+"/"+fileName);
+
+            map.put("filename",fileName);
             //将文件在服务器的存储路径返回
             return ResultVO.ok(map);
         } catch (IOException e) {

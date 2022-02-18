@@ -22,6 +22,7 @@ import com.djq.springGarden.service.ProductService;
 
 
 import javax.annotation.Resource;
+import javax.swing.*;
 
 
 /**
@@ -35,12 +36,15 @@ public class ProductServiceImpl implements ProductService {
     @Resource
     private ProductMapper productMapper;
 
-    /**
+        /**
      * 类型
       */
     @Resource
     private CategoryService categoryService;
 
+    /**
+     * 房间图片
+     */
     @Resource
     private ProductimageMapper productimageMapper;
 
@@ -111,8 +115,22 @@ public class ProductServiceImpl implements ProductService {
      * @return 结果
      */
     @Override
+//    public int insertProduct(Product product,List<String> fileList) {
     public int insertProduct(Product product) {
-        return productMapper.insert(product);
+        productMapper.insert(product);
+        //获取客房id
+        Integer id = product.getId();
+        List<Productimage> productimageList = new ArrayList<>();
+        //图片信息添加
+
+        for (String s : product.getFileList() ) {
+            Productimage productimage = new Productimage();
+            productimage.setProductId(id);
+            productimage.setUrl(s);
+            productimageList.add(productimage);
+        }
+
+        return productimageMapper.insertList(productimageList);
     }
 
     /**
