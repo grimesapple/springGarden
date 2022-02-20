@@ -1,0 +1,12 @@
+@startwbs
+'https://plantuml.com/wbs-diagram
+
+* 青庭民宿网站
+** 网站首页
+** 房源展示页面
+** 房源预定页面
+** 个人中心
+** 我的订单
+
+
+@endwbs

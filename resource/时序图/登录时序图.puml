@@ -1,0 +1,20 @@
+
+
+
+@startuml
+autonumber
+actor 用户 as user
+participant 民宿网站 as client
+control 用户控制器 as con
+database 数据库 as data
+
+user -> client : 输入账号密码
+client -> client : 校验格式
+client -> con : 发送账号和密码
+con -> data : 获取账号和密码
+data --> con : 返回数据
+con -> con : 校验密码和账号
+con --> client : 返回token或者错误码
+client -> client: 保存token或者提示错误
+
+@enduml

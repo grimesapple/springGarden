@@ -1,0 +1,20 @@
+
+
+
+@startuml
+autonumber
+actor 用户 as user
+participant 民宿网站 as client
+control 图片上传控制器 as con
+database 数据库 as data
+
+user -> client : 点击上传按钮
+client -> client : 打开图片选择窗口
+user -> client : 选择图片
+client -> con : 图片上传
+con -> con : 图片保存
+con -> data : 保存图片路径
+con --> client : 返回图片路径
+client --> user: 展示图片
+
+@enduml
