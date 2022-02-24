@@ -1,0 +1,18 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+
+start
+:用户来店准备入住;
+if (是否有预定?) is (是) then
+  :用户出示身份证，查询订单;
+  :选择对应预定订单;
+else (否)
+  :用户选择房间;
+  :管理员在后台系统下单;
+  :完成后，选择对应订单;
+endif
+  :点击入住按钮;
+  :完成入住;
+stop
+
+@enduml

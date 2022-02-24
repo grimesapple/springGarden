@@ -1,0 +1,21 @@
+@startuml
+
+!pragma useVerticalIf on
+start
+:点击注册按钮;
+:弹出注册窗口;
+:输入账号、密码等信息;
+:点击注册;
+if (账号密码格式是否正确) then (正确)
+    if (校验手机号码是否重复) is (是) then
+      :提示手机号码重复;
+    else (否)
+      :注册成功;
+    endif
+else (错误)
+    :提示账号或者密码格式错误;
+endif
+
+stop
+
+@enduml

@@ -1,0 +1,20 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+
+start
+:点击对应客房;
+:跳转至房源详情页面;
+:选择日期;
+:选择入住人数;
+:点击下单;
+if (判断用户信息是否完善?) is (是) then
+  :提示预定成功;
+else (否)
+  :提示请完善信息，并跳转至个人信息页面;
+  :完善信息，点击确定;
+  :完成下单预定，提示预定成功;
+endif
+
+stop
+
+@enduml

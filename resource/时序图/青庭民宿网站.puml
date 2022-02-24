@@ -1,0 +1,10 @@
+@startwbs
+'https://plantuml.com/wbs-diagram
+
+* 青庭民宿后台管理系统
+** 用户管理
+** 订单管理
+** 房源管理
+
+
+@endwbs
