@@ -1,0 +1,10 @@
+@startwbs
+'https://plantuml.com/wbs-diagram
+
+* 个人中心
+** 用户信息修改
+** 上传头像
+** 我的订单
+** 订单退订
+
+@endwbs

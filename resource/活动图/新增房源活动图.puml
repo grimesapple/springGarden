@@ -1,0 +1,18 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+
+start
+:进入房源管理界面;
+:点击新增按钮;
+:在新增窗口中填写房源信息;
+:上传房间图片;
+    if (是否上传成功) then (是)
+       :提示上传成功;
+       else (否)
+       :提示上传失;
+     endif
+    :点击确定;
+    :关闭弹窗，并提示添加成功;
+    :刷新数据，显示新增房源数据;
+stop
+@enduml

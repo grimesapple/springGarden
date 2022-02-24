@@ -1,0 +1,8 @@
+@startwbs
+'https://plantuml.com/wbs-diagram
+
+* 房源预定
+** 房源详情信息
+** 预定下单
+
+@endwbs

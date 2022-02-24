@@ -1,0 +1,14 @@
+@startuml
+
+start
+:进入用户管理页面;
+:在搜索框中输入信息;
+:点击搜索;
+if (是否有数据?) is (是) then
+  :在表格中展示数据;
+else (否)
+  :提示0条数据;
+endif
+stop
+
+@enduml

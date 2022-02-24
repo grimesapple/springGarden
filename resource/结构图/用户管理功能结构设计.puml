@@ -1,0 +1,9 @@
+@startwbs
+'https://plantuml.com/wbs-diagram
+
+* 用户管理
+** 修改用户
+** 冻结解冻
+** 重置密码
+
+@endwbs

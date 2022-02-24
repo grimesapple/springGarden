@@ -1,0 +1,8 @@
+@startwbs
+'https://plantuml.com/wbs-diagram
+
+* 订单管理
+** 入住功能
+** 退房续住
+
+@endwbs

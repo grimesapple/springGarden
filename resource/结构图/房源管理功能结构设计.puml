@@ -1,0 +1,11 @@
+@startwbs
+'https://plantuml.com/wbs-diagram
+
+* 房源管理
+** 新增房源
+** 修改房源信息
+** 上传房源图片
+** 删除房源
+** 查找房源
+
+@endwbs

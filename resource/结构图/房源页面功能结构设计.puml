@@ -1,0 +1,8 @@
+@startwbs
+'https://plantuml.com/wbs-diagram
+
+* 房源页面功能
+** 筛选条件
+** 房源列表展示
+
+@endwbs
