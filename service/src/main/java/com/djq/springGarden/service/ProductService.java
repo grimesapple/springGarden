@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.djq.springGarden.entity.Product;
+import com.djq.springGarden.vo.ProductSearchVo;
 import com.djq.springGarden.vo.ProductVO;
 
 /**
@@ -20,6 +21,15 @@ public interface ProductService {
      * @return 客房;商品信息相关：分类，商品图片，商品规格，商品参数集合
      */
     List<Product> select(Product product);
+
+
+    /**
+     * 客房界面展示列表查询接口
+     * @param productSearchVo 查询条件
+     * @return 返回客房信息，简介，图片，部分属性。
+     */
+    List<Map<String,Object>> search(ProductSearchVo productSearchVo);
+
 
     /**
      * 条件查询客房;商品信息相关：分类，商品图片，商品规格，商品参数:查询单个

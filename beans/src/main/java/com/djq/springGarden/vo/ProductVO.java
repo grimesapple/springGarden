@@ -28,10 +28,10 @@ import java.util.List;
 public class ProductVO extends Product {
 
 
-    /** 房间类型 */
+    /** 房间的类型 */
     @ApiModelProperty("房间类型" )
     private String typeName;
-    /** 房间类型 */
+    /** 房间的类型 */
     @ApiModelProperty("图片列表" )
     private List<Productimage> imgs;
 

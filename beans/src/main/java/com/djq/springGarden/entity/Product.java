@@ -47,7 +47,11 @@ public class Product {
     @ApiModelProperty("库存" )
     @Column(name = "stock" )
     private Integer stock;
-    /** 房间类型 */
+    /** 最大入住人数 */
+    @ApiModelProperty("最大入住人数" )
+    @Column(name = "people_num" )
+    private Integer people;
+    /** 房间的类型 */
     @ApiModelProperty("房间类型" )
     @Column(name = "c_id" )
     private Integer categoryId;
