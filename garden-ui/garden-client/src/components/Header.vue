@@ -10,10 +10,10 @@
 			</div>
 			<div class="slot-area">
 				<div class="tools-item">
-					<span>青庭首页</span>
+					<span @click="toHome">青庭首页</span>
 				</div>
 				<div class="tools-item">
-					<span>民宿房源</span>
+					<span @click="toHouse">民宿房源</span>
 				</div>
 				<div class="tools-item">
 					<span>关于我们</span>
@@ -143,7 +143,24 @@
 				this.$router.push({
 					path: "/MerchantManage",
 				})
+			},
+			toHome() { //去首页
+				this.$router.push({
+					path: "/",
+				})
+			},
+			toHouse() { //去房源页面
+				this.$router.push({
+					path: "/CityHotel",
+					query: {
+						city: 0,
+						region: 0,
+						timeslot: 0, //[{…}, {…}]this.chooseDate["xxx", "aaa"]
+						showLogin: this.showLogin
+					}
+				})
 			}
+
 		},
 		computed: {
 			showLogin: {
@@ -176,7 +193,8 @@
 		z-index: 1;
 		left: 0;
 		right: 0;
-		background: linear-gradient(180deg, rgba(0, 0, 0, .3), transparent);
+		/* background: linear-gradient(180deg, rgba(0, 0, 0, .3), transparent); */
+		background: #edf4ec;
 		color: #fff;
 		height: 90px;
 		min-width: 1180px;
@@ -236,7 +254,7 @@
 
 	.hc-home-header-wrapper span {
 		font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
-		color: #fff;
+		color: #41ac52;
 	}
 
 	.dropdown-notice {
