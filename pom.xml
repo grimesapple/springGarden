@@ -21,7 +21,6 @@
         <module>mapper</module>
         <module>service</module>
         <module>api</module>
-        <module>mapper</module>
     </modules>
 
     <properties>

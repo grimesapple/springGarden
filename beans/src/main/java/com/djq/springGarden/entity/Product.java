@@ -1,11 +1,15 @@
 package com.djq.springGarden.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.*;
 
@@ -55,6 +59,12 @@ public class Product {
     @ApiModelProperty("房间类型" )
     @Column(name = "c_id" )
     private Integer categoryId;
+
+    @ApiModelProperty("时间" )
+    @Column(name = "create_time" )
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(locale="zh", timezone="GMT+8", pattern="yyyy-MM-dd HH:mm:ss")
+    private Date createTime;
 
     private List<String> fileList;
 

@@ -3,6 +3,7 @@ package com.djq.springGarden.controller;
 import java.util.List;
 
 import com.djq.springGarden.entity.Order;
+import com.djq.springGarden.vo.OrderSearchVo;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -63,8 +64,8 @@ public class OrderController {
      */
     @ApiOperation("新增订单" )
     @PostMapping("/add" )
-    public ResultVO<Order> add(Order order) {
-        return orderService.insertOrder(order) > 0 ? ResultVO.ok("新增成功" ) : ResultVO.error("新增失败" );
+    public ResultVO<Order> add(OrderSearchVo orderSearchVo) {
+        return orderService.insertOrder(orderSearchVo) > 0 ? ResultVO.ok("新增成功" ) : ResultVO.error("新增失败" );
     }
 
     /**

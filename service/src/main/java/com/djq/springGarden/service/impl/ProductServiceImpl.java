@@ -124,6 +124,7 @@ public class ProductServiceImpl implements ProductService {
                 if (productSearchVo.getStartTime().before(ord.getStartTime()) && productSearchVo.getEndTime().after(ord.getEndTime())) {
                     //有订单
                     flag = true;
+                    break;
                 }
             }
             if (flag) {

@@ -3,6 +3,7 @@ package com.djq.springGarden.service;
 import java.util.List;
 
 import com.djq.springGarden.entity.Order;
+import com.djq.springGarden.vo.OrderSearchVo;
 
 /**
  * 订单Service接口
@@ -31,10 +32,10 @@ public interface OrderService {
     /**
      * 新增订单
      *
-     * @param order 订单
+     * @param orderSearchVo 订单信息
      * @return 结果
      */
-    int insertOrder(Order order);
+    int insertOrder(OrderSearchVo orderSearchVo);
 
     /**
      * 修改订单
