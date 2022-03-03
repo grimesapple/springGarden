@@ -5,13 +5,20 @@ import java.util.*;
 import javax.annotation.Resource;
 
 import com.djq.springGarden.entity.Orderitem;
+import com.djq.springGarden.entity.User;
 import com.djq.springGarden.mapper.OrderitemMapper;
+import com.djq.springGarden.mapper.UserMapper;
+import com.djq.springGarden.service.UserService;
 import com.djq.springGarden.util.RandomUtils;
+import com.djq.springGarden.vo.OrderConditionVo;
 import com.djq.springGarden.vo.OrderSearchVo;
+import com.djq.springGarden.vo.OrderVo;
+import lombok.Data;
 import org.springframework.stereotype.Service;
 import com.djq.springGarden.mapper.OrderMapper;
 import com.djq.springGarden.entity.Order;
 import com.djq.springGarden.service.OrderService;
+import tk.mybatis.mapper.entity.Example;
 
 
 /**
@@ -27,6 +34,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Resource
     private OrderitemMapper orderitemMapper;
+
+    @Resource
+    private UserMapper userMapper;
 
     /**
      * 条件查询订单列表
@@ -48,6 +58,50 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order selectOne(Order order) {
         return orderMapper.selectOne(order);
+    }
+
+    /**
+     * 订单列表详情
+     *
+     * @return 完成信息
+     */
+    public List<Order> list(OrderConditionVo orderConditionVo) {
+
+        //根据手机尾号
+        Integer number = orderConditionVo.getNumber();
+        //用户账号姓名
+        String username = orderConditionVo.getUsername();
+        Example userExample = new Example(User.class);
+        Example.Criteria criteria4User = userExample.createCriteria();
+        criteria4User.andLike("name","%"+username+"%");
+        List<User> users = userMapper.selectByExample(userExample);
+        ArrayList<String> userIdList = new ArrayList<>();
+        for (User user : users) {
+            //封装id
+            Integer id = user.getId();
+            userIdList.add(id.toString());
+        }
+
+        //客房名字
+
+        //时间
+        Data firstTime = orderConditionVo.getFirstTime();
+        Data lastTime = orderConditionVo.getLastTime();
+
+        //拼接条件
+        Example example = new Example(Order.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andLike("number", number + "%");
+        if (firstTime != null && lastTime != null) {
+            criteria.andBetween("startTime", firstTime, lastTime);
+        }
+        if (userIdList.size() != 0) {
+            criteria.andIn("userId",userIdList);
+        }
+
+        orderMapper.selectByExample(example);
+
+        return null;
     }
 
 
