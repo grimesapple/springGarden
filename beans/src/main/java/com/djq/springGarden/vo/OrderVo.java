@@ -7,6 +7,9 @@ import com.djq.springGarden.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.mockito.internal.matchers.Or;
+
+import java.util.List;
 
 /**
  * 订单完整信息格式
@@ -31,13 +34,7 @@ public class OrderVo extends Order {
     /**
      * 入住信息
      */
-    private Orderitem orderitem;
-
-
-
-
-
-
+    private List<Orderitem>  orderitems;
 
 
 

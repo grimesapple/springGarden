@@ -5,8 +5,10 @@ import java.util.*;
 import javax.annotation.Resource;
 
 import com.djq.springGarden.entity.Orderitem;
+import com.djq.springGarden.entity.Product;
 import com.djq.springGarden.entity.User;
 import com.djq.springGarden.mapper.OrderitemMapper;
+import com.djq.springGarden.mapper.ProductMapper;
 import com.djq.springGarden.mapper.UserMapper;
 import com.djq.springGarden.service.UserService;
 import com.djq.springGarden.util.RandomUtils;
@@ -37,6 +39,10 @@ public class OrderServiceImpl implements OrderService {
 
     @Resource
     private UserMapper userMapper;
+
+    @Resource
+    private ProductMapper productMapper;
+
 
     /**
      * 条件查询订单列表
@@ -83,6 +89,17 @@ public class OrderServiceImpl implements OrderService {
         }
 
         //客房名字
+        String productName = orderConditionVo.getProductName();
+        Example productExample = new Example(Product.class);
+        Example.Criteria criteria4product = productExample.createCriteria();
+        criteria4product.andLike("name","%"+productName+"%");
+        List<Product> products = productMapper.selectByExample(productExample);
+        ArrayList<String> productIdList = new ArrayList<>();
+        for (Product product : products) {
+            //封装id
+            Integer id = product.getId();
+            productIdList.add(id.toString());
+        }
 
         //时间
         Data firstTime = orderConditionVo.getFirstTime();
@@ -98,10 +115,15 @@ public class OrderServiceImpl implements OrderService {
         if (userIdList.size() != 0) {
             criteria.andIn("userId",userIdList);
         }
+        if (productIdList.size() != 0) {
+            criteria.andIn("userId",productIdList);
+        }
 
-        orderMapper.selectByExample(example);
+        List<Order> orderList = orderMapper.selectByExample(example);
 
-        return null;
+        //封装订单信息
+
+        return orderList;
     }
 
 
