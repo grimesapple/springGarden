@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS `order`;
-CREATE TABLE `order`(
+DROP TABLE IF EXISTS `orderT`;
+CREATE TABLE `orderT`(
     `id` INT NOT NULL AUTO_INCREMENT  COMMENT '主键' ,
     `p_id` INT    COMMENT '客房id' ,
     `u_id` INT    COMMENT '用户账号' ,

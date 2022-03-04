@@ -3,6 +3,8 @@ package com.djq.springGarden.controller;
 import java.util.List;
 
 import com.djq.springGarden.entity.Product;
+import com.djq.springGarden.vo.OrderSearchVo;
+import com.djq.springGarden.vo.ProductSearchVo;
 import com.djq.springGarden.vo.ProductVO;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageInfo;
@@ -67,6 +69,27 @@ public class ProductController {
         map.put("list", list);
         return ResultVO.ok(map, "查询成功");
     }
+
+
+    /**
+     * 管理员查询所有房屋列表
+     *
+     * @return 返回结果
+     */
+    @GetMapping("/searchForPage")
+    @ApiOperation("房屋信息列表查询")
+    public ResultVO<Map<String, Object>> searchForPage(ProductSearchVo ProductSearchVo
+//                                                       @RequestParam(value = "pageNum", required = false, defaultValue = "1") Integer pageNum,
+//                                                       @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
+                                                       ) {
+        Map<String, Object> map = new HashMap<>();
+        List<Map<String, Object>> list = productService.search(ProductSearchVo);
+        map.put("total", list.size());
+        map.put("list", list);
+        return ResultVO.ok(map, "查询成功");
+    }
+
+
 
 
     /**

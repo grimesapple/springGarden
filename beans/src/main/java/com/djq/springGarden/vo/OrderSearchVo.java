@@ -1,6 +1,6 @@
 package com.djq.springGarden.vo;
 
-import com.djq.springGarden.entity.Order;
+import com.djq.springGarden.entity.OrderT;
 import com.djq.springGarden.entity.Orderitem;
 import lombok.Data;
 
@@ -17,7 +17,7 @@ public class OrderSearchVo {
     /**
      * 订单
      */
-    private Order order;
+    private OrderT orderT;
 
     /**
      * 订单信息

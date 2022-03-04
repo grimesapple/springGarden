@@ -21,7 +21,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ApiModel("订单对象")
-public class Order {
+public class OrderT {
 
     /** 主键 */
     @ApiModelProperty("主键" )

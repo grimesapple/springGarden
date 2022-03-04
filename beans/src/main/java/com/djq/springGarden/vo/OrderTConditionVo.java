@@ -1,12 +1,10 @@
 package com.djq.springGarden.vo;
 
-import com.djq.springGarden.entity.Order;
+import com.djq.springGarden.entity.OrderT;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
-
-import javax.annotation.Nullable;
 
 /**
  * 条件查询订单
@@ -17,7 +15,7 @@ import javax.annotation.Nullable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderConditionVo extends Order {
+public class OrderTConditionVo extends OrderT {
 
     /**
      * 身份证号码

@@ -1,13 +1,12 @@
 package com.djq.springGarden.vo;
 
-import com.djq.springGarden.entity.Order;
+import com.djq.springGarden.entity.OrderT;
 import com.djq.springGarden.entity.Orderitem;
 import com.djq.springGarden.entity.Product;
 import com.djq.springGarden.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.mockito.internal.matchers.Or;
 
 import java.util.List;
 
@@ -20,7 +19,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderVo extends Order {
+public class OrderTVo extends OrderT {
     /**
      * 客房信息
      */

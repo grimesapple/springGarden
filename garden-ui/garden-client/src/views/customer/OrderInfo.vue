@@ -11,8 +11,8 @@
             <el-menu-item index="2"><a @click="loginOut">退出</a></el-menu-item>
             <el-menu-item index="3"><a href="/MerchantManage" target="_blank">商户系统</a></el-menu-item>
         </el-menu>
-        <div class="order-fill-page">
-            <div class="order-main">
+        <div class="orderT-fill-page">
+            <div class="orderT-main">
                 <div class="orderinfo-cont">
                     <div class="col-header">
                         <span class="col-title">预订信息</span>
@@ -58,7 +58,7 @@
                         WIDbody：<input type="text" name="WIDbody" v-model="currentHouseData.title"><br/>
                         <input type="submit" value="下单">
                     </form>
-                    <div class="submit-order-btn" @click="placeOrder">提交订单</div>
+                    <div class="submit-orderT-btn" @click="placeOrder">提交订单</div>
                 </div>
             </div>
         </div>
@@ -87,10 +87,10 @@
                 )
             },
             placeOrder(){/*提交订单*/
-                let order={"id":null,"timeSlot":this.currentHouseData.chooseDate.toString(),"money":this.totalPrice,"title":this.currentHouseData.title,
+                let orderT={"id":null,"timeSlot":this.currentHouseData.chooseDate.toString(),"money":this.totalPrice,"title":this.currentHouseData.title,
                 "username":this.currentHouseData.username,"customerId":this.$store.state.userInfo.username,"state":1}
                 const _this=this
-                axios.post(this.API.AddOrder,order).then(function (resp) {
+                axios.post(this.API.AddOrder,orderT).then(function (resp) {
                     if(resp.data=="error"){
                         _this.$notify.error({
                             title: '错误',
@@ -118,11 +118,11 @@
 </script>
 
 <style scoped>
-    .order-fill-page {
+    .orderT-fill-page {
         margin: 0 auto;
         width: 1190px;
     }
-    .order-main {
+    .orderT-main {
         margin: 15px 0;
         padding: 40px 30px;
         width: 800px;
@@ -152,7 +152,7 @@
         font-size: 14px;
         color: #333;
     }
-    .submit-order-btn{
+    .submit-orderT-btn{
         margin: 18px auto 0;
         width: 124px;
         height: 36px;

@@ -14,8 +14,11 @@ const API = {
 	GetNotice: ApiRootUrl + 'notice/getNotice/', //用户通知接口,+username
 	AddNotice: ApiRootUrl + 'notice/addNotice', //添加通知接口，notice
 
-	GetHouseTotal: ApiRootUrl + 'house/getHouseTotal', //得到房屋总数量接口,allFilters
-	GetHouseList: ApiRootUrl + 'house/getHouseList/', //得到房屋列表接口，1/'+this.pageSize,this.allFilters
+	//得到房屋总数量接口,allFilters
+	GetHouseTotal: ApiRootUrl + 'house/getHouseTotal', 
+	//得到房屋列表接口，1/'+this.pageSize,this.allFilters
+	GetHouseList: ApiRootUrl + 'product/searchForPage/', 
+	
 	GetHouse: ApiRootUrl + 'house/getHouse/', //得到单个房屋接口，+this.$store.state.userInfo.username+'/null'
 	//管理员得到房屋接口
 	GetHouseByAdmin: ApiRootUrl + 'product/listByAdmin/',

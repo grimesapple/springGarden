@@ -50,19 +50,18 @@
 				<section class="g-unitList-selectUI-layout">
 					<section class="selectUI">
 						<span class="title">日期</span>
-							<section class="date-search-wrapper">
-								<div class="block">
-									<el-date-picker format="yyyy-MM-dd" value-format="yyyy-MM-dd" v-model="chooseDate"
-										type="daterange" range-separator="-" start-placeholder="开始日期"
-										end-placeholder="结束日期" :picker-options="pickerOptions"
-										@change="currentPage=1,searchHotelByAllFilters()">
-									</el-date-picker>
-								</div>
-							</section>
+						<section class="date-search-wrapper">
+							<div class="block">
+								<el-date-picker format="yyyy-MM-dd" value-format="yyyy-MM-dd" v-model="chooseDate"
+									type="daterange" range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期"
+									:picker-options="pickerOptions" @change="currentPage=1,searchHotelByAllFilters()">
+								</el-date-picker>
+							</div>
+						</section>
 					</section>
 				</section>
 
-<!-- 				<section class="g-unitList-select-location-layout">
+				<!-- 				<section class="g-unitList-select-location-layout">
 					<section class="locationUI">
 						<span class="title">位置</span>
 						<el-dropdown @command="chooseLocation" placement="bottom">
@@ -359,12 +358,12 @@
 							<div class="unit-item-pic-wrapper">
 								<div class="swiper-container pic-swiper swiper-container-horizontal"
 									@click="toDetail(item)">
-									<el-carousel trigger="click" :autoplay="false" height="296px">
+<!-- 									<el-carousel trigger="click" :autoplay="false" height="296px">
 										<el-carousel-item v-for="imgItem in item.img.split(',')">
 											<img ref="imgHeight" :src=imgItem width="100%" height="100%"
 												object-fit="cover">
 										</el-carousel-item>
-									</el-carousel>
+									</el-carousel> -->
 								</div>
 								<i class="collection-icon"
 									:class="isCollection[key]?'icon-collection':'icon-no-collection'"
@@ -837,12 +836,13 @@
 			async getHouseData(filter, page) { //得到房屋数据,参数筛选条件,排序方式,页码
 				this.loading = true
 				const _this = this
-				await axios.post(this.API.GetHouseTotal, this.allFilters).then(function(resp) {
-					_this.total = resp.data //得到记录条数
-				})
-				await axios.post(this.API.GetHouseList + page + '/' + this.pageSize, this.allFilters).then(function(
+				// await axios.post(this.API.GetHouseTotal, this.allFilters).then(function(resp) {
+				// 	_this.total = resp.data //得到记录条数
+				// })
+				await axios.get(this.API.GetHouseList).then(function(
 					resp) {
-					_this.houseData = resp.data //得到记录
+					console.log(resp.data.result);
+					_this.houseData = resp.data.result.list //得到记录
 				})
 				console.log(this.houseData)
 				//排序和筛选
@@ -850,19 +850,19 @@
 				//排序由数据库排序
 				//matchingList，houseList,currentCityNameAndCurrentRegion由前端筛选
 				let len = this.houseData.length
-				for (let i = 0; i < len; i++) {
-					if (!(this.isContained(this.houseData[i].matchingList.split(","), filter.matchingList) && this
-							.isContained(this.houseData[i].houseList.split(","), filter.houseList) &&
-							this.isContained(this.houseData[i].cityAndRegion.split(","), [filter.currentCityName,
-								filter.currentRegion
-							]))) {
-						//console.log(this.houseData[i])
-						this.houseData.splice(i, 1) //移除不满足匹配条件的
-						i--
-						len--
-					}
-				}
-				await this.getCollection() //得到收藏
+				// for (let i = 0; i < len; i++) {
+				// 	if (!(this.isContained(this.houseData[i].matchingList.split(","), filter.matchingList) && this
+				// 			.isContained(this.houseData[i].houseList.split(","), filter.houseList) &&
+				// 			this.isContained(this.houseData[i].cityAndRegion.split(","), [filter.currentCityName,
+				// 				filter.currentRegion
+				// 			]))) {
+				// 		//console.log(this.houseData[i])
+				// 		this.houseData.splice(i, 1) //移除不满足匹配条件的
+				// 		i--
+				// 		len--
+				// 	}
+				// }
+				// await this.getCollection() //得到收藏
 				this.loading = false
 			},
 			//得到收藏
