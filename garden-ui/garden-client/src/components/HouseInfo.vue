@@ -4,15 +4,13 @@
         <!--步骤条-->
         <div class="g-comStepNav-layout">
             <el-steps :active="active" finish-status="success" class="step-nav">
-                <el-step title="房源位置"></el-step><!--地图定位-->
                 <el-step title="房源概况"></el-step><!--出租类型，床数，人数，户型，标题-->
                 <el-step title="设施和服务"></el-step><!--配套列表，房型列表-->
                 <el-step title="照片和描述"></el-step><!--图片，描述-->
-                <el-step title="时段和价格"></el-step><!--价格，时段-->
             </el-steps>
         </div>
         <!--内容-->
-        <section class="g-hcComModal-layout" v-show="active===0">
+<!--        <section class="g-hcComModal-layout" v-show="active===0">
             <div class="region-left">
                 <p class="title">你的房源在哪里？</p>
                 <h5>国家/城市</h5>
@@ -28,68 +26,65 @@
                 <el-tag type="info" style="min-width: 150px;margin-top: 20px">{{cityAndRegion}}</el-tag>
             </div>
             <div class="region-right" id="map"></div>
+        </section> -->
+        <section class="g-hcComModal-layout" v-show="active===0">
+            <div class="situation-item">
+                <div class="item-title">
+                    <h2>房间号</h2>
+                </div>
+				<div class="item-contain">
+				    <el-input v-model="title" placeholder="请输入房间号" style="width: 300px" size="small" maxlength="20" clearable></el-input>
+				</div>
+				<div class="item-title">
+				    <h2>房间标题</h2>
+				</div>
+				<div class="item-contain">
+				    <el-input v-model="title" placeholder="请输入标题" style="width: 300px" size="small" maxlength="20" clearable></el-input>
+				</div>
+<!--                <div class="item-contain">
+                   <el-radio v-model="rentalType" label="complete">整套</el-radio>
+                    <el-radio v-model="rentalType" label="single">单间</el-radio>
+					
+                </div> -->
+				<div class="item-title">
+				    <h2>宜住人数</h2>
+				</div>
+				<div class="item-contain">
+				    <el-select v-model="peopleNumber" placeholder="请选择人数" size="small">
+				        <el-option
+				                v-for="item in Options"
+				                :key="item.value"
+				                :label="item.value+'人'"
+				                :value="item.value"
+				        >
+				        </el-option>
+				    </el-select>
+				</div>				
+				<div class="item-title">
+				    <h2>每日出租价格/晚</h2>
+				</div>
+				<div class="item-contain">
+				    <el-input v-model="housePrice" placeholder="请输入价格" style="width: 150px" size="small" maxlength="6" clearable></el-input>
+				</div>
+				
+            </div>
         </section>
         <section class="g-hcComModal-layout" v-show="active===1">
             <div class="situation-item">
-                <div class="item-title">
-                    <h2>出租方式</h2>
-                </div>
-                <div class="item-contain">
-                    <el-radio v-model="rentalType" label="complete">整套</el-radio>
-                    <el-radio v-model="rentalType" label="single">单间</el-radio>
-                </div>
-                <div class="item-title">
-                    <h2>床数</h2>
-                </div>
-                <div class="item-contain">
-                    <el-select v-model="bedNumber" placeholder="请选择床数" size="small">
-                        <el-option
-                                v-for="item in Options"
-                                :key="item.value"
-                                :label="item.value+'床'"
-                                :value="item.value"
-                                >
-                        </el-option>
-                    </el-select>
-                </div>
-                <div class="item-title">
-                    <h2>宜住人数</h2>
-                </div>
-                <div class="item-contain">
-                    <el-select v-model="peopleNumber" placeholder="请选择人数" size="small">
-                        <el-option
-                                v-for="item in Options"
-                                :key="item.value"
-                                :label="item.value+'人'"
-                                :value="item.value"
-                        >
-                        </el-option>
-                    </el-select>
-                </div>
-                <div class="item-title">
-                    <h2>户型</h2>
-                </div>
-                <div class="item-contain">
-                    <el-select v-model="houseType" placeholder="请选择户型" size="small">
-                        <el-option
-                                v-for="item in Options"
-                                :key="item.value"
-                                :label="item.value+'居'"
-                                :value="item.value"
-                        >
-                        </el-option>
-                    </el-select>
-                </div>
-                <div class="item-title">
-                    <h2>房屋标题</h2>
-                </div>
-                <div class="item-contain">
-                    <el-input v-model="title" placeholder="请输入标题" style="width: 300px" size="small" maxlength="20" clearable></el-input>
-                </div>
-            </div>
-        </section>
-        <section class="g-hcComModal-layout" v-show="active===2">
-            <div class="situation-item">
+				<div class="item-title">
+				    <h2>房间类型</h2>
+				</div>
+				<div class="item-contain">
+				    <el-select v-model="houseType" placeholder="请选择类型" size="small">
+				        <el-option
+				                v-for="item in Options"
+				                :key="item.value"
+				                :label="item.value+'居'"
+				                :value="item.value"
+				        >
+				        </el-option>
+				    </el-select>
+				</div>
                 <div class="item-title">
                     <h2>配套设施</h2>
                 </div>
@@ -109,7 +104,21 @@
                         <el-checkbox label="免费停车" class="item-check"></el-checkbox>
                     </el-checkbox-group>
                 </div>
-                <div class="item-title" style="margin-top: 50px">
+				<div class="item-title">
+				    <h2>床数</h2>
+				</div>
+				<div class="item-contain">
+				    <el-select v-model="bedNumber" placeholder="请选择床数" size="small">
+				        <el-option
+				                v-for="item in Options"
+				                :key="item.value"
+				                :label="item.value+'床'"
+				                :value="item.value"
+				                >
+				        </el-option>
+				    </el-select>
+				</div>
+<!--                <div class="item-title" style="margin-top: 50px">
                     <h2>房型</h2>
                 </div>
                 <div class="item-contain">
@@ -124,10 +133,10 @@
                         <el-checkbox label="帐篷营地" class="item-check" style="margin-bottom: 20px"></el-checkbox>
                         <el-checkbox label="老洋房" class="item-check"></el-checkbox>
                     </el-checkbox-group>
-                </div>
+                </div> -->
             </div>
         </section>
-        <section class="g-hcComModal-layout" v-show="active===3">
+        <section class="g-hcComModal-layout" v-show="active===2">
             <div class="photo-wrapper" style="width: 100%">
                 <div class="item-title">
                     <div class="item-title-left">
@@ -210,14 +219,9 @@
                 </div>
             </div>
         </section>
-        <section class="g-hcComModal-layout" v-show="active===4">
+        <section class="g-hcComModal-layout" v-show="active===3">
             <div class="situation-item">
-                <div class="item-title">
-                    <h2>每日出租价格/晚</h2>
-                </div>
-                <div class="item-contain">
-                    <el-input v-model="housePrice" placeholder="请输入价格" style="width: 150px" size="small" maxlength="6" clearable></el-input>
-                </div>
+             
                 <div class="item-title">
                     <h2>请选择出租时段</h2>
                 </div>
@@ -320,6 +324,7 @@
             };
         },
         mounted() {
+			/*
             let _this=this
             // 百度地图API功能
             let map = new BMap.Map("map");// 创建Map实例
@@ -367,6 +372,7 @@
                 });
                 local.search(myValue);
             }
+			*/
             //定位当前位置1
 /*            function myFun(result){
                 var cityName = result.name;

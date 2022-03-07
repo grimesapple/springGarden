@@ -41,7 +41,6 @@ public class OrderServiceImpl implements OrderService {
     @Resource
     private ProductMapper productMapper;
 
-
     /**
      * 条件查询订单列表
      *

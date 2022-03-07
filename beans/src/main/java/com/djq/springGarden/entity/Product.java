@@ -32,7 +32,7 @@ public class Product {
     @GeneratedValue(generator = "JDBC" )
     private Integer id;
     /** 房间名称 */
-    @ApiModelProperty("房间名称" )
+    @ApiModelProperty("房间号" )
     @Column(name = "name" )
     private String name;
     /** 标题 */
@@ -48,9 +48,9 @@ public class Product {
     @Column(name = "promote_price" )
     private BigDecimal promotePrice;
     /** 库存 */
-    @ApiModelProperty("库存" )
-    @Column(name = "stock" )
-    private Integer stock;
+    @ApiModelProperty("床的数量" )
+    @Column(name = "bed_number" )
+    private Integer bedNumber;
     /** 最大入住人数 */
     @ApiModelProperty("最大入住人数" )
     @Column(name = "people_num" )
@@ -60,7 +60,7 @@ public class Product {
     @Column(name = "c_id" )
     private Integer categoryId;
 
-    @ApiModelProperty("时间" )
+    @ApiModelProperty("创建时间" )
     @Column(name = "create_time" )
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @JsonFormat(locale="zh", timezone="GMT+8", pattern="yyyy-MM-dd HH:mm:ss")

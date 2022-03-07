@@ -126,17 +126,17 @@ const routes = [
         name:"HouseManager",
         component:HouseManager,
       },
-      {
-        path:'/HouseInfo/:operation',
-        name:"HouseInfo",
-        component:HouseInfo,
-        props:function(route){
-          return {
-            operation:route.params.operation,
-            houseData:route.query.data,
-          }
-        },
-      },
+      // {
+      //   path:'/HouseInfo/:operation',
+      //   name:"HouseInfo",
+      //   component:HouseInfo,
+      //   props:function(route){
+      //     return {
+      //       operation:route.params.operation,
+      //       houseData:route.query.data,
+      //     }
+      //   },
+      // },
       {
         path:'/MerchantMessage',
         name:"MerchantMessage",
@@ -179,6 +179,17 @@ const routes = [
           }
         },
       },
+	  {
+	    path:'/HouseInfo/:operation',
+	    name:"HouseInfo",
+	    component:HouseInfo,
+	    props:function(route){
+	      return {
+	        operation:route.params.operation,
+	        houseData:route.query.data,
+	      }
+	    },
+	  },
       {
         path:'/Notice/:type',
         name:"Notice",
@@ -191,6 +202,7 @@ const routes = [
       },
     ]
   },
+
   {
     path:"*",
     component:Page404

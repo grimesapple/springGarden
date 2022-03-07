@@ -29,7 +29,7 @@
                 <el-menu router :default-openeds="['0','1','2']"
                          background-color="#545c64"
                          text-color="#fff"
-                         active-text-color="#ffd04b"><!--默认打开菜单--->
+                         active-text-color="#ffd04b"><!--默认打开菜单-->
                     <el-submenu index="0">
                         <template slot="title">
                             <i class="el-icon-menu"></i>
@@ -49,7 +49,7 @@
                             <i class="el-icon-s-home"></i>
                             我的房源
                         </el-menu-item>
-                        <el-menu-item index="/HouseInfo/addHouse" :class="$route.path=='/HouseInfo/addHouse'?'is-active':''">
+                       <el-menu-item index="/HouseInfo/addHouse" :class="$route.path=='/HouseInfo/addHouse'?'is-active':''">
                             <i class="el-icon-s-opportunity"></i>
                             新增房源
                         </el-menu-item>
