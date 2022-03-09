@@ -2,6 +2,7 @@ package com.djq.springGarden.vo;
 
 import com.djq.springGarden.entity.Product;
 import com.djq.springGarden.entity.Productimage;
+import com.djq.springGarden.entity.Property;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -25,7 +27,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @ApiModel("客房;商品信息相关：分类，商品图片，商品规格，商品参数对象")
-public class ProductVO extends Product {
+public class ProductVO extends Product implements Serializable {
 
 
     /** 房间的类型 */

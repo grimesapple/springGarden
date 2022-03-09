@@ -134,8 +134,12 @@ public class OrderServiceImpl implements OrderService {
     public int insertOrder(OrderSearchVo orderSearchVo) {
         //插入订单
         OrderT orderT = orderSearchVo.getOrderT();
+        //预定或者入住的结束时间
+        Date startTime = new Date();
+        //预定或者入住的开始时间
+        Date endTime = new Date();
         //校验对应房间是否已经被预定
-        if (!check(orderT)) {
+        if (!check(startTime,endTime,orderT.getProductId())) {
             //有冲突，不能通过预定
             return 0;
         }
@@ -213,29 +217,28 @@ public class OrderServiceImpl implements OrderService {
     /**
      * 判断当前选定时间是否可以入住是可预定
      *
+     * @param endTime 预定或者入住的结束时间
+     * @param startTime 预定或者入住的开始时间
+     * @param productId 房间id
      * @return true:无冲突，可以预定.false：有冲突。
      */
-    public boolean check(OrderT orderT) {
-        //预定或者入住的开始时间
-        Date startTime = orderT.getStartTime();
-        //预定或者入住的结束时间
-        Date endTime = orderT.getEndTime();
-
+    @Override
+    public boolean check(Date startTime,Date endTime,Integer productId) {
         //查询对应的房间列表：预定
         OrderT orderTForSearch = new OrderT();
-        orderTForSearch.setProductId(orderT.getProductId());
+        orderTForSearch.setProductId(productId);
         orderTForSearch.setStatus(1);
-        List<OrderT> orderTList = select(orderT);
+        List<OrderT> orderTList = select(orderTForSearch);
         //查询对应的房间列表：已入住
         orderTForSearch.setStatus(2);
-        List<OrderT> list2 = select(orderT);
+        List<OrderT> list2 = select(orderTForSearch);
         //两种订单合并
         orderTList.addAll(list2);
         //订单需要根据时间进行排序：前一个订单和后一个订单的时间不会有交叉，最多是相等。(升序)
         orderTList.sort(Comparator.comparing(OrderT::getStartTime));
 
         //遍历订单在选定时间中是否有冲突
-        boolean flag = false;
+        boolean flag = true;
         for (int i = orderTList.size() - 1; i > 0; i++) {
             //当前订单
             OrderT firstOrderT = orderTList.get(i);
@@ -248,6 +251,7 @@ public class OrderServiceImpl implements OrderService {
                 flag = true;
                 break;
             }
+            flag = false;
         }
         return flag;
     }

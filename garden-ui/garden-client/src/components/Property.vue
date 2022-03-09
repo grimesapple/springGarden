@@ -2,64 +2,44 @@
 <template>
 	<article style="height: 90%">
 		<div style="height: 50px;">
-			<el-page-header content="房源管理">
+			<el-page-header content="房间属性">
 			</el-page-header>
 		</div>
 		<div class="loading" v-loading="loading" v-show="loading"></div>
 		<!--搜索-->
-		<div class="search" v-if="operation=='seeAll'">
-			<span>房间名称：</span>
-			<el-input placeholder="请输入内容" v-model="title" style="width: 250px" clearable>
+		<div class="search">
+			<span>属性名称：</span>
+			<el-input placeholder="请输入内容" v-model="name" style="width: 250px" clearable>
 			</el-input>
 			<span>房间类型：</span>
-			<el-input placeholder="请输入内容" v-model="title" style="width: 250px" clearable>
+			<el-input placeholder="请输入内容" v-model="name" style="width: 250px" clearable>
 			</el-input>
 
 			<div style="margin-left: 20px;height: 40px;padding-top: 5px">
-				<el-button type="primary" icon="el-icon-search" size="mini" @click="getHouseData()">搜索</el-button>
+				<el-button type="primary" icon="el-icon-search" size="mini" @click="getData()">搜索</el-button>
 			</div>
 			<span>共{{total}}条搜索结果</span>
 		</div>
 		<!-- 新增 -->
-<!-- 		<div class="search" v-if="operation=='seeAll'">
+		<div class="search">
 			<div style="height: 40px;padding-top: 5px">
 				<el-button type="primary" icon="el-icon-plus" size="mini"
 					@click="dialogVisible = true,dialogType='add'">添加</el-button>
 			</div>
-		</div> -->
+
+		</div>
 
 		<!--内容区域-->
 		<el-table :data="tableData" height="90%" border stripe>
-			<el-table-column prop="house.id" label="房屋id" width="70" align="center"></el-table-column>
-			<el-table-column prop="house.name" label="房屋名字" align="center"></el-table-column>
-			<el-table-column prop="house.subTitle" label="房屋标题" align="center"></el-table-column>
-			<el-table-column label="房屋照片" align="center">
-				<template slot-scope="scope">
-					<el-carousel trigger="click" :autoplay="false" height="96px" indicator-position="none">
-						<el-carousel-item v-for="(imgItem,key) in scope.row.img" :key="key">
-							<img ref="imgHeight" :src=imgItem width="100%" height="100%" object-fit="cover"
-								v-show="imgItem!=null">
-						</el-carousel-item>
-					</el-carousel>
-				</template>
-			</el-table-column>
-			<el-table-column prop="house.bedNumber" label="床数量" align="center"></el-table-column>
-			<el-table-column prop="house.people" label="最大入住人数" align="center"></el-table-column>
-			<el-table-column prop="house.orignalPrice" label="原价格(元/晚)" align="center"></el-table-column>
-			<el-table-column prop="house.promotePrice" label="促销价格(元/晚)" align="center"></el-table-column>
-			<el-table-column prop="tag" label="其他属性" align="center">
-				<template slot-scope="scope">
-					<el-tag size="mini" v-for="(imgItem,key) in scope.row.property" :key="key" :type="imgItem.propertyName === '家' ? 'primary' : 'success'" disable-transitions>{{imgItem.propertyName}}
-					</el-tag>
-				</template>
-			</el-table-column>
-			<el-table-column prop="content" label="房间描述" align="center"></el-table-column>
+			<el-table-column prop="id" label="属性id" width="70" align="center"></el-table-column>
+			<el-table-column prop="cName" label="房间类型" align="center"></el-table-column>
+			<el-table-column prop="name" label="属性名称" align="center"></el-table-column>
 			<el-table-column label="操作" align="center">
 				<template slot-scope="scope">
 					<el-button @click="dialogType='edit', set(form, scope.row), dialogVisible=true" type="text"
 						size="small">修改</el-button>
 					<el-popconfirm title="这是一段内容确定删除吗？" @confirm="del(scope.row)">
-						<el-button type="text" size="small" slot="reference">删除</el-button>
+						<el-button   type="text"  size="small" slot="reference" >删除</el-button>
 					</el-popconfirm>
 				</template>
 			</el-table-column>
@@ -68,42 +48,19 @@
 		<el-pagination background layout="prev, pager, next" :page-size=pageSize :total="total"
 			:current-page="currentPage" @current-change="page" @next-click="currentPage += 1, page(currentPage)">
 		</el-pagination>
+		<!-- 新增窗口 -->
 		<el-dialog :visible.sync="dialogVisible" width="28%">
 			<el-form ref="form" :model="form" label-width="80px">
-				<el-form-item label="房间名称">
-					<el-input v-model="form.name" placeholder="房间名称"></el-input>
-				</el-form-item>
-				<el-form-item label="房间标题">
-					<el-input v-model="form.subTitle" placeholder="房间标题"></el-input>
-				</el-form-item>
-				<el-form-item label="房间价格">
-					<el-input v-model="form.orignalPrice" placeholder="房间价格,单位:晚/元"></el-input>
-				</el-form-item>
-				<el-form-item label="促销价格">
-					<el-input v-model="form.promotePrice" placeholder="促销价格,单位:晚/元"></el-input>
-				</el-form-item>
-				<el-form-item label="房间数量">
-					<el-input v-model="form.stock" placeholder="数量,单位:间"></el-input>
-				</el-form-item>
 				<el-form-item label="房间类型">
-					<el-select v-model="form.categoryId" placeholder="请选择房间类型" style="width: 100%;">
-						<el-option v-for="item in categorys" :key="item.value" :label="item.label" :value="item.value">
-						</el-option>
-					</el-select>
+					<el-input v-model="form.categoryId" placeholder="房间类型"></el-input>
 				</el-form-item>
-
-				<el-form-item label="上传图片">
-					<el-upload class="upload-demo" ref="upload" :http-request=uploadImage list-type="picture-card"
-						multiple>
-						<i class="el-icon-plus"></i>
-						<div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
-					</el-upload>
+				<el-form-item label="属性名称">
+					<el-input v-model="form.name" placeholder="属性名称"></el-input>
 				</el-form-item>
-
 			</el-form>
 			<span slot="footer" class="dialog-footer">
 				<el-button @click="dialogVisible = false">取 消</el-button>
-				<el-button type="primary" @click="addHouse(),dialogVisible = false" v-if="dialogType=='add'">确
+				<el-button type="primary" @click="add(),dialogVisible = false" v-if="dialogType=='add'">确
 					定</el-button>
 				<el-button type="primary" @click="edit(), dialogVisible = false" v-if="dialogType=='edit'">确 定
 				</el-button>
@@ -134,22 +91,20 @@
 				/*城市*/
 				username: '',
 				/*用户名*/
-				title: '',
-				/*房屋标题*/
+
+
+				/*属性名称*/
+				name: '',
+
 
 				//添加弹出框
 				dialogVisible: false,
 				dialogType: "",
 				form: {
-					name: '大床房',
-					subTitle: '浪漫',
-					orignalPrice: '100',
-					promotePrice: '80',
-					stock: '1',
-					categoryId: '1',
-					//图片地址
-					fileList: [],
-
+					//房间类型
+					categoryId: '',
+					//属性名称
+					name: '',
 				},
 				//房间类型
 				categorys: [],
@@ -159,14 +114,24 @@
 			}
 		},
 		created() {
-			this.getHouseData()
+			this.getData()
 		},
 		methods: {
 			async edit() { //修改接口
 				const _this = this
-				await this.updateHouse(_this.form)
-				await this.getHouseData()
+				await this.update(_this.form)
+				await this.getData()
 			},
+			async add() { //添加接口
+				const _this = this
+				await this.addData()
+				await this.getData()
+			},
+			async del(row) { //审核拒绝
+				await this.delData(row)
+				await this.getData()
+			},
+
 			set(form, row) {
 				form.id = row.id
 				form.name = row.name
@@ -176,10 +141,7 @@
 				form.stock = row.stock
 				form.categoryId = row.categoryId
 			},
-			async del(row) { //审核拒绝
-				await this.delHouse(row)
-				await this.getHouseData()
-			},
+
 
 			// open() {
 			// 	this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
@@ -199,61 +161,10 @@
 			// 	});
 			// },
 
-			async updateHouse(item) { //修改房屋
-				const _this = this
-				let data = this.requestSend(this.API.UpdateHouse, item, "post");
-				if (data.code == 200) {
-					_this.$message({
-						message: '操作完成',
-						type: 'success'
-					})
-				}
-				if (data.code == 500) {
-					_this.$message({
-						showClose: true,
-						message: '系统错误',
-						type: 'error'
-					})
-				}
-			},
-			async getHouseData(Page) { //得到房屋数据
-				if (Page != null && Page != 'undefined') {
-					this.currentPage = Page
-				} else {
-					this.currentPage = 1
-				}
-				this.loading = true
-				const _this = this
-				if (this.operation == "seeAll") {
-					await axios.get(this.API.GetHouseByAdmin, {
-						params: {
-							pageNum: _this.currentPage,
-							pageSize: _this.pageSize
-						}
-					}).then(resp => {
-						console.log(resp.data)
-						_this.total = resp.data.result.total
-						_this.tableData = resp.data.result.list
-					})
-
-					// let data = _this.requestSend(this.API.GetCategory,null,"get");
-					// console.log(data);
-				}
-				this.loading = false
-			},
-			page(currentPage) { //换页
-				this.getHouseData(currentPage)
-			},
-			async addHouse() {
-				//房子信息添加
+			async addData() {
+				//添加
 				const _this = this;
-				let datas = QS.stringify(_this.form)
-
-				axios.post(_this.API.AddHouse, _this.form, {
-						headers: {
-							'Content-Type': 'application/json;charset=UTF-8'
-						}
-					}).then(res => {
+				await axios.post(_this.API.AddProperty, _this.form).then(res => {
 						let data = res.data.result;
 						if (data.code == 200) {
 							_this.$message({
@@ -289,8 +200,93 @@
 				// 	})
 				// }
 
-				this.getHouseData()
+				this.getData()
 			},
+			async update(item) { //修改房屋
+				const _this = this
+				await axios.post(_this.API.EditProperty, item).then(res => {
+						let data = res.data.result;
+						if (data.code == 200) {
+							_this.$message({
+								message: '操作完成',
+								type: 'success'
+							})
+						}
+						if (data.code == 500) {
+							_this.$message({
+								showClose: true,
+								message: '系统错误',
+								type: 'error'
+							})
+						}
+					})
+					.catch(err => {
+						console.log(err.message)
+					})
+			},
+			//删除
+			async delData(row) {
+				console.log(row.id);
+				let data = {}
+				data.id = row.id;
+				await axios.get(this.API.DeleteProperty, {
+						params: {
+							id: row.id
+						}
+					}).then(res => {
+						let data = res.data.result;
+						if (data.code == 200) {
+							_this.$message({
+								message: '操作完成',
+								type: 'success'
+							})
+						}
+						if (data.code == 500) {
+							_this.$message({
+								showClose: true,
+								message: '系统错误',
+								type: 'error'
+							})
+						}
+					})
+					.catch(err => {
+						console.log(err.message)
+					})
+			},
+			async getData(Page) { //得到房屋数据
+				if (Page != null && Page != 'undefined') {
+					this.currentPage = Page
+				} else {
+					this.currentPage = 1
+				}
+				this.loading = true
+				const _this = this
+
+				let data = {
+					pageNum: _this.currentPage,
+					pageSize: _this.pageSize
+				};
+				if (_this.name != '') {
+					data. ["name"] = _this.name
+				}
+				await axios.get(this.API.GetProperty, {
+					params: data
+				}).then(resp => {
+					console.log(resp.data)
+					_this.total = resp.data.result.total
+					_this.tableData = resp.data.result.list
+				})
+
+				// let data = _this.requestSend(this.API.GetCategory,null,"get");
+				// console.log(data);
+
+				this.loading = false
+			},
+			page(currentPage) { //换页
+				this.getData(currentPage)
+			},
+
+
 
 
 			//发送请求
@@ -314,13 +310,7 @@
 				return result;
 			},
 
-			//删除
-			delHouse(row) {
-				console.log(row.id);
-				let data = {}
-				data.id = row.id;
-				this.requestSend(this.API.delHouse, data, "post");
-			},
+
 
 			//图片上传
 

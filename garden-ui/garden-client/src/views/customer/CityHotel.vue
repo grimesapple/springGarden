@@ -156,7 +156,8 @@
 			<section class="selectRow">
 				<section class="g-unitList-radioUI-layout">
 					<section class="radioUI">
-						<span class="title">户型</span>
+						<span class="title">房间类型</span>
+						<!-- <el-radio-group v-model="houseType" @change="changeHouseType"> -->
 						<el-radio-group v-model="houseType" @change="changeHouseType">
 							<el-radio :label="1">一居</el-radio>
 							<el-radio :label="2">二居</el-radio>
@@ -181,7 +182,7 @@
 			</section>
 			<!--出租类型，配套-->
 			<section class="selectRow">
-				<section class="g-unitList-radioUI-layout" style="width: 20%">
+				<!-- <section class="g-unitList-radioUI-layout" style="width: 20%">
 					<section class="radioUI">
 						<span class="title">出租类型</span>
 						<el-radio-group v-model="rentalType" @change="changeRentalType">
@@ -189,7 +190,7 @@
 							<el-radio :label="'single'">单间</el-radio>
 						</el-radio-group>
 					</section>
-				</section>
+				</section> -->
 				<section class="g-unitList-selectUI-layout">
 					<section class="selectUI">
 						<span class="title">配套</span>
@@ -232,7 +233,7 @@
 					</section>
 				</section>
 				<section class="g-unitList-selectUI-layout">
-					<section class="selectUI">
+					<!-- <section class="selectUI">
 						<span class="title">房型</span>
 						<div class="el-select selectBox">
 							<el-dropdown trigger="click" @command="" placement="bottom">
@@ -267,7 +268,7 @@
 								</el-dropdown-menu>
 							</el-dropdown>
 						</div>
-					</section>
+					</section> -->
 				</section>
 			</section>
 			<section class="selectRow"></section>
@@ -358,7 +359,7 @@
 							<div class="unit-item-pic-wrapper">
 								<div class="swiper-container pic-swiper swiper-container-horizontal"
 									@click="toDetail(item)">
-<!-- 									<el-carousel trigger="click" :autoplay="false" height="296px">
+									<!-- 									<el-carousel trigger="click" :autoplay="false" height="296px">
 										<el-carousel-item v-for="imgItem in item.img.split(',')">
 											<img ref="imgHeight" :src=imgItem width="100%" height="100%"
 												object-fit="cover">
@@ -438,7 +439,7 @@
 				/*是否显示城市搜索*/
 				keywordToggle: false,
 				/*是否显示关键字搜索*/
-				chooseDate: this.timeslot,
+				chooseDate: '',
 				/*选择的日期*/
 				cities: [],
 				/*城市列表*/
@@ -495,16 +496,19 @@
 				houseList: [],
 				/*房型列表*/
 				allFilters: {
-					"peopleNumber": "",
+					"people": "",
 					"bedNumber": "",
-					"currentRegion": this.chooseregion,
-					"houseType": "",
-					"housePrice": "",
-					"rentalType": "",
-					"matchingList": [],
-					"houseList": [],
-					"chooseDate": this.timeslot.toString(),
-					"currentCityName": this.city
+					// "currentRegion": this.chooseregion,
+					// "houseType": "",
+					// "orignalPrice": "",
+					"startPrice": "0",
+					"endPrice": "",
+					// "rentalType": "",
+					// "properties": [],
+					// "houseList": [],
+					"startTime": this.chooseDate,
+					"endTime": this.chooseDate
+					// "currentCityName": this.city
 				},
 				/*所有筛选条件*/
 				pickerOptions: {
@@ -537,7 +541,21 @@
 			if (JSON.parse(sessionStorage.getItem('store')) != null) {
 				this.getUserNotice(this.$store.state.userInfo.username) //得到用户通知
 			}
-			this.getCityAsync() //得到城市
+			//['2022-03-09', '2022-03-10']
+			let startTime = new Date();
+			let endTime = new Date();
+			let y = startTime.getFullYear()
+			let m = startTime.getMonth() + 1
+			let d = startTime.getDate()
+			startTime = y + '-' + m + '-' + d;
+			y = endTime.getFullYear()
+			m = endTime.getMonth() + 1
+			d = endTime.getDate() + 1
+			endTime = y + '-' + m + '-' + d;
+			
+			this.chooseDate = [startTime,endTime];
+			
+			// this.getCityAsync() //得到城市
 			// this.getRegionAsync(this.currentCityName, "hotsearch", this.currentRegion) //得到默认地区
 			// this.getClassifyLocation(this.currentCityName) //得到分类位置
 			// this.getHouseData(this.allFilters, this.currentPage) //得到房屋
@@ -545,6 +563,8 @@
 		mounted() {
 			// 滚动条的获取
 			window.addEventListener('scroll', this.handleScroll, true)
+			
+			
 		},
 		methods: {
 			//切换选择城市模态框
@@ -777,36 +797,43 @@
 			/*根据所有筛选条件查询民宿结果*/
 			searchHotelByAllFilters() {
 				//得到所有筛选条件
-				this.allFilters.peopleNumber = this.peopleNumber.replace("人", "").replace("人+", "") //人数，1...
+				console.log(this.chooseDate);
+				this.allFilters.people = this.peopleNumber.replace("人", "").replace("人+", "") //人数，1...
 				this.allFilters.bedNumber = this.bedNumber.replace("床", "").replace("床+", "") //床数，1...
-				this.allFilters.currentRegion = this.currentRegion //地区，昌平区..
-				this.allFilters.houseType = this.houseType //户型，一居...
-				this.allFilters.housePrice = this.realHousePrice //房价，400...
-				this.allFilters.rentalType = this.rentalType //出租类型，single（单间），complete（整套）...
-				this.allFilters.matchingList = this.matchingList //配套，无线网络...
-				this.allFilters.houseList = this.houseList //房型，公寓...
-				this.allFilters.chooseDate = this.chooseDate.toString() //选择日期，['2020-11-30','2020-12-01']
-				this.allFilters.currentCityName = this.currentCityName //当前城市，成都...
+				// this.allFilters.currentRegion = this.currentRegion //地区，昌平区..
+				// this.allFilters.houseType = this.houseType //户型，一居...
+				this.allFilters.endPrice = this.realHousePrice //房价，400...
+				// this.allFilters.rentalType = this.rentalType //出租类型，single（单间），complete（整套）...
+				// this.allFilters.matchingList = this.matchingList //配套，无线网络...
+				// this.allFilters.houseList = this.houseList //房型，公寓...
+				this.allFilters.startTime = this.chooseDate[0] //选择日期，['2020-11-30','2020-12-01']
+				this.allFilters.endTime = this.chooseDate[1] //选择日期，['2020-11-30','2020-12-01']
+				// this.allFilters.currentCityName = this.currentCityName //当前城市，成都...
 				//清除排序
-				this.sortOrder = ''
-				this.sortImg = ''
+				// this.sortOrder = ''
+				// this.sortImg = ''
 				console.log(this.allFilters)
 				this.getHouseData(this.allFilters, this.currentPage) //得到房屋数据
 			},
 			clearAllFilters() {
 				/*清除所有条件*/
-				this.peopleNumber = ''
+				this.people = ''
 				this.bedNumber = ''
-				this.currentRegion = ''
-				this.houseType = ''
-				this.realHousePrice = ''
-				this.rentalType = ''
-				this.matchingList = []
-				this.houseList = []
-				this.chooseDate = []
-				this.matchNumber = '' //.
-				this.houseNumber = '' //.
-				this.housePrice = 0 //.
+				this.startPrice = ''
+				this.endPrice = ''
+				this.startTime = ''
+				this.endTime = ''
+				// this.currentRegion = ''
+				// this.houseType = ''
+				// this.realHousePrice = ''
+				// this.rentalType = ''
+				// this.matchingList = []
+				// this.houseList = []
+				// this.chooseDate = []
+				// this.matchNumber = '' //.
+				// this.houseNumber = '' //.
+				// this.housePrice = 0 //.
+
 				this.searchHotelByAllFilters()
 			},
 			/*下拉滚动条时将筛选条件固定在顶部*/
@@ -839,7 +866,10 @@
 				// await axios.post(this.API.GetHouseTotal, this.allFilters).then(function(resp) {
 				// 	_this.total = resp.data //得到记录条数
 				// })
-				await axios.get(this.API.GetHouseList).then(function(
+				console.log(_this.allFilters)
+				await axios.get(this.API.GetHouseList, {
+					params: _this.allFilters
+				}).then(function(
 					resp) {
 					console.log(resp.data.result);
 					_this.houseData = resp.data.result.list //得到记录

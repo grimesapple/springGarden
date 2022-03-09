@@ -14,6 +14,7 @@ import HouseManager from "../components/HouseManager";
 import HouseInfo from "../components/HouseInfo";
 import Administrator from "../views/administrators/Administrator";
 import HouseList from "../components/HouseList";
+import Property from "../components/Property";
 import Notice from "../components/Notice";
 import CashBox from "../components/CashBox";
 import Page404 from "../views/Page404";
@@ -179,6 +180,16 @@ const routes = [
           }
         },
       },
+	  {
+	    path:'/Property',
+	    name:"Property",
+	    component:Property,
+	    props:function(route){
+	      return {
+	        operation:route.params.operation,
+	      }
+	    },
+	  },
 	  {
 	    path:'/HouseInfo/:operation',
 	    name:"HouseInfo",

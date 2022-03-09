@@ -8,7 +8,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.*;
@@ -24,7 +26,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ApiModel("客房;商品信息相关：分类，商品图片，商品规格，商品参数对象")
-public class Product {
+public class Product implements Serializable {
 
     /** 主键 */
     @ApiModelProperty("主键" )
@@ -59,13 +61,20 @@ public class Product {
     @ApiModelProperty("房间类型" )
     @Column(name = "c_id" )
     private Integer categoryId;
-
+    /** 房间描述 */
+    @ApiModelProperty("房间描述" )
+    @Column(name = "content" )
+    private String content;
     @ApiModelProperty("创建时间" )
     @Column(name = "create_time" )
-    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(locale="zh", timezone="GMT+8", pattern="yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern="yyyy-MM-dd")
+    @JsonFormat(locale="zh", timezone="GMT+8", pattern="yyyy-MM-dd")
     private Date createTime;
 
-    private List<String> fileList;
+    /**图片列表*/
+    private List<String> imgList;
+    /**房间的属性列表*/
+    private List<Integer> properties;
+
 
 }

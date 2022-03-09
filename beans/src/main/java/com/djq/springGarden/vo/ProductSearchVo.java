@@ -2,8 +2,10 @@ package com.djq.springGarden.vo;
 
 import com.djq.springGarden.entity.Product;
 import com.djq.springGarden.entity.Property;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -27,29 +29,19 @@ public class ProductSearchVo extends Product {
     @ApiModelProperty("结束价格" )
     private BigDecimal endPrice;
 
-
-    /**
-     * 人数
-     */
-    @ApiModelProperty("人数" )
-    private Integer people;
-
     /**
      * 开始时间
      */
     @ApiModelProperty("开始时间" )
+    @DateTimeFormat(pattern="yyyy-MM-dd")
+    @JsonFormat(locale="zh", timezone="GMT+8", pattern="yyyy-MM-dd")
     private Date startTime;
     /**
      * 结束时间
      */
     @ApiModelProperty("结束时间" )
+    @DateTimeFormat(pattern="yyyy-MM-dd")
+    @JsonFormat(locale="zh", timezone="GMT+8", pattern="yyyy-MM-dd")
     private Date endTime;
-
-    /**
-     * 属性
-     */
-    private Property property;
-
-
 
 }

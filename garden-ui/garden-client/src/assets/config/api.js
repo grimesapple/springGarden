@@ -1,6 +1,8 @@
 const ApiRootUrl = 'http://localhost:8010/';
 
 const API = {
+	//根路径
+	ApiRootUrl: ApiRootUrl,
 	//注册：id，name，password，realname，telphone，eamil，cardid
 	Register: ApiRootUrl + 'user/register/',
 	//登录接口，+this.phoneNumber+'/null/'+this.passWord
@@ -13,11 +15,11 @@ const API = {
 
 	GetNotice: ApiRootUrl + 'notice/getNotice/', //用户通知接口,+username
 	AddNotice: ApiRootUrl + 'notice/addNotice', //添加通知接口，notice
-
+//======================房屋相关接口=======================
 	//得到房屋总数量接口,allFilters
 	GetHouseTotal: ApiRootUrl + 'house/getHouseTotal', 
 	//得到房屋列表接口，1/'+this.pageSize,this.allFilters
-	GetHouseList: ApiRootUrl + 'product/searchForPage/', 
+	GetHouseList: ApiRootUrl + 'product/searchForPage', 
 	
 	GetHouse: ApiRootUrl + 'house/getHouse/', //得到单个房屋接口，+this.$store.state.userInfo.username+'/null'
 	//管理员得到房屋接口
@@ -25,19 +27,28 @@ const API = {
 	//上传图片
 	UploadImage: ApiRootUrl + 'util/upload/',
 	//回显图片路径
-	ShowImage: ApiRootUrl + 'api/upload/',
+	ShowImage: ApiRootUrl + 'api/upload/resource/imgs/',
 
 
 	// GetHouseTotalByAdmin:ApiRootUrl + 'product/list/',//管理员得到得到房屋数量，+state
 	//修改房屋接口，house
 	UpdateHouse: ApiRootUrl + 'product/update',
 	//添加房屋接口,house
-	AddHouse: ApiRootUrl + 'product/add/1',
+	AddHouse: ApiRootUrl + 'product/add',
 	//删除房屋
 	delHouse: ApiRootUrl + 'product/delete',
 	//所有房屋类型
 	GetCategory: ApiRootUrl + 'category/list',
-
+	
+//======================房屋属性相关接口=======================
+	//房屋属性查询
+	GetProperty: ApiRootUrl + 'property/list',
+	AddProperty: ApiRootUrl + 'property/add',
+	EditProperty: ApiRootUrl + 'property/update',
+	DeleteProperty: ApiRootUrl + 'property/delete',
+	
+		
+	GetCategory: ApiRootUrl + 'category/list',
 	GetCollect: ApiRootUrl + 'collect/getCollect/', //得到收藏接口，+this.$store.state.userInfo.username
 	AddCollect: ApiRootUrl + 'collect/addCollect/', //添加收藏接口，collect
 	DeleteCollect: ApiRootUrl + 'collect/deleteCollect/', //取消收藏接口，+this.collectionList[j].id

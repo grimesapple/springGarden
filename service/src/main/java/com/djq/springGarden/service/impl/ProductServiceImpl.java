@@ -1,18 +1,17 @@
 package com.djq.springGarden.service.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.annotation.Resource;
 
 import cn.hutool.core.convert.Convert;
 import com.djq.springGarden.entity.*;
 import com.djq.springGarden.mapper.ProductimageMapper;
+import com.djq.springGarden.mapper.PropertyvalueMapper;
 import com.djq.springGarden.service.*;
 import com.djq.springGarden.vo.ProductSearchVo;
 import com.djq.springGarden.vo.ProductVO;
+import org.springframework.beans.PropertyValue;
 import org.springframework.stereotype.Service;
 import com.djq.springGarden.mapper.ProductMapper;
 
@@ -53,6 +52,13 @@ public class ProductServiceImpl implements ProductService {
     private PropertyvalueService propertyvalueService;
 
     /**
+     * 房间的属性情况
+     */
+    @Resource
+    private PropertyvalueMapper propertyvalueMapper;
+
+
+    /**
      * 订单
      */
     @Resource
@@ -83,6 +89,8 @@ public class ProductServiceImpl implements ProductService {
         ArrayList<Map<String, Object>> resultList = new ArrayList<>();
         //查询客房信息
         List<Product> productList = select(productSearchVo);
+        //按时间倒序
+        productList.sort(Comparator.comparing(Product::getCreateTime).reversed());
         for (Product pro : productList) {
             //房间id
             Integer proId = pro.getId();
@@ -92,59 +100,52 @@ public class ProductServiceImpl implements ProductService {
             //筛选客房信息
             //人数：客房人数根据房间最大入住人数选择
             Integer people = productSearchVo.getPeople();
-            if (people != null && people.compareTo(pro.getPeople()) > 0) {
+            if (Objects.equals(people, pro.getPeople())) {
                 //不符合条件 跳过;
                 continue;
             }
 
             //价格
-//            if (pro.getOrignalPrice().compareTo(productSearchVo.getStartPrice()) < 0 || pro.getOrignalPrice().compareTo(productSearchVo.getEndPrice()) > 0) {
-//                //不符合条件 跳过;
-//                continue;
-//            }
+            if (productSearchVo.getStartPrice() != null && productSearchVo.getEndPrice() != null) {
+                if (pro.getOrignalPrice().compareTo(productSearchVo.getStartPrice()) < 0 || pro.getOrignalPrice().compareTo(productSearchVo.getEndPrice()) > 0) {
+                    //不符合条件 跳过;
+                    continue;
+                }
+            }
 
-            //时间：如果该时间段的当前房间的库存不够，跳过
-            //查询对应房间的订单，如果在选择的时间内有预定，则跳过
-            OrderT orderT = new OrderT();
-            orderT.setProductId(proId);
-            List<OrderT> orderTList = orderService.select(orderT);
-            //遍历订单在对应时间中是否有订单
-//            boolean flag = false;
-//            for (OrderT ord : orderTList) {
-//                //判断状态是否为无效状态：0离店，3取消订单
-//                if (ord.getStatus() == 0 || ord.getStatus() == 3) {
-//                    continue;
-//                }
-//                if (productSearchVo.getStartTime().before(ord.getStartTime()) && productSearchVo.getEndTime().after(ord.getEndTime())) {
-//                    //有订单
-//                    flag = true;
-//                    break;
-//                }
-//            }
-//            if (flag) {
-//                //有订单的房间，跳过
-//                continue;
-//            }
 
+
+            //判断当前房间在对应时间是否有订单
+            if (!orderService.check(productSearchVo.getStartTime(), productSearchVo.getEndTime(), proId)) {
+                //有订单，该房间不能被租
+                continue;
+            }
 
             //封装房间的信息
             result.put("house", pro);
 
             //封装房间的属性
-            Property property = new Property();
-            property.setCategoryId(categoryId);
-            List<Property> propertyList = propertyService.select(property);
-            //封装房间的属性情况：
-//            for (Property proper : propertyList) {
-//                Propertyvalue propertyvalue = new Propertyvalue();
-//                propertyvalue.setProductId(proId);
-//                propertyvalue.setPropertyId(proper.getId());
-//                List<Propertyvalue> propertyValueList = propertyvalueService.select(propertyvalue);
-//                for (Propertyvalue properValueItem : propertyValueList) {
-//                    Integer status = properValueItem.getStatus();
-//                    result.put(proper.getName(), status);
-//                }
-//            }
+            Propertyvalue propertyvalue = new Propertyvalue();
+            propertyvalue.setProductId(proId);
+            List<Propertyvalue> propertyvalueList = propertyvalueService.select(propertyvalue);
+            List<Map<String,Object>> maps = new ArrayList<>();
+            for (Propertyvalue propertyvalue1 : propertyvalueList) {
+                if (propertyvalue1 == null) {
+                    continue;
+                }
+                Map<String, Object> map = new HashMap<>();
+                Integer propertyId = propertyvalue1.getPropertyId();
+                Property property = new Property();
+                property.setId(propertyId);
+                Property property1 = propertyService.selectOne(property);
+                if (property1 != null) {
+                    map.put("propertyId",propertyId);
+                    map.put("status",propertyvalue1.getStatus());
+                    map.put("propertyName",property1.getName());
+                    maps.add(map);
+                }
+            }
+            result.put("property", maps);
 
             //房间的图片列表
             Productimage productimage = new Productimage();
@@ -155,17 +156,14 @@ public class ProductServiceImpl implements ProductService {
             //房间的类型
             Category category = new Category();
             category.setId(pro.getCategoryId());
-            categoryService.selectOne(category);
-
-            //床的数量
+            Category selectOne = categoryService.selectOne(category);
+            result.put("category", selectOne);
 
             //评价
-            result.put("housePrice", pro.getOrignalPrice());
+//            result.put("housePrice", pro.getOrignalPrice());
 
             //title
-            result.put("title", pro.getName());
-
-
+//            result.put("title", pro.getName());
             resultList.add(result);
         }
         return resultList;
@@ -219,26 +217,38 @@ public class ProductServiceImpl implements ProductService {
     /**
      * 新增客房;商品信息相关：分类，商品图片，商品规格，商品参数
      *
-     * @param product 客房;商品信息相关：分类，商品图片，商品规格，商品参数
+     * @param productVO 客房;商品信息相关：分类，商品图片，商品规格，商品参数
      * @return 结果
      */
     @Override
 //    public int insertProduct(Product product,List<String> fileList) {
-    public int insertProduct(Product product) {
-        productMapper.insert(product);
+    public int insertProduct(ProductVO productVO) {
+        int insert = productMapper.insert(productVO);
         //获取客房id
-        Integer id = product.getId();
-        List<Productimage> productimageList = new ArrayList<>();
+        Integer id = productVO.getId();
         //图片信息添加
+//        List<Productimage> productimageList = new ArrayList<>();
+//        for (String s : productVO.getImgList()) {
+//            //添加图片
+//            Productimage productimage = new Productimage();
+//            productimage.setProductId(id);
+//            productimage.setUrl(s);
+//            productimageList.add(productimage);
+//        }
+//        productimageMapper.insertList(productimageList);
 
-        for (String s : product.getFileList()) {
-            Productimage productimage = new Productimage();
-            productimage.setProductId(id);
-            productimage.setUrl(s);
-            productimageList.add(productimage);
+        //房间的属性添加
+        List<Propertyvalue> propertyValueList = new ArrayList<>();
+        for (Integer proId : productVO.getProperties()) {
+            Propertyvalue propertyvalue = new Propertyvalue();
+            propertyvalue.setProductId(id);
+            propertyvalue.setPropertyId(proId);
+            propertyvalue.setStatus(0);
+            propertyValueList.add(propertyvalue);
         }
+        propertyvalueMapper.insertList(propertyValueList);
 
-        return productimageMapper.insertList(productimageList);
+        return insert;
     }
 
     /**

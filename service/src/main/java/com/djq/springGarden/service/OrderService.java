@@ -1,5 +1,6 @@
 package com.djq.springGarden.service;
 
+import java.util.Date;
 import java.util.List;
 
 import com.djq.springGarden.entity.OrderT;
@@ -52,4 +53,14 @@ public interface OrderService {
      * @return 结果
      */
     int deleteOrderById(Integer id);
+
+    /**
+     * 判断当前选定时间是否可以入住是可预定
+     *
+     * @param endTime 预定或者入住的结束时间
+     * @param startTime 预定或者入住的开始时间
+     * @param productId 房间id
+     * @return true:无冲突，可以预定.false：有冲突。
+     */
+    boolean check(Date startTime, Date endTime, Integer productId);
 }

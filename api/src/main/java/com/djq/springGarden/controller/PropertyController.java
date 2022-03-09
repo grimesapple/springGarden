@@ -3,11 +3,7 @@ package com.djq.springGarden.controller;
 import java.util.List;
 
 import com.djq.springGarden.entity.Property;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import com.djq.springGarden.service.PropertyService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -28,7 +24,7 @@ import javax.annotation.Resource;
  */
 @Api(tags = "房间属性字典控制器" )
 @RestController
-@RequestMapping("/system/property" )
+@RequestMapping("/property" )
 public class PropertyController {
     @Resource
     private PropertyService propertyService;
@@ -63,7 +59,7 @@ public class PropertyController {
      */
     @ApiOperation("新增房间属性字典" )
     @PostMapping("/add" )
-    public ResultVO<Property> add(Property property) {
+    public ResultVO<Property> add(@RequestBody Property property) {
         return propertyService.insertProperty(property) > 0 ? ResultVO.ok("新增成功" ) : ResultVO.error("新增失败" );
     }
 
@@ -72,7 +68,7 @@ public class PropertyController {
      */
     @ApiOperation("修改房间属性字典" )
     @PostMapping("/update" )
-    public ResultVO<Property> edit(Property property) {
+    public ResultVO<Property> edit(@RequestBody Property property) {
         return propertyService.updateProperty(property) > 0 ? ResultVO.ok("更新成功" ) : ResultVO.error("更新失败" );
     }
 
@@ -80,8 +76,8 @@ public class PropertyController {
      * 删除房间属性字典
      */
     @ApiOperation("删除房间属性字典" )
-    @PostMapping("/delete" )
-    public ResultVO<Property> remove(@RequestParam(value = "id" ) Integer id) {
+    @GetMapping("/delete" )
+    public ResultVO<Property> remove(@RequestParam(value = "id") Integer id) {
         return propertyService.deletePropertyById(id) > 0 ? ResultVO.ok("删除成功" ) : ResultVO.error("删除失败" );
     }
 }
