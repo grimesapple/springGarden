@@ -21,7 +21,7 @@
 			<span>共{{total}}条搜索结果</span>
 		</div>
 		<!-- 新增 -->
-<!-- 		<div class="search" v-if="operation=='seeAll'">
+		<!-- 		<div class="search" v-if="operation=='seeAll'">
 			<div style="height: 40px;padding-top: 5px">
 				<el-button type="primary" icon="el-icon-plus" size="mini"
 					@click="dialogVisible = true,dialogType='add'">添加</el-button>
@@ -33,12 +33,12 @@
 			<el-table-column prop="house.id" label="房屋id" width="70" align="center"></el-table-column>
 			<el-table-column prop="house.name" label="房屋名字" align="center"></el-table-column>
 			<el-table-column prop="house.subTitle" label="房屋标题" align="center"></el-table-column>
-			<el-table-column label="房屋照片" align="center">
+			<el-table-column label="房屋照片" width="300" align="center">
 				<template slot-scope="scope">
 					<el-carousel trigger="click" :autoplay="false" height="96px" indicator-position="none">
 						<el-carousel-item v-for="(imgItem,key) in scope.row.img" :key="key">
-							<img ref="imgHeight" :src=imgItem width="100%" height="100%" object-fit="cover"
-								v-show="imgItem!=null">
+							<img ref="imgHeight" :src="$data.root+imgItem.url" width="100%" height="100%"
+								object-fit="cover" v-show="imgItem!=null">
 						</el-carousel-item>
 					</el-carousel>
 				</template>
@@ -49,11 +49,16 @@
 			<el-table-column prop="house.promotePrice" label="促销价格(元/晚)" align="center"></el-table-column>
 			<el-table-column prop="tag" label="其他属性" align="center">
 				<template slot-scope="scope">
-					<el-tag size="mini" v-for="(imgItem,key) in scope.row.property" :key="key" :type="imgItem.propertyName === '家' ? 'primary' : 'success'" disable-transitions>{{imgItem.propertyName}}
+					<el-tag size="mini" v-for="(imgItem,key) in scope.row.property" :key="key"
+						:type="key%2 === 1 ? 'primary' : 'success'" disable-transitions>{{imgItem.propertyName}}
 					</el-tag>
 				</template>
 			</el-table-column>
-			<el-table-column prop="content" label="房间描述" align="center"></el-table-column>
+			<el-table-column prop="house.content" label="房间描述" align="center">
+				<template slot-scope="scope">
+					<p v-html = "scope.row.house.content"></p>
+				</template>
+			</el-table-column>
 			<el-table-column label="操作" align="center">
 				<template slot-scope="scope">
 					<el-button @click="dialogType='edit', set(form, scope.row), dialogVisible=true" type="text"
@@ -136,6 +141,7 @@
 				/*用户名*/
 				title: '',
 				/*房屋标题*/
+				root: this.API.ShowImage,
 
 				//添加弹出框
 				dialogVisible: false,

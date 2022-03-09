@@ -3,6 +3,7 @@ package com.djq.springGarden.service.impl;
 import java.util.*;
 
 import javax.annotation.Resource;
+import javax.xml.crypto.Data;
 
 import cn.hutool.core.convert.Convert;
 import com.djq.springGarden.entity.*;
@@ -14,6 +15,8 @@ import com.djq.springGarden.vo.ProductVO;
 import org.springframework.beans.PropertyValue;
 import org.springframework.stereotype.Service;
 import com.djq.springGarden.mapper.ProductMapper;
+import tk.mybatis.mapper.entity.Example;
+import tk.mybatis.mapper.provider.ExampleProvider;
 
 
 /**
@@ -85,13 +88,14 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public List<Map<String, Object>> search(ProductSearchVo productSearchVo) {
-        HashMap<String, Object> result = new HashMap<>();
         ArrayList<Map<String, Object>> resultList = new ArrayList<>();
         //查询客房信息
-        List<Product> productList = select(productSearchVo);
+        List<Product> productList = productMapper.searchAllByTime(productSearchVo);
+//        List<Product> productList = select(productSearchVo);
         //按时间倒序
-        productList.sort(Comparator.comparing(Product::getCreateTime).reversed());
+        System.out.println(productList);
         for (Product pro : productList) {
+            HashMap<String, Object> result = new HashMap<>();
             //房间id
             Integer proId = pro.getId();
             //房间类型id
@@ -112,8 +116,6 @@ public class ProductServiceImpl implements ProductService {
                     continue;
                 }
             }
-
-
 
             //判断当前房间在对应时间是否有订单
             if (!orderService.check(productSearchVo.getStartTime(), productSearchVo.getEndTime(), proId)) {
@@ -165,6 +167,7 @@ public class ProductServiceImpl implements ProductService {
             //title
 //            result.put("title", pro.getName());
             resultList.add(result);
+//            System.out.println(result);
         }
         return resultList;
     }
@@ -223,19 +226,21 @@ public class ProductServiceImpl implements ProductService {
     @Override
 //    public int insertProduct(Product product,List<String> fileList) {
     public int insertProduct(ProductVO productVO) {
+        //设置当前时间
+        productVO.setCreateTime(new Date());
         int insert = productMapper.insert(productVO);
         //获取客房id
         Integer id = productVO.getId();
         //图片信息添加
-//        List<Productimage> productimageList = new ArrayList<>();
-//        for (String s : productVO.getImgList()) {
-//            //添加图片
-//            Productimage productimage = new Productimage();
-//            productimage.setProductId(id);
-//            productimage.setUrl(s);
-//            productimageList.add(productimage);
-//        }
-//        productimageMapper.insertList(productimageList);
+        List<Productimage> productimageList = new ArrayList<>();
+        for (String s : productVO.getImgList()) {
+            //添加图片
+            Productimage productimage = new Productimage();
+            productimage.setProductId(id);
+            productimage.setUrl(s);
+            productimageList.add(productimage);
+        }
+        productimageMapper.insertList(productimageList);
 
         //房间的属性添加
         List<Propertyvalue> propertyValueList = new ArrayList<>();

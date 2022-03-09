@@ -8,4 +8,8 @@ import java.util.Map;
 
 public interface ProductMapper extends GeneralDAO<Product> {
 //    List<Map<String,Object>> selectAllMap();
+    /**
+     * 根据时间进行查询
+     */
+    List<Product> searchAllByTime(Product product);
 }

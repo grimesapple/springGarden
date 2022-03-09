@@ -63,17 +63,22 @@
 					</el-select>
 				</div>
 				<div class="item-title">
-					<h2>每日出租价格/晚</h2>
+					<h2>市场价格/晚</h2>
 				</div>
 				<div class="item-contain">
 					<el-input v-model="housePrice" placeholder="请输入价格" style="width: 150px" size="small" maxlength="6"
 						clearable></el-input>
 				</div>
-
+				<div class="item-title">
+					<h2>促销价格/晚</h2>
+				</div>
+				<div class="item-contain">
+					<el-input v-model="promotePrice" placeholder="请输入价格" style="width: 150px" size="small" maxlength="6"
+						clearable></el-input>
+				</div>
 			</div>
 		</section>
 		<section class="g-hcComModal-layout" v-show="active===1">
-
 			<div class="situation-item">
 				<div class="item-title" style="margin-top: 50px">
 					<h2>房间类型</h2>
@@ -102,7 +107,9 @@
 				</div>
 				<div class="item-contain">
 					<el-checkbox-group v-model="matchingList" class="item-checkList">
-						<el-checkbox label="无线网络" class="item-check"></el-checkbox>
+						<el-checkbox v-for="(item,index) in this.property" :label="item.id" class="item-check">{{item.name}}
+						</el-checkbox>
+						<!-- <el-checkbox label="无线网络" class="item-check"></el-checkbox>
 						<el-checkbox label="电梯" class="item-check"></el-checkbox>
 						<el-checkbox label="热水淋浴" class="item-check"></el-checkbox>
 						<el-checkbox label="洗衣机" class="item-check" style="margin-bottom: 20px"></el-checkbox>
@@ -113,7 +120,7 @@
 						<el-checkbox label="卫浴用品" class="item-check"></el-checkbox>
 						<el-checkbox label="投影设备" class="item-check"></el-checkbox>
 						<el-checkbox label="麻将机" class="item-check"></el-checkbox>
-						<el-checkbox label="免费停车" class="item-check"></el-checkbox>
+						<el-checkbox label="免费停车" class="item-check"></el-checkbox> -->
 					</el-checkbox-group>
 				</div>
 				<div class="item-title">
@@ -156,7 +163,7 @@
 								<el-upload class="avatar-uploader" action="" :show-file-list="false"
 									:on-success="handleAvatarSuccess1" :http-request="uploadImage"
 									:before-upload="beforeAvatarUpload" :on-error="handleError">
-									<img v-if="imageUrl[0]" :src="imageUrl[0]" class="avatar">
+									<img v-if="imageUrl[0]" :src="this.API.ShowImage+imageUrl[0]" class="avatar">
 									<i v-else class="el-icon-plus avatar-uploader-icon"></i>
 								</el-upload>
 							</div>
@@ -164,7 +171,7 @@
 								<el-upload class="avatar-uploader" action="" :show-file-list="false"
 									:on-success="handleAvatarSuccess2" :http-request="uploadImage"
 									:before-upload="beforeAvatarUpload" :on-error="handleError">
-									<img v-if="imageUrl[1]" :src="imageUrl[1]" class="avatar">
+									<img v-if="imageUrl[1]" :src="this.API.ShowImage+imageUrl[1]" class="avatar">
 									<i v-else class="el-icon-plus avatar-uploader-icon"></i>
 								</el-upload>
 							</div>
@@ -172,7 +179,7 @@
 								<el-upload class="avatar-uploader" action="" :show-file-list="false"
 									:on-success="handleAvatarSuccess3" :http-request="uploadImage"
 									:before-upload="beforeAvatarUpload" :on-error="handleError">
-									<img v-if="imageUrl[2]" :src="imageUrl[2]" class="avatar">
+									<img v-if="imageUrl[2]" :src="this.API.ShowImage+imageUrl[2]" class="avatar">
 									<i v-else class="el-icon-plus avatar-uploader-icon"></i>
 								</el-upload>
 							</div>
@@ -180,7 +187,7 @@
 								<el-upload class="avatar-uploader" action="" :show-file-list="false"
 									:on-success="handleAvatarSuccess4" :http-request="uploadImage"
 									:before-upload="beforeAvatarUpload" :on-error="handleError">
-									<img v-if="imageUrl[3]" :src="imageUrl[3]" class="avatar">
+									<img v-if="imageUrl[3]" :src="this.API.ShowImage+imageUrl[3]" class="avatar">
 									<i v-else class="el-icon-plus avatar-uploader-icon"></i>
 								</el-upload>
 							</div>
@@ -188,7 +195,7 @@
 								<el-upload class="avatar-uploader" action="" :show-file-list="false"
 									:on-success="handleAvatarSuccess5" :http-request="uploadImage"
 									:before-upload="beforeAvatarUpload" :on-error="handleError">
-									<img v-if="imageUrl[4]" :src="imageUrl[4]" class="avatar">
+									<img v-if="imageUrl[4]" :src="this.API.ShowImage+imageUrl[4]" class="avatar">
 									<i v-else class="el-icon-plus avatar-uploader-icon"></i>
 								</el-upload>
 							</div>
@@ -282,12 +289,16 @@
 				subTitle: '',
 				/*属性列表*/
 				matchingList: [],
+				/*属性展示列表*/
+				property: [],
 				/*图片列表*/
 				imageUrl: [],
 				/*当前图片个数*/
 				ImageNumber: 1,
-				/*房屋价格*/
+				/*市场价格*/
 				housePrice: '',
+				/*促销价格*/
+				promotePrice: '',
 				// /*出租时段*/
 				// chooseDate: '',
 				pickerOptions: {
@@ -446,6 +457,7 @@
 			           }, { enableHighAccuracy: true })*/
 		},
 		created() {
+
 			if (this.operation == "addHouse") {}
 
 			if (this.operation == "updateHouse") {
@@ -466,9 +478,10 @@
 				this.chooseDate = this.house.chooseDate.split(",")
 				this.describe = this.house.describe
 				this.state = this.house.state
-
 				this.ImageNumber = this.imageUrl.length
 			}
+			//属性字典查询
+			this.getProperty()
 		},
 		methods: {
 			//上一步
@@ -509,7 +522,7 @@
 				await axios.post(this.API.UploadImage, formdata, config)
 					.then(res => {
 
-						url = _this.API.ShowImage + res.data.result.filename;
+						url = res.data.result.filename;
 						// this.form.fileList.push(res.data.result.filename);
 						console.log('image upload succeed.');
 					})
@@ -520,25 +533,25 @@
 				return url;
 			},
 
-			async Upload(file) {
-				let fileName = 'house' + `${Date.parse(new Date())}` + '.png'; //定义唯一的文件名
-				let url;
-				await client().multipartUpload(fileName, file.file, {
-					headers: {
-						'Content-Disposition': 'inline', //设置头部，否则阿里oss的地址是下载而不是浏览图片
-						'Content-Type': 'png' //注意：根据图片或者文件的后缀来设置
-					}
-				}).then(result => {
-					//得到上传后的文件地址
-					let index = result.res.requestUrls[0].indexOf('?')
-					if (index == -1) {
-						url = result.res.requestUrls[0]
-					} else {
-						url = result.res.requestUrls[0].substring(0, index)
-					}
-				})
-				return url
-			},
+			// async Upload(file) {
+			// 	let fileName = 'house' + `${Date.parse(new Date())}` + '.png'; //定义唯一的文件名
+			// 	let url;
+			// 	await client().multipartUpload(fileName, file.file, {
+			// 		headers: {
+			// 			'Content-Disposition': 'inline', //设置头部，否则阿里oss的地址是下载而不是浏览图片
+			// 			'Content-Type': 'png' //注意：根据图片或者文件的后缀来设置
+			// 		}
+			// 	}).then(result => {
+			// 		//得到上传后的文件地址
+			// 		let index = result.res.requestUrls[0].indexOf('?')
+			// 		if (index == -1) {
+			// 			url = result.res.requestUrls[0]
+			// 		} else {
+			// 			url = result.res.requestUrls[0].substring(0, index)
+			// 		}
+			// 	})
+			// 	return url
+			// },
 			//头像上传成功
 			handleAvatarSuccess(res, file) {
 				this.ImageNumber++; //处理图片未刷新问题，不知道原因，可能是数据必须发送变化
@@ -573,7 +586,14 @@
 			},
 			onEditorChange(event) { //限制内容在1000字
 				event.quill.deleteText(1000, 4)
-
+			},
+			//获取房间属性列表
+			getProperty() {
+				let _this = this;
+				axios.get(this.API.GetProperty).then(res => {
+					console.log(res.data);
+					_this.property = res.data.result.list;
+				})
 			},
 			async addHouse(option) { //添加/修改房屋
 				if (isNaN(parseInt(this.housePrice))) {
@@ -589,8 +609,9 @@
 					"categoryId": this.houseType,
 					"imgList": this.imageUrl,
 					"orignalPrice": this.housePrice,
+					"promotePrice": this.promotePrice,
 					"properties": this.matchingList,
-					// "content": this.describe,
+					"content": this.describe,
 				}
 				let key
 				for (key in this.house) {
@@ -610,18 +631,18 @@
 				const _this = this
 				if (option == 'add') {
 					await axios.post(this.API.AddHouse, this.house).then(resp => {
-						if (resp.data == 'success') {
+						if (resp.data.code == 200) {
 							_this.$message({
 								message: '添加房屋数据成功',
 								type: 'success'
 							})
-							// setTimeout(() => {
-							// 	_this.$router.push({
-							// 		path: "/MerchantManage"
-							// 	})
-							// }, 1000);
+							setTimeout(() => {
+								_this.$router.push({
+									path: "/HouseList/seeAll"
+								})
+							}, 1000);
 						}
-						if (resp.data == 'error') {
+						if (resp.data.code == 500) {
 							_this.$message({
 								showClose: true,
 								message: '添加失败，房屋名称重复',
@@ -657,7 +678,9 @@
 						}
 					})
 				}
-			}
+			},
+			//查询属性列表
+
 		}
 	}
 </script>
