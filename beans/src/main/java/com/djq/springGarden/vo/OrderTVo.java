@@ -4,10 +4,12 @@ import com.djq.springGarden.entity.OrderT;
 import com.djq.springGarden.entity.Orderitem;
 import com.djq.springGarden.entity.Product;
 import com.djq.springGarden.entity.User;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import java.util.List;
 
 /**
@@ -20,20 +22,20 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderTVo extends OrderT {
-    /**
-     * 客房信息
-     */
-    private Product product;
 
-    /**
-     * 用户账号信息
-     */
-    private User user;
+    /** 入住时间筛选-开始 */
+    @ApiModelProperty("入住时间筛选-开始" )
+    private Integer startTime;
+    /** 入住时间筛选-结束 */
+    @ApiModelProperty("入住时间筛选-结束" )
+    private Integer entTime;
 
-    /**
-     * 入住信息
-     */
-    private List<Orderitem>  orderitems;
+    /** 手机尾号 */
+    @ApiModelProperty("手机尾号" )
+    private Integer phoneNum;
+
+
+
 
 
 

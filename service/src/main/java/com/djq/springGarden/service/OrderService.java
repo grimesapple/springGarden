@@ -2,6 +2,7 @@ package com.djq.springGarden.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import com.djq.springGarden.entity.OrderT;
 import com.djq.springGarden.vo.OrderSearchVo;
@@ -19,7 +20,7 @@ public interface OrderService {
      * @param orderT 订单
      * @return 订单集合
      */
-    List<OrderT> select(OrderT orderT);
+    List<Map<String, Object>> select(OrderT orderT);
 
     /**
      * 条件查询订单:查询单个

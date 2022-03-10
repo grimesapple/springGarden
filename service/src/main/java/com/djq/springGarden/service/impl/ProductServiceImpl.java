@@ -186,7 +186,7 @@ public class ProductServiceImpl implements ProductService {
 
 
     /**
-     * 管理员查询所有房屋列表
+     * 管理员查询所有房屋列表进行订单添加
      *
      * @return 返回结果
      */

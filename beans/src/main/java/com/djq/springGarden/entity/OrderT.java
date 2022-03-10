@@ -47,7 +47,7 @@ public class OrderT {
     /** 入住信息id */
     @ApiModelProperty("入住信息id" )
     @Column(name = "r_id" )
-    private String residentId;
+    private Integer residentId;
     /** 用户备注 */
     @ApiModelProperty("用户备注" )
     @Column(name = "user_message" )
@@ -72,6 +72,11 @@ public class OrderT {
     @Column(name = "delivery_date" )
     @JsonFormat(pattern = "yyyy-MM-dd" )
     private Date deliveryDate;
+    /** 提交时间 */
+    @ApiModelProperty("提交时间" )
+    @Column(name = "creat_time" )
+    @JsonFormat(pattern = "yyyy-MM-dd" )
+    private Date createTime;
     /** 批准时间 */
     @ApiModelProperty("批准时间" )
     @Column(name = "confirm_date" )

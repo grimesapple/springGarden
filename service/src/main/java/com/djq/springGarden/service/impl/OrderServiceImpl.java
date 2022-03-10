@@ -41,6 +41,8 @@ public class OrderServiceImpl implements OrderService {
     @Resource
     private ProductMapper productMapper;
 
+
+
     /**
      * 条件查询订单列表
      *
@@ -48,8 +50,48 @@ public class OrderServiceImpl implements OrderService {
      * @return 订单
      */
     @Override
-    public List<OrderT> select(OrderT orderT) {
-        return orderMapper.select(orderT);
+    public List<Map<String, Object>> select(OrderT orderT) {
+        //查询条件，筛选入住时间，状态，支付时间，手机尾号，账号，身份证号码，订单编号。
+        //展示信息：订单编号，房间的信息(房间号)，预订人信息（账号名称，手机号码），预定时间（创建时间），选定时间:(入住时间，离开时间)，状态，总价格，备注，操作（入住，退房）
+        List<Map<String,Object>> mapList = new ArrayList<>();
+        List<OrderT> orderTList = orderMapper.select(orderT);
+        //封装数据
+        for (OrderT t : orderTList) {
+            Map<String,Object> result = new HashMap<>();
+            result.put("orderCode",t.getOrderCode());
+            result.put("createTime",t.getCreateTime());
+            result.put("startTime",t.getStartTime());
+            result.put("endTime",t.getEndTime());
+            result.put("status",t.getStatus());
+            result.put("totalCost",t.getTotal());
+            result.put("con",t.getUserMessage());
+            //房间id
+            Integer productId = t.getProductId();
+            Product product = new Product();
+            product.setId(productId);
+            Product productResult = productMapper.selectOne(product);
+            if (productResult == null) {
+                result.put("productName",product.getName());
+            }
+            //账号信息
+            User user = new User();
+            user.setId(t.getUserId());
+            User userResult = userMapper.selectOne(user);
+            if (userResult != null) {
+                result.put("username", user.getName());
+            }
+            //入住人信息
+            Orderitem orderitem = new Orderitem();
+            orderitem.setId(t.getResidentId());
+            Orderitem orderitemReuslt = orderitemMapper.selectOne(orderitem);
+            if (orderitemReuslt != null) {
+                result.put("realName", orderitemReuslt.getReceiver());
+                result.put("phone", user.getTelphone());
+            }
+            mapList.add(result);
+        }
+
+        return mapList;
     }
 
     /**
@@ -116,11 +158,9 @@ public class OrderServiceImpl implements OrderService {
             criteria.andIn("userId",productIdList);
         }
 
-        List<OrderT> orderTList = orderMapper.selectByExample(example);
-
         //封装订单信息
 
-        return orderTList;
+        return orderMapper.selectByExample(example);
     }
 
 
@@ -141,7 +181,7 @@ public class OrderServiceImpl implements OrderService {
         //校验对应房间是否已经被预定
         if (!check(startTime,endTime,orderT.getProductId())) {
             //有冲突，不能通过预定
-            return 0;
+            return -1;
         }
         //初始化订单编号
         String businessNum = RandomUtils.businessNum();
@@ -228,10 +268,10 @@ public class OrderServiceImpl implements OrderService {
         OrderT orderTForSearch = new OrderT();
         orderTForSearch.setProductId(productId);
         orderTForSearch.setStatus(1);
-        List<OrderT> orderTList = select(orderTForSearch);
+        List<OrderT> orderTList = orderMapper.select(orderTForSearch);
         //查询对应的房间列表：已入住
         orderTForSearch.setStatus(2);
-        List<OrderT> list2 = select(orderTForSearch);
+        List<OrderT> list2 = orderMapper.select(orderTForSearch);
         //两种订单合并
         orderTList.addAll(list2);
         //订单需要根据时间进行排序：前一个订单和后一个订单的时间不会有交叉，最多是相等。(升序)

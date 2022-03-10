@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.djq.springGarden.entity.OrderT;
 import com.djq.springGarden.vo.OrderSearchVo;
+import com.github.pagehelper.Page;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,9 +44,9 @@ public class OrderController {
                                              @RequestParam(value = "pageNum" , required = false, defaultValue = "1" ) Integer pageNum,
                                              @RequestParam(value = "pageSize" , required = false, defaultValue = "10" ) Integer pageSize) {
         HashMap<String, Object> map = new HashMap<>();
-        PageHelper.startPage(pageNum, pageSize);
-        List<OrderT> list = orderService.select(orderT);
-        map.put("total" , list.size());
+        Page<Object> info = PageHelper.startPage(pageNum, pageSize);
+        List<Map<String, Object>> list = orderService.select(orderT);
+        map.put("total" , info.getTotal());
         map.put("list" , list);
         return ResultVO.ok(map,"查询成功");
     }
