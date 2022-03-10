@@ -164,7 +164,7 @@
 								<el-upload class="avatar-uploader" action="" :show-file-list="false"
 									:on-success="handleAvatarSuccess1" :http-request="uploadImage"
 									:before-upload="beforeAvatarUpload" :on-error="handleError">
-									<img v-if="imageUrl[0]" :src="this.API.ShowImage+imageUrl[0]" class="avatar">
+									<img v-if="imageUrl[0]" :src="this.API.ShowImage+imageUrl[0].url" class="avatar">
 									<i v-else class="el-icon-plus avatar-uploader-icon"></i>
 								</el-upload>
 							</div>
@@ -172,7 +172,7 @@
 								<el-upload class="avatar-uploader" action="" :show-file-list="false"
 									:on-success="handleAvatarSuccess2" :http-request="uploadImage"
 									:before-upload="beforeAvatarUpload" :on-error="handleError">
-									<img v-if="imageUrl[1]" :src="this.API.ShowImage+imageUrl[1]" class="avatar">
+									<img v-if="imageUrl[1]" :src="this.API.ShowImage+imageUrl[1].url" class="avatar">
 									<i v-else class="el-icon-plus avatar-uploader-icon"></i>
 								</el-upload>
 							</div>
@@ -180,7 +180,7 @@
 								<el-upload class="avatar-uploader" action="" :show-file-list="false"
 									:on-success="handleAvatarSuccess3" :http-request="uploadImage"
 									:before-upload="beforeAvatarUpload" :on-error="handleError">
-									<img v-if="imageUrl[2]" :src="this.API.ShowImage+imageUrl[2]" class="avatar">
+									<img v-if="imageUrl[2]" :src="this.API.ShowImage+imageUrl[2].url" class="avatar">
 									<i v-else class="el-icon-plus avatar-uploader-icon"></i>
 								</el-upload>
 							</div>
@@ -188,7 +188,7 @@
 								<el-upload class="avatar-uploader" action="" :show-file-list="false"
 									:on-success="handleAvatarSuccess4" :http-request="uploadImage"
 									:before-upload="beforeAvatarUpload" :on-error="handleError">
-									<img v-if="imageUrl[3]" :src="this.API.ShowImage+imageUrl[3]" class="avatar">
+									<img v-if="imageUrl[3]" :src="this.API.ShowImage+imageUrl[3].url" class="avatar">
 									<i v-else class="el-icon-plus avatar-uploader-icon"></i>
 								</el-upload>
 							</div>
@@ -196,7 +196,7 @@
 								<el-upload class="avatar-uploader" action="" :show-file-list="false"
 									:on-success="handleAvatarSuccess5" :http-request="uploadImage"
 									:before-upload="beforeAvatarUpload" :on-error="handleError">
-									<img v-if="imageUrl[4]" :src="this.API.ShowImage+imageUrl[4]" class="avatar">
+									<img v-if="imageUrl[4]" :src="this.API.ShowImage+imageUrl[4].url" class="avatar">
 									<i v-else class="el-icon-plus avatar-uploader-icon"></i>
 								</el-upload>
 							</div>
@@ -278,6 +278,8 @@
 				}, {
 					value: '10'
 				}],
+				/*房间id*/
+				id: '',
 				/*床数*/
 				bedNumber: '',
 				/*入住人数*/
@@ -315,9 +317,9 @@
 				// commentsNumber: 0,
 				// /*评论人数*/
 				// state: "0",
-				// /*房屋状态*/
-				// house: [],
 				// /*房屋数据*/
+				house: [],
+				// /**/
 				describe: '',
 				/*房屋描述*/
 				id: '', //房屋id
@@ -467,6 +469,7 @@
 				this.houseData = JSON.parse(this.houseData)
 				console.log("houseData")
 				console.log(this.houseData)
+				this.id = this.houseData.house.id
 				this.bedNumber = this.houseData.house.bedNumber
 				this.peopleNumber = this.houseData.house.people
 				this.houseType = this.houseData.house.houseType
@@ -475,14 +478,13 @@
 				this.housePrice = this.houseData.house.orignalPrice
 				this.promotePrice = this.houseData.house.promotePrice
 				this.describe = this.houseData.house.content
-
 				this.imageUrl = this.houseData.img
+				// for (let i = 0; i < this.houseData.img.length; i++) {
+				// 	this.imageUrl[i] = this.houseData.img[i].url
+				// }
 				for (let i = 0; i < this.houseData.property.length; i++) {
 					this.matchingList[i] = this.houseData.property[i].propertyId
 				}
-
-
-
 			}
 			//属性字典查询
 			this.getProperty()
@@ -564,24 +566,39 @@
 				this.$message.success("上传成功!")
 			},
 			handleAvatarSuccess1(res, file) {
-				this.imageUrl[0] = res;
+				let data = {
+					url: res
+				}
+				this.imageUrl[0] = data;
 
 				this.handleAvatarSuccess(res, file)
 			},
 			handleAvatarSuccess2(res, file) {
-				this.imageUrl[1] = res;
+				let data = {
+					url: res
+				}
+				this.imageUrl[1] = data;
 				this.handleAvatarSuccess(res, file)
 			},
 			handleAvatarSuccess3(res, file) {
-				this.imageUrl[2] = res;
+				let data = {
+					url: res
+				}
+				this.imageUrl[2] = data;
 				this.handleAvatarSuccess(res, file)
 			},
 			handleAvatarSuccess4(res, file) {
-				this.imageUrl[3] = res;
+				let data = {
+					url: res
+				}
+				this.imageUrl[3] = data;
 				this.handleAvatarSuccess(res, file)
 			},
 			handleAvatarSuccess5(res, file) {
-				this.imageUrl[4] = res;
+				let data = {
+					url: res
+				}
+				this.imageUrl[4] = data;
 				this.handleAvatarSuccess(res, file)
 			},
 			//上传失败
@@ -604,21 +621,44 @@
 					this.$message.warning("价格必须是数字!");
 					return false
 				}
-				if (option == 'update') {
-					this.house.id = this.id
-				}
 				this.house = {
 					"name": this.name,
 					"subTitle": this.subTitle,
 					"bedNumber": this.bedNumber,
 					"people": this.peopleNumber,
 					"categoryId": this.houseType,
-					"imgList": this.imageUrl,
+					"imgs": this.imageUrl,
 					"orignalPrice": this.housePrice,
 					"promotePrice": this.promotePrice,
 					"properties": this.matchingList,
-					"content": this.describe,
+					"content": this.describe
 				}
+				if (option == 'update') {
+					this.house.id = this.id
+					
+					// for (let i = 0; i < this.matchingList.length; i++) {
+					// 	if (i < this.houseData.property.length) {
+					// 		this.house.propertyvalues[i] = {
+					// 			"productId": this.house.id,
+					// 			"propertyId": this.matchingList[i],
+					// 			"id": this.houseData.property[i].id
+					// 		}
+					// 	} else {
+					// 		this.house.propertyvalues[i] = {
+					// 			"productId": this.house.id,
+					// 			"propertyId": this.matchingList[i],
+					// 			"id": ''
+					// 		}
+						// }
+
+					// }
+					console.log("houseid")
+					console.log(this.house.id)
+				}
+				//封装图片和属性信息
+
+				console.log("house")
+				console.log(this.house)
 				let key
 				for (key in this.house) {
 					if (this.house[key] === "" && key != "id") {
@@ -658,26 +698,26 @@
 					})
 				} else if (option == 'update') {
 					await axios.post(this.API.UpdateHouse, this.house)
-					.then(resp => {
-						if (resp.data.code == 200) {
-							_this.$message({
-								message: '修改房屋数据成功',
-								type: 'success'
-							})
-							setTimeout(() => {
-								_this.$router.push({
-									path: "/HouseList/seeAll"
+						.then(resp => {
+							if (resp.data.code == 200) {
+								_this.$message({
+									message: '修改房屋数据成功',
+									type: 'success'
 								})
-							}, 1000);
-						}
-						if (resp.data.code == 500) {
-							_this.$message({
-								showClose: true,
-								message: '修改失败，房屋名称重复',
-								type: 'error'
-							})
-						}
-					})
+								setTimeout(() => {
+									_this.$router.push({
+										path: "/HouseList/seeAll"
+									})
+								}, 1000);
+							}
+							if (resp.data.code == 500) {
+								_this.$message({
+									showClose: true,
+									message: '修改失败',
+									type: 'error'
+								})
+							}
+						})
 				}
 			},
 			//查询属性列表

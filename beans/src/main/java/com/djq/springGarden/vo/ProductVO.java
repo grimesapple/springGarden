@@ -3,6 +3,7 @@ package com.djq.springGarden.vo;
 import com.djq.springGarden.entity.Product;
 import com.djq.springGarden.entity.Productimage;
 import com.djq.springGarden.entity.Property;
+import com.djq.springGarden.entity.Propertyvalue;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -36,6 +37,9 @@ public class ProductVO extends Product implements Serializable {
     /** 房间的类型 */
     @ApiModelProperty("图片列表" )
     private List<Productimage> imgs;
+    @ApiModelProperty("属性列表" )
+    private List<Propertyvalue> propertyvalues;
+
 
 
 

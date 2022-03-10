@@ -57,7 +57,7 @@ public interface ProductService {
     /**
      * 修改客房;商品信息相关：分类，商品图片，商品规格，商品参数
      *
-     * @param product 客房;商品信息相关：分类，商品图片，商品规格，商品参数
+     * @param productVO 客房;商品信息相关：分类，商品图片，商品规格，商品参数
      * @return 结果
      */
     int updateProduct(ProductVO productVO);

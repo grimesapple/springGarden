@@ -12,6 +12,7 @@ import com.djq.springGarden.mapper.PropertyvalueMapper;
 import com.djq.springGarden.service.*;
 import com.djq.springGarden.vo.ProductSearchVo;
 import com.djq.springGarden.vo.ProductVO;
+import io.swagger.models.auth.In;
 import org.springframework.beans.PropertyValue;
 import org.springframework.stereotype.Service;
 import com.djq.springGarden.mapper.ProductMapper;
@@ -231,14 +232,13 @@ public class ProductServiceImpl implements ProductService {
         int insert = productMapper.insert(productVO);
         //获取客房id
         Integer id = productVO.getId();
+
         //图片信息添加
         List<Productimage> productimageList = new ArrayList<>();
-        for (String s : productVO.getImgList()) {
+        for (Productimage img : productVO.getImgs()) {
             //添加图片
-            Productimage productimage = new Productimage();
-            productimage.setProductId(id);
-            productimage.setUrl(s);
-            productimageList.add(productimage);
+            img.setProductId(id);
+            productimageList.add(img);
         }
         productimageMapper.insertList(productimageList);
 
@@ -257,35 +257,65 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * 修改客房;商品信息相关：分类，商品图片，商品规格，商品参数
+     * 修改客房;
      *
-     * @param productVO 客房;商品信息相关：分类，商品图片，商品规格，商品参数
+     * @param productVO 客房;
      * @return 结果
      */
     @Override
     public int updateProduct(ProductVO productVO) {
         //修改房屋信息
-        productVO.setCreateTime(new Date());
-        int update = productMapper.updateByPrimaryKey(productVO);
+        int update = productMapper.updateByPrimaryKeySelective(productVO);
+        if (update <= 0) {
+            return -1;
+        }
         //修改图片列表
         Integer id = productVO.getId();
-        for (String s : productVO.getImgList()) {
-            Productimage productimage = new Productimage();
-            productimage.setProductId(id);
-            productimage.setUrl(s);
-            Example example = new Example(Productimage.class);
-            example.createCriteria().andEqualTo("productId", id);
-            productimageMapper.updateByExampleSelective(productimage, example);
+        List<Productimage> imgs = productVO.getImgs();
+        for (Productimage img : imgs) {
+            if (img.getId() == null) {
+                //新增
+                img.setProductId(id);
+                productimageMapper.insert(img);
+            } else {
+                productimageMapper.updateByPrimaryKeySelective(img);
+            }
         }
         //修改属性
-        for (Integer proId : productVO.getProperties()) {
-            Propertyvalue propertyvalue = new Propertyvalue();
-            propertyvalue.setProductId(id);
-            propertyvalue.setPropertyId(proId);
-            propertyvalue.setStatus(0);
-            Example example = new Example(Propertyvalue.class);
-            example.createCriteria().andEqualTo("productId",id);
-            propertyvalueMapper.updateByExampleSelective(propertyvalue,example);
+        List<Integer> properties = productVO.getProperties();
+        if (properties == null || properties.size() <= 0) {
+            return update;
+        }
+        //查询原来的属性列表
+        Propertyvalue propertyvalueCon = new Propertyvalue();
+        propertyvalueCon.setProductId(id);
+        List<Propertyvalue> propertyvalues = propertyvalueMapper.select(propertyvalueCon);
+        //大于0，减少了。小于0，增加了。等于0更换
+        int diff = propertyvalues.size() - properties.size();
+        int i = 1;
+        for (Integer propertyId : properties) {
+            //判断属性是多还是少
+            if ( (diff <=0 && i <= propertyvalues.size())) {
+                //更新
+                Propertyvalue propertyvalue = propertyvalues.get(i - 1);
+                propertyvalue.setPropertyId(propertyId);
+                propertyvalueMapper.updateByPrimaryKeySelective(propertyvalue);
+            } else if (diff < 0) {
+                //新增
+                Propertyvalue propertyvalue = new Propertyvalue();
+                propertyvalue.setProductId(id);
+                propertyvalue.setPropertyId(propertyId);
+                propertyvalue.setStatus(0);
+                propertyvalueMapper.insert(propertyvalue);
+            }
+            i++;
+        }
+        if (diff > 0) {
+            //删除
+            for (int j = 1; j <= diff; j++) {
+                Propertyvalue propertyvalue = propertyvalues.get(propertyvalues.size()-j);
+                propertyvalueMapper.deleteByPrimaryKey(propertyvalue);
+            }
         }
         return update;
     }
