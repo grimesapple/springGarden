@@ -107,7 +107,8 @@
 				</div>
 				<div class="item-contain">
 					<el-checkbox-group v-model="matchingList" class="item-checkList">
-						<el-checkbox v-for="(item,index) in this.property" :label="item.id" class="item-check">{{item.name}}
+						<el-checkbox v-for="(item,index) in this.property" :label="item.id" class="item-check">
+							{{item.name}}
 						</el-checkbox>
 						<!-- <el-checkbox label="无线网络" class="item-check"></el-checkbox>
 						<el-checkbox label="电梯" class="item-check"></el-checkbox>
@@ -233,7 +234,7 @@
 			<el-button style="margin-top: 12px;" @click="addHouse('add')" v-show="active===3&&operation=='addHouse'">
 				添加房屋</el-button>
 			<el-button style="margin-top: 12px;" @click="addHouse('update')"
-				v-show="active===4&&operation=='updateHouse'">确认修改</el-button>
+				v-show="active===3&&operation=='updateHouse'">确认修改</el-button>
 		</div>
 	</section>
 </template>
@@ -263,7 +264,7 @@
 				// cityAndRegion: "",
 				// /*当前地区*/
 				// rentalType: "",
-				/*入住人数*/
+				/*入住人数选择*/
 				Options: [{
 					value: '1'
 				}, {
@@ -301,6 +302,8 @@
 				promotePrice: '',
 				// /*出租时段*/
 				// chooseDate: '',
+				//房间数据
+				houseData: '',
 				pickerOptions: {
 					/*限制只能选择今天及以后的时间*/
 					disabledDate(time) {
@@ -461,24 +464,25 @@
 			if (this.operation == "addHouse") {}
 
 			if (this.operation == "updateHouse") {
-				this.house = JSON.parse(this.houseData)
-				this.id = this.house.id
-				this.title = this.house.title
-				this.rentalType = this.house.rentalType
-				this.bedNumber = this.house.bedNumber
-				this.peopleNumber = this.house.peopleNumber
-				this.houseType = this.house.houseType
-				this.score = this.house.score
-				this.commentsNumber = this.house.commentsNumber
-				this.imageUrl = this.house.img.split(",")
-				this.housePrice = this.house.housePrice
-				this.cityAndRegion = this.house.cityAndRegion
-				this.matchingList = this.house.matchingList.split(",")
-				this.houseList = this.house.houseList.split(",")
-				this.chooseDate = this.house.chooseDate.split(",")
-				this.describe = this.house.describe
-				this.state = this.house.state
-				this.ImageNumber = this.imageUrl.length
+				this.houseData = JSON.parse(this.houseData)
+				console.log("houseData")
+				console.log(this.houseData)
+				this.bedNumber = this.houseData.house.bedNumber
+				this.peopleNumber = this.houseData.house.people
+				this.houseType = this.houseData.house.houseType
+				this.name = this.houseData.house.name
+				this.subTitle = this.houseData.house.subTitle
+				this.housePrice = this.houseData.house.orignalPrice
+				this.promotePrice = this.houseData.house.promotePrice
+				this.describe = this.houseData.house.content
+
+				this.imageUrl = this.houseData.img
+				for (let i = 0; i < this.houseData.property.length; i++) {
+					this.matchingList[i] = this.houseData.property[i].propertyId
+				}
+
+
+
 			}
 			//属性字典查询
 			this.getProperty()
@@ -600,8 +604,10 @@
 					this.$message.warning("价格必须是数字!");
 					return false
 				}
+				if (option == 'update') {
+					this.house.id = this.id
+				}
 				this.house = {
-					// "id": this.id,
 					"name": this.name,
 					"subTitle": this.subTitle,
 					"bedNumber": this.bedNumber,
@@ -651,25 +657,20 @@
 						}
 					})
 				} else if (option == 'update') {
-					await axios.put(this.API.UpdateHouse, QS.stringify(this.house), {
-							headers: {
-								'Content-Type': 'application/json;charset=UTF-8'
-							}
-						}
-
-					).then(resp => {
-						if (resp.data == 'success') {
+					await axios.post(this.API.UpdateHouse, this.house)
+					.then(resp => {
+						if (resp.data.code == 200) {
 							_this.$message({
 								message: '修改房屋数据成功',
 								type: 'success'
 							})
 							setTimeout(() => {
 								_this.$router.push({
-									path: "/MerchantManage"
+									path: "/HouseList/seeAll"
 								})
 							}, 1000);
 						}
-						if (resp.data == 'error') {
+						if (resp.data.code == 500) {
 							_this.$message({
 								showClose: true,
 								message: '修改失败，房屋名称重复',

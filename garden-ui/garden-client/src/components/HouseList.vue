@@ -61,7 +61,7 @@
 			</el-table-column>
 			<el-table-column label="操作" align="center">
 				<template slot-scope="scope">
-					<el-button @click="dialogType='edit', set(form, scope.row), dialogVisible=true" type="text"
+					<el-button @click=" set(form, scope.row)" type="text"
 						size="small">修改</el-button>
 					<el-popconfirm title="这是一段内容确定删除吗？" @confirm="del(scope.row)">
 						<el-button type="text" size="small" slot="reference">删除</el-button>
@@ -173,14 +173,15 @@
 				await this.updateHouse(_this.form)
 				await this.getHouseData()
 			},
+			//修改
 			set(form, row) {
-				form.id = row.id
-				form.name = row.name
-				form.subTitle = row.subTitle
-				form.orignalPrice = row.orignalPrice
-				form.promotePrice = row.promotePrice
-				form.stock = row.stock
-				form.categoryId = row.categoryId
+			
+				this.$router.push({
+					path: "/HouseInfo/updateHouse",
+					query: {
+						data: JSON.stringify(row)
+					}
+				})
 			},
 			async del(row) { //审核拒绝
 				await this.delHouse(row)

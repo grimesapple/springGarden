@@ -130,7 +130,7 @@ public class ProductServiceImpl implements ProductService {
             Propertyvalue propertyvalue = new Propertyvalue();
             propertyvalue.setProductId(proId);
             List<Propertyvalue> propertyvalueList = propertyvalueService.select(propertyvalue);
-            List<Map<String,Object>> maps = new ArrayList<>();
+            List<Map<String, Object>> maps = new ArrayList<>();
             for (Propertyvalue propertyvalue1 : propertyvalueList) {
                 if (propertyvalue1 == null) {
                     continue;
@@ -141,9 +141,9 @@ public class ProductServiceImpl implements ProductService {
                 property.setId(propertyId);
                 Property property1 = propertyService.selectOne(property);
                 if (property1 != null) {
-                    map.put("propertyId",propertyId);
-                    map.put("status",propertyvalue1.getStatus());
-                    map.put("propertyName",property1.getName());
+                    map.put("propertyId", propertyId);
+                    map.put("status", propertyvalue1.getStatus());
+                    map.put("propertyName", property1.getName());
                     maps.add(map);
                 }
             }
@@ -259,12 +259,35 @@ public class ProductServiceImpl implements ProductService {
     /**
      * 修改客房;商品信息相关：分类，商品图片，商品规格，商品参数
      *
-     * @param product 客房;商品信息相关：分类，商品图片，商品规格，商品参数
+     * @param productVO 客房;商品信息相关：分类，商品图片，商品规格，商品参数
      * @return 结果
      */
     @Override
-    public int updateProduct(Product product) {
-        return productMapper.updateByPrimaryKey(product);
+    public int updateProduct(ProductVO productVO) {
+        //修改房屋信息
+        productVO.setCreateTime(new Date());
+        int update = productMapper.updateByPrimaryKey(productVO);
+        //修改图片列表
+        Integer id = productVO.getId();
+        for (String s : productVO.getImgList()) {
+            Productimage productimage = new Productimage();
+            productimage.setProductId(id);
+            productimage.setUrl(s);
+            Example example = new Example(Productimage.class);
+            example.createCriteria().andEqualTo("productId", id);
+            productimageMapper.updateByExampleSelective(productimage, example);
+        }
+        //修改属性
+        for (Integer proId : productVO.getProperties()) {
+            Propertyvalue propertyvalue = new Propertyvalue();
+            propertyvalue.setProductId(id);
+            propertyvalue.setPropertyId(proId);
+            propertyvalue.setStatus(0);
+            Example example = new Example(Propertyvalue.class);
+            example.createCriteria().andEqualTo("productId",id);
+            propertyvalueMapper.updateByExampleSelective(propertyvalue,example);
+        }
+        return update;
     }
 
     /**

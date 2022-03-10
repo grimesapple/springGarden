@@ -32,7 +32,7 @@
 							<i class="el-icon-menu"></i>
 							<span>房源管理</span>
 						</template>
-	<!-- 					<el-menu-item index="/HouseList/examine"
+						<!-- 					<el-menu-item index="/HouseList/examine"
 							:class="$route.path=='/HouseList/examine'?'is-active':''">
 							<i class="el-icon-user"></i>房源审核
 						</el-menu-item> -->
@@ -44,11 +44,10 @@
 							:class="$route.path=='/HouseList/seeAll'?'is-active':''">
 							<i class="el-icon-s-home"></i>所有房源
 						</el-menu-item>
-						<el-menu-item index="/Property"
-							:class="$route.path=='/Property '?'is-active':''">
+						<el-menu-item index="/Property" :class="$route.path=='/Property '?'is-active':''">
 							<i class="el-icon-s-home"></i>类型属性
 						</el-menu-item>
-						
+
 					</el-submenu>
 					<el-submenu index="1">
 						<template slot="title">

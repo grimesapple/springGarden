@@ -115,8 +115,8 @@ public class ProductController {
      */
     @ApiOperation("修改客房;")
     @PostMapping("/update")
-    public ResultVO<Product> edit( Product product) {
-        return productService.updateProduct(product) > 0 ? ResultVO.ok("更新成功") : ResultVO.error("更新失败");
+    public ResultVO<Product> edit(@RequestBody ProductVO productVO) {
+        return productService.updateProduct(productVO) > 0 ? ResultVO.ok("更新成功") : ResultVO.error("更新失败");
     }
 
     /**
