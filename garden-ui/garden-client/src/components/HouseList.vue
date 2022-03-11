@@ -56,13 +56,12 @@
 			</el-table-column>
 			<el-table-column prop="house.content" label="房间描述" align="center">
 				<template slot-scope="scope">
-					<p v-html = "scope.row.house.content"></p>
+					<p v-html="scope.row.house.content"></p>
 				</template>
 			</el-table-column>
 			<el-table-column label="操作" align="center">
 				<template slot-scope="scope">
-					<el-button @click=" set(form, scope.row)" type="text"
-						size="small">修改</el-button>
+					<el-button @click=" set(form, scope.row)" type="text" size="small">修改</el-button>
 					<el-popconfirm title="这是一段内容确定删除吗？" @confirm="del(scope.row)">
 						<el-button type="text" size="small" slot="reference">删除</el-button>
 					</el-popconfirm>
@@ -175,7 +174,7 @@
 			},
 			//修改
 			set(form, row) {
-			
+
 				this.$router.push({
 					path: "/HouseInfo/updateHouse",
 					query: {
@@ -256,11 +255,7 @@
 				const _this = this;
 				let datas = QS.stringify(_this.form)
 
-				axios.post(_this.API.AddHouse, _this.form, {
-						headers: {
-							'Content-Type': 'application/json;charset=UTF-8'
-						}
-					}).then(res => {
+				axios.post(_this.API.AddHouse, _this.form).then(res => {
 						let data = res.data.result;
 						if (data.code == 200) {
 							_this.$message({
@@ -322,11 +317,38 @@
 			},
 
 			//删除
-			delHouse(row) {
-				console.log(row.id);
+			async delHouse(row) {
+				console.log(row.house.id);
 				let data = {}
-				data.id = row.id;
-				this.requestSend(this.API.delHouse, data, "post");
+				data.id = row.house.id;
+				let _this = this
+				await axios.get(this.API.delHouse, {
+					params: {
+						id: row.house.id
+					}
+				}).then(resp => {
+					// console.log(resp.data)
+					// _this.total = resp.data.result.total
+					// _this.tableData = resp.data.result.list
+					let data = resp.data;
+					if (data.code == 200) {
+						_this.$message({
+							message: '操作完成',
+							type: 'success'
+						})
+					}
+					if (data.code == 500) {
+						_this.$message({
+							showClose: true,
+							message: '系统错误',
+							type: 'error'
+						})
+					}
+				})
+
+				// let data = _this.requestSend(this.API.GetCategory,null,"get");
+				// console.log(data);
+				// this.requestSend(this.API.delHouse, data, "get");
 			},
 
 			//图片上传

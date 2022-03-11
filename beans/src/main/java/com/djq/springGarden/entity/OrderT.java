@@ -74,7 +74,7 @@ public class OrderT {
     private Date deliveryDate;
     /** 提交时间 */
     @ApiModelProperty("提交时间" )
-    @Column(name = "creat_time" )
+    @Column(name = "create_time" )
     @JsonFormat(pattern = "yyyy-MM-dd" )
     private Date createTime;
     /** 批准时间 */

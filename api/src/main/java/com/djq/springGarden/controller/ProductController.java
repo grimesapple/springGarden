@@ -123,7 +123,7 @@ public class ProductController {
      * 删除客房;商品信息相关：分类，商品图片，商品规格，商品参数
      */
     @ApiOperation("删除客房;")
-    @PostMapping("/delete")
+    @GetMapping("/delete")
     public ResultVO<Product> remove(@RequestParam(value = "id") Integer id) {
         return productService.deleteProductById(id) > 0 ? ResultVO.ok("删除成功") : ResultVO.error("删除失败");
     }

@@ -251,8 +251,9 @@ public class ProductServiceImpl implements ProductService {
             propertyvalue.setStatus(0);
             propertyValueList.add(propertyvalue);
         }
-        propertyvalueMapper.insertList(propertyValueList);
-
+        if (propertyValueList.size() != 0) {
+            propertyvalueMapper.insertList(propertyValueList);
+        }
         return insert;
     }
 
@@ -295,7 +296,7 @@ public class ProductServiceImpl implements ProductService {
         int i = 1;
         for (Integer propertyId : properties) {
             //判断属性是多还是少
-            if ( (diff <=0 && i <= propertyvalues.size())) {
+            if ((diff <= 0 && i <= propertyvalues.size())) {
                 //更新
                 Propertyvalue propertyvalue = propertyvalues.get(i - 1);
                 propertyvalue.setPropertyId(propertyId);
@@ -313,7 +314,7 @@ public class ProductServiceImpl implements ProductService {
         if (diff > 0) {
             //删除
             for (int j = 1; j <= diff; j++) {
-                Propertyvalue propertyvalue = propertyvalues.get(propertyvalues.size()-j);
+                Propertyvalue propertyvalue = propertyvalues.get(propertyvalues.size() - j);
                 propertyvalueMapper.deleteByPrimaryKey(propertyvalue);
             }
         }
