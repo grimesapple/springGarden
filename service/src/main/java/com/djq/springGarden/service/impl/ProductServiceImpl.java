@@ -102,13 +102,6 @@ public class ProductServiceImpl implements ProductService {
             //房间类型id
             Integer categoryId = pro.getCategoryId();
 
-            //筛选客房信息
-            //人数：客房人数根据房间最大入住人数选择
-            Integer people = productSearchVo.getPeople();
-            if (Objects.equals(people, pro.getPeople())) {
-                //不符合条件 跳过;
-                continue;
-            }
 
             //价格
             if (productSearchVo.getStartPrice() != null && productSearchVo.getEndPrice() != null) {
@@ -124,18 +117,17 @@ public class ProductServiceImpl implements ProductService {
                 continue;
             }
 
-            //封装房间的信息
-            result.put("house", pro);
+
+
 
             //封装房间的属性
             Propertyvalue propertyvalue = new Propertyvalue();
             propertyvalue.setProductId(proId);
             List<Propertyvalue> propertyvalueList = propertyvalueService.select(propertyvalue);
+            ArrayList<Integer> integerIdList = new ArrayList<>();
             List<Map<String, Object>> maps = new ArrayList<>();
             for (Propertyvalue propertyvalue1 : propertyvalueList) {
-                if (propertyvalue1 == null) {
-                    continue;
-                }
+                integerIdList.add(propertyvalue1.getPropertyId());
                 Map<String, Object> map = new HashMap<>();
                 Integer propertyId = propertyvalue1.getPropertyId();
                 Property property = new Property();
@@ -148,19 +140,34 @@ public class ProductServiceImpl implements ProductService {
                     maps.add(map);
                 }
             }
-            result.put("property", maps);
+            //筛选属性，如果不完成包含条件中的属性列表，则去掉
+            List<Integer> properties = productSearchVo.getProperties();
+            if (properties != null) {
+                if (!integerIdList.containsAll(properties)) {
+                    continue;
+                }
+            }
+
 
             //房间的图片列表
             Productimage productimage = new Productimage();
             productimage.setProductId(proId);
             List<Productimage> imageList = productimageMapper.select(productimage);
-            result.put("img", imageList);
 
             //房间的类型
             Category category = new Category();
             category.setId(pro.getCategoryId());
             Category selectOne = categoryService.selectOne(category);
+
+
+            //封装房间的信息
+            result.put("house", pro);
+            //房间的类型
             result.put("category", selectOne);
+            //房间的图片列表
+            result.put("img", imageList);
+            //属性
+            result.put("property", maps);
 
             //评价
 //            result.put("housePrice", pro.getOrignalPrice());

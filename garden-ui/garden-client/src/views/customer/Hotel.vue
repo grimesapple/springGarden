@@ -14,7 +14,7 @@
 						<div class="el-select selectBox">
 							<el-dropdown trigger="click" @command="choosePeopleNumber" placement="bottom">
 								<section @click="showPeopleNumber=!showPeopleNumber">
-									<el-input v-model="peopleNumber" placeholder="请选择" :suffix-icon="!showPeopleNumber?
+									<el-input v-model="people" placeholder="请选择" :suffix-icon="!showPeopleNumber?
                                     'el-icon-caret-bottom':'el-icon-caret-top'" :readonly=true></el-input>
 								</section>
 								<el-dropdown-menu slot="dropdown"
@@ -203,7 +203,9 @@
 								<el-dropdown-menu slot="dropdown">
 									<div class="matching">
 										<el-checkbox-group v-model="matchingList" size="medium">
-											<el-checkbox label="无线网络" class="matching-checkbox"></el-checkbox>
+											<el-checkbox v-for="(item,index) in this.property" :label="item.id"
+												class="matching-checkbox">{{item.name}}</el-checkbox>
+											<!-- <el-checkbox label="无线网络" class="matching-checkbox"></el-checkbox>
 											<el-checkbox label="电梯" class="matching-checkbox"></el-checkbox>
 											<el-checkbox label="热水淋浴" class="matching-checkbox"></el-checkbox>
 											<el-checkbox label="洗衣机" class="matching-checkbox"></el-checkbox>
@@ -214,7 +216,7 @@
 											<el-checkbox label="卫浴用品" class="matching-checkbox"></el-checkbox>
 											<el-checkbox label="投影设备" class="matching-checkbox"></el-checkbox>
 											<el-checkbox label="麻将机" class="matching-checkbox"></el-checkbox>
-											<el-checkbox label="免费停车" class="matching-checkbox"></el-checkbox>
+											<el-checkbox label="免费停车" class="matching-checkbox"></el-checkbox> -->
 										</el-checkbox-group>
 										<div class="matching-options">
 											<el-dropdown-item command="close" class="dropdown-item">
@@ -276,16 +278,16 @@
 		<section id="fixedHeaderRoot" class="g-unitList-selected-layout"
 			:class="isFixedTop?'g-unitList-selected-isFixed':''">
 			<section class="selectedBox">
-				<span v-show="allFilters.chooseDate!=''">
+				<span v-show="this.chooseDate!=''">
 					<span class="el-tag el-tag--info">
-						{{allFilters.chooseDate}} <i class="el-icon-close"
+						{{this.chooseDate}} <i class="el-icon-close"
 							@click="chooseDate='',searchHotelByAllFilters()"></i>
 					</span>
 				</span>
-				<span v-show="allFilters.peopleNumber!=''">
+				<span v-show="allFilters.people!=''">
 					<span class="el-tag el-tag--info">
-						{{allFilters.peopleNumber}}人 <i class="el-icon-close"
-							@click="peopleNumber='',searchHotelByAllFilters()"></i>
+						{{allFilters.people}}人 <i class="el-icon-close"
+							@click="people='',searchHotelByAllFilters()"></i>
 					</span>
 				</span>
 				<span v-show="allFilters.bedNumber!=''">
@@ -300,28 +302,28 @@
 							@click="currentRegion='',searchHotelByAllFilters()"></i>
 					</span>
 				</span> -->
-				<span v-show="allFilters.houseType!=''">
+<!-- 				<span v-show="allFilters.houseType!=''">
 					<span class="el-tag el-tag--info">
 						{{allFilters.houseType}}居<i class="el-icon-close"
 							@click="houseType='',searchHotelByAllFilters()"></i>
 					</span>
-				</span>
-				<span v-show="allFilters.housePrice!=''">
+				</span> -->
+				<span v-show="allFilters.endPrice!=''">
 					<span class="el-tag el-tag--info">
-						{{allFilters.housePrice}}元以内<i class="el-icon-close"
+						{{allFilters.endPrice}}元以内<i class="el-icon-close"
 							@click="realHousePrice='',housePrice=0,searchHotelByAllFilters()"></i>
 					</span>
 				</span>
-				<span v-show="allFilters.rentalType!=''">
+				<!-- 				<span v-show="allFilters.rentalType!=''">
 					<span class="el-tag el-tag--info">
 						{{allFilters.rentalType=='single'?'单间':'整套'}} <i class="el-icon-close"
 							@click="rentalType='',searchHotelByAllFilters()"></i>
 					</span>
-				</span>
-				<span v-show="allFilters.matchingList!=''">
-					<span class="el-tag el-tag--info" v-for="(item,key) in allFilters.matchingList" :key="key">
+				</span> -->
+				<span v-show="allFilters.properties!=''">
+					<span class="el-tag el-tag--info" v-for="(item,key) in allFilters.properties" :key="key">
 						{{item}}<i class="el-icon-close"
-							@click="matchingList=[],matchNumber='',searchHotelByAllFilters()"></i>
+							@click="properties=[],matchNumber='',searchHotelByAllFilters()"></i>
 					</span>
 				</span>
 				<span v-show="allFilters.houseList!=''">
@@ -354,47 +356,45 @@
 				</section>
 				<!--房屋子项-->
 				<section class="tj-unit-list clearfix">
-					<article class="tj-unit-item-layout" v-for="(item,key) in houseData" :key="key">
+					<article class="tj-unit-item-layout"  v-for="(item,key) in houseData" :key="key">
 						<div class="tj-unit-item">
 							<div class="unit-item-pic-wrapper">
 								<div class="swiper-container pic-swiper swiper-container-horizontal"
 									@click="toDetail(item)">
-									<!-- 									<el-carousel trigger="click" :autoplay="false" height="296px">
-										<el-carousel-item v-for="imgItem in item.img.split(',')">
-											<img ref="imgHeight" :src=imgItem width="100%" height="100%"
+									<el-carousel trigger="click" :autoplay="false" height="296px">
+										<el-carousel-item v-for="imgItem in item.img">
+											<img ref="imgHeight" :src="$data.rootImgs+imgItem.url" width="100%" height="100%"
 												object-fit="cover">
 										</el-carousel-item>
-									</el-carousel> -->
+									</el-carousel>
 								</div>
-								<i class="collection-icon"
+								<!-- <i class="collection-icon"
 									:class="isCollection[key]?'icon-collection':'icon-no-collection'"
-									@click="cancelCollection(key)"></i>
+									@click="cancelCollection(key)"></i> -->
 							</div>
 							<div class="unit-item-content" @click="toDetail(item)">
 								<h3 class="unit-title">
-									<a>{{item.title}}</a>
+									<a>{{item.house.subTitle}}</a>
 								</h3>
 								<ul class="unit-desc-list">
-									<li><span>{{item.rentalType=='complete'?'整套':'单间'}}</span></li>
-									<li><span>{{item.houseType}}居{{item.bedNumber}}床{{item.peopleNumber}}人</span></li>
-									<li><span>{{item.score}}分/{{item.commentsNumber}}点评</span></li>
+									<!-- <li><span>{{item.rentalType=='complete'?'整套':'单间'}}</span></li> -->
+									<li><span>{{item.house.bedNumber}}床{{item.house.people}}人</span></li>
+									<!-- <li><span>{{item.score}}分/{{item.commentsNumber}}点评</span></li> -->
 								</ul>
 								<div class="unit-desc-list-extra">
 									<ul class="unit-little-label-list">
-										<li class="unit-little-label-list-item">近地铁</li>
-										<li class="unit-little-label-list-item">宽松取消</li>
-										<li class="unit-little-label-list-item">立即确认</li>
+										<li  class="unit-little-label-list-item" v-for="(resp,key) in item.property"  >{{resp.propertyName}}</li>
 									</ul>
 								</div>
 								<div class="unit-price-content">
 									<p class="unit-price">
-										<span class="text">￥{{item.housePrice}}</span>
+										<span class="text">￥{{item.house.orignalPrice}}元</span>
 										<span class="text">/</span>
 										<span>晚</span>
 									</p>
 								</div>
 								<section class="tj-avatar-layout landlord-avatar">
-									<img :src="item.headImg" alt="" class="avatar-img" lazy="loaded">
+									<img :src="$data.rootImgs+item.img[0].url" alt="" class="avatar-img" lazy="loaded">
 								</section>
 							</div>
 						</div>
@@ -420,56 +420,58 @@
 			Footer,
 			Header
 		},
-		props: ['city', 'chooseregion', 'timeslot', 'showLogin'],
+		props: ['people', 'timeslot', 'showLogin'],
 		data() {
 			return {
 				thisnotice: '',
 				/*通知*/
 				thisshowLogin: this.showLogin,
 				/*是否显示登录*/
-				queryCityName: '',
-				/*建议的城市名称*/
-				currentCityName: this.city,
-				/*当前选择的城市*/
-				loadingCity: true,
-				/*是否显示城市正在加载界面*/
-				currentRegion: this.chooseregion,
-				/*当前选择的地区*/
-				toggle: true,
-				/*是否显示城市搜索*/
-				keywordToggle: false,
-				/*是否显示关键字搜索*/
-				chooseDate: '',
+				// queryCityName: '',
+				// /*建议的城市名称*/
+				// currentCityName: this.city,
+				// /*当前选择的城市*/
+				// loadingCity: true,
+				// /*是否显示城市正在加载界面*/
+				// currentRegion: this.chooseregion,
+				// /*当前选择的地区*/
+				// toggle: true,
+				// /*是否显示城市搜索*/
+				// keywordToggle: false,
+				// /*是否显示关键字搜索*/
+
 				/*选择的日期*/
-				cities: [],
+				chooseDate: this.timeslot,
 				/*城市列表*/
+				cities: [],
 				region: [],
 				/*地区列表*/
 				currentRegionTypeIndex: 0,
 				/*当前地区类型的索引*/
-				peopleNumber: '',
+
 				/*人数*/
-				showPeopleNumber: false,
+				prople: this.people,
 				/*是否显示人数选择下拉框*/
-				bedNumber: '',
+				showPeopleNumber: false,
 				/*床数*/
-				showBedNumber: false,
+				bedNumber: '',
 				/*是否显示床数下拉框*/
-				hotSearch: [],
-				/*热门搜索*/
-				scenicSpot: [],
-				/*观光景点*/
-				businessDistrict: [],
-				/*商圈*/
-				district: [],
-				/*行政区*/
-				metroLine: [],
-				/*地铁线路*/
-				airportOrStation: [],
-				/*机场或者车站*/
-				universities: [],
-				/*高校*/
-				hospital: [],
+				showBedNumber: false,
+				// hotSearch: [],
+				// /*热门搜索*/
+				// scenicSpot: [],
+				// /*观光景点*/
+				// businessDistrict: [],
+				// /*商圈*/
+				// district: [],
+				// /*行政区*/
+				// metroLine: [],
+				// /*地铁线路*/
+				// airportOrStation: [],
+				// /*机场或者车站*/
+				// universities: [],
+				// /*高校*/
+				// hospital: [],
 				/*医院*/
 				houseType: '',
 				/*户型*/
@@ -487,8 +489,16 @@
 				/*配套条件个数*/
 				showMatching: false,
 				/*是否显示配套信息*/
-				matchingList: [],
+
 				/*配套列表*/
+				matchingList: [],
+
+				/*展示配套列表*/
+				property: [],
+				/*图片回显地址*/
+				rootImgs: this.API.ShowImage,
+				
+
 				houseNumber: '',
 				/*房型条件的个数*/
 				showHouse: false,
@@ -500,11 +510,10 @@
 					"bedNumber": "",
 					// "currentRegion": this.chooseregion,
 					// "houseType": "",
-					// "orignalPrice": "",
 					"startPrice": "0",
 					"endPrice": "",
 					// "rentalType": "",
-					// "properties": [],
+					"properties": [],
 					// "houseList": [],
 					"startTime": this.chooseDate,
 					"endTime": this.chooseDate
@@ -541,172 +550,46 @@
 			if (JSON.parse(sessionStorage.getItem('store')) != null) {
 				this.getUserNotice(this.$store.state.userInfo.username) //得到用户通知
 			}
-			//['2022-03-09', '2022-03-10']
-			let startTime = new Date();
-			let endTime = new Date();
-			let y = startTime.getFullYear()
-			let m = startTime.getMonth() + 1
-			let d = startTime.getDate()
-			startTime = y + '-' + m + '-' + d;
-			y = endTime.getFullYear()
-			m = endTime.getMonth() + 1
-			d = endTime.getDate() + 1
-			endTime = y + '-' + m + '-' + d;
-			
-			this.chooseDate = [startTime,endTime];
-			
+			if (this.timeslot == '') {
+				//['2022-03-09', '2022-03-10']
+				let startTime = new Date();
+				let endTime = new Date();
+				let y = startTime.getFullYear()
+				let m = startTime.getMonth() + 1
+				let d = startTime.getDate()
+				startTime = y + '-' + m + '-' + d;
+				y = endTime.getFullYear()
+				m = endTime.getMonth() + 1
+				d = endTime.getDate() + 1
+				endTime = y + '-' + m + '-' + d;
+				this.chooseDate = [startTime, endTime];
+			}
+			this.getProperty();
+
 			// this.getCityAsync() //得到城市
 			// this.getRegionAsync(this.currentCityName, "hotsearch", this.currentRegion) //得到默认地区
 			// this.getClassifyLocation(this.currentCityName) //得到分类位置
-			// this.getHouseData(this.allFilters, this.currentPage) //得到房屋
+			this.choosePeopleNumber(this.people)
+			this.getHouseData(this.allFilters, this.currentPage) //得到房屋
 		},
 		mounted() {
 			// 滚动条的获取
 			window.addEventListener('scroll', this.handleScroll, true)
-			
-			
+
+
 		},
 		methods: {
-			//切换选择城市模态框
-			toggleClass() {
-				if (this.keywordToggle)
-					this.keywordToggle = false
-				this.toggle = !this.toggle
-			},
-			//切换显示关键字查询模态框
-			toggleKeywordClass() {
-				if (!this.toggle) {
-					this.toggle = true
-				} else {
-					this.keywordToggle = !this.keywordToggle
-				}
-			},
-			//查询城市建议
-			querySuggestedCities(queryString, cb) {
-				let restaurants = this.cities
-				let results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
-				// 调用 callback 返回建议列表的数据
-				cb(results);
-			},
-			//城市查询过滤器
-			createFilter(queryString) {
-				return (restaurant) => {
-					return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
-				}
-			},
-			//选择建议的城市后
-			citySelect(item) {
-				this.currentCityName = item.value
-				this.toggle = true //关闭城市选择框
-				this.getRegionAsync(this.currentCityName, 'hotsearch')
-				this.getClassifyLocation(item.value)
-				this.searchHotelByAllFilters()
-				this.currentPage = 1
-			},
-			//当前地区索引的样式
-			currentRegionTypeClass(index) {
-				this.currentRegionTypeIndex = index
-			},
-			//得到城市
-			getCityAsync() {
-				//故意制造延迟，让加载效果出来
-				setTimeout(() => {
-					this.cities = [{
-							"value": "北京"
-						}, {
-							"value": "上海"
-						}, {
-							"value": "广州"
-						}, {
-							"value": "成都"
-						}, {
-							"value": "重庆"
-						}, {
-							"value": "德阳"
-						},
-						{
-							"value": "自贡"
-						}, {
-							"value": "泸州"
-						}, {
-							"value": "内江"
-						}, {
-							"value": "宜宾"
-						}, {
-							"value": "重庆"
-						}, {
-							"value": "福州"
-						},
-						{
-							"value": "南昌"
-						}, {
-							"value": "郑州"
-						}, {
-							"value": "黄冈"
-						}, {
-							"value": "珠海"
-						}, {
-							"value": "乌鲁木齐"
-						}, {
-							"value": "兰州"
-						},
-						{
-							"value": "昆明"
-						}, {
-							"value": "玉溪"
-						}, {
-							"value": "大理"
-						},
-					]
-					this.loadingCity = false;
-				}, 3000);
-			},
-			getRegionAsync(cityName, type, currentRegion) { //得到地区
-				// this.currentRegion = '' //每次切换选择的城市后把当前选择的地区清空
-				// if (currentRegion != null) { //如果首页传过来有地区，则显示
-				// 	this.currentRegion = currentRegion
-				// }
-				// const _this = this
-				// axios.get(this.API.GetRegion + cityName + "/" + type).then(function(resp) {
-				// 	_this.region = resp.data
-				// })
-			},
-			async getUserNotice(username) { //得到用户通知
-				const _this = this
-				await axios.get(this.API.GetNotice + username).then(function(resp) {
-					_this.thisnotice = resp.data
-				})
-			},
-			getClassifyLocation(city) { //得到分类位置
-				const _this = this
-				axios.get(this.API.GetRegion + city + "/hotsearch").then(function(resp) {
-					_this.hotSearch = resp.data
-				})
-				axios.get(this.API.GetRegion + city + "/scenicspot").then(function(resp) {
-					_this.scenicSpot = resp.data
-				})
-				axios.get(this.API.GetRegion + city + "/tradingarea").then(function(resp) {
-					_this.businessDistrict = resp.data
-				})
-				axios.get(this.API.GetRegion + city + "/district").then(function(resp) {
-					_this.district = resp.data
-				})
-				axios.get(this.API.GetRegion + city + "/metroline").then(function(resp) {
-					_this.metroLine = resp.data
-				})
-				axios.get(this.API.GetRegion + city + "/airportorstation").then(function(resp) {
-					_this.airportOrStation = resp.data
-				})
-				axios.get(this.API.GetRegion + city + "/universities").then(function(resp) {
-					_this.universities = resp.data
-				})
-				axios.get(this.API.GetRegion + city + "/hospital").then(function(resp) {
-					_this.hospital = resp.data
+			//查询属性
+			getProperty() {
+				axios.get(this.API.GetProperty).then(res => {
+					let data = res.data.result.list
+					this.property = data
+
 				})
 			},
 			//选择人数，查询结果
 			choosePeopleNumber(number) {
-				this.peopleNumber = number
+				this.people = number
 				this.showPeopleNumber = !this.showPeopleNumber
 				this.searchHotelByAllFilters() //查询结果
 			},
@@ -798,13 +681,13 @@
 			searchHotelByAllFilters() {
 				//得到所有筛选条件
 				console.log(this.chooseDate);
-				this.allFilters.people = this.peopleNumber.replace("人", "").replace("人+", "") //人数，1...
+				this.allFilters.people = this.people.replace("人", "").replace("人+", "") //人数，1...
 				this.allFilters.bedNumber = this.bedNumber.replace("床", "").replace("床+", "") //床数，1...
 				// this.allFilters.currentRegion = this.currentRegion //地区，昌平区..
 				// this.allFilters.houseType = this.houseType //户型，一居...
 				this.allFilters.endPrice = this.realHousePrice //房价，400...
 				// this.allFilters.rentalType = this.rentalType //出租类型，single（单间），complete（整套）...
-				// this.allFilters.matchingList = this.matchingList //配套，无线网络...
+				this.allFilters.properties = this.matchingList.toString() //配套，无线网络...
 				// this.allFilters.houseList = this.houseList //房型，公寓...
 				this.allFilters.startTime = this.chooseDate[0] //选择日期，['2020-11-30','2020-12-01']
 				this.allFilters.endTime = this.chooseDate[1] //选择日期，['2020-11-30','2020-12-01']

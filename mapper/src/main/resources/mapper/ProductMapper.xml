@@ -33,13 +33,13 @@
         <where>
             <if test="id != null">and id = #{id}</if>
             <if test="name != null  and name != ''">and name like concat('%',#{name},'%')</if>
-            <if test="subTitle != null  and subTitle != ''">and sub_title=#{subTitle})</if>
-            <if test="orignalPrice != null">and orignal_price=#{orignalPrice})</if>
-            <if test="promotePrice != null">and promote_price=#{promotePrice})</if>
-            <if test="bedNumber != null">and bed_number=#{bedNumber})</if>
-            <if test="people != null">and people_num=#{people})</if>
-            <if test="categoryId != null">and c_id=#{categoryId})</if>
-            <if test="content != null and content != ''">and content=#{content})</if>
+            <if test="subTitle != null  and subTitle != ''">and sub_title=#{subTitle}</if>
+            <if test="orignalPrice != null">and orignal_price=#{orignalPrice}</if>
+            <if test="promotePrice != null">and promote_price=#{promotePrice}</if>
+            <if test="bedNumber != null">and bed_number=#{bedNumber}</if>
+            <if test="people != null">and people_num=#{people}</if>
+            <if test="categoryId != null">and c_id=#{categoryId}</if>
+            <if test="content != null and content != ''">and content=#{content}</if>
         </where>
         order by tp.create_time desc
     </select>

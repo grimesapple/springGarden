@@ -151,7 +151,7 @@
 			},
 			toHouse() { //去房源页面
 				this.$router.push({
-					path: "/CityHotel",
+					path: "/Hotel",
 					query: {
 						city: 0,
 						region: 0,

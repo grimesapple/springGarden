@@ -498,7 +498,7 @@
 			//下一步
 			next() {
 				++this.active
-				if (this.active > 4) this.active = 4;
+				if (this.active > 3) this.active = 3;
 			},
 			//头像上传之前
 			beforeAvatarUpload(file) {
@@ -536,6 +536,13 @@
 						console.log(err.message)
 					})
 				console.log(url)
+				let result = {}
+				if (this.operation == "addHouse"){
+					return result = {
+						url:url
+					}
+				}
+				
 				return url;
 			},
 
@@ -566,39 +573,23 @@
 				this.$message.success("上传成功!")
 			},
 			handleAvatarSuccess1(res, file) {
-				let data = {
-					url: res
-				}
-				this.imageUrl[0] = data;
-
+				this.imageUrl[0].url = res;
 				this.handleAvatarSuccess(res, file)
 			},
 			handleAvatarSuccess2(res, file) {
-				let data = {
-					url: res
-				}
-				this.imageUrl[1] = data;
+				this.imageUrl[1].url = res;
 				this.handleAvatarSuccess(res, file)
 			},
 			handleAvatarSuccess3(res, file) {
-				let data = {
-					url: res
-				}
-				this.imageUrl[2] = data;
+				this.imageUrl[2].url = res;
 				this.handleAvatarSuccess(res, file)
 			},
 			handleAvatarSuccess4(res, file) {
-				let data = {
-					url: res
-				}
-				this.imageUrl[3] = data;
+				this.imageUrl[3].url = res;
 				this.handleAvatarSuccess(res, file)
 			},
 			handleAvatarSuccess5(res, file) {
-				let data = {
-					url: res
-				}
-				this.imageUrl[4] = data;
+				this.imageUrl[4].url = res;
 				this.handleAvatarSuccess(res, file)
 			},
 			//上传失败
@@ -635,7 +626,6 @@
 				}
 				if (option == 'update') {
 					this.house.id = this.id
-					
 					// for (let i = 0; i < this.matchingList.length; i++) {
 					// 	if (i < this.houseData.property.length) {
 					// 		this.house.propertyvalues[i] = {
@@ -652,11 +642,8 @@
 						// }
 
 					// }
-					console.log("houseid")
-					console.log(this.house.id)
 				}
 				//封装图片和属性信息
-
 				console.log("house")
 				console.log(this.house)
 				let key

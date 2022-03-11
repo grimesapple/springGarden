@@ -598,13 +598,13 @@
 					this.loadingCity = false;
 				}, 3000);
 			},
-			getRegionAsync(cityName, type) { //得到地区
-				const _this = this
-				this.currentRegion = '' //每次切换选择的城市后把当前选择的城市清空
-				axios.get(this.API.GetRegion + cityName + "/" + type).then(function(resp) {
-					_this.region = resp.data
-				})
-			},
+			// getRegionAsync(cityName, type) { //得到地区
+			// 	const _this = this
+			// 	this.currentRegion = '' //每次切换选择的城市后把当前选择的城市清空
+			// 	axios.get(this.API.GetRegion + cityName + "/" + type).then(function(resp) {
+			// 		_this.region = resp.data
+			// 	})
+			// },
 			async getUserNotice(username) { //得到用户通知
 				const _this = this
 				await axios.get(this.API.GetNotice + username).then(function(resp) {
@@ -625,10 +625,9 @@
 			//跳转去城市旅馆页面
 			toCityHotel() {
 				this.$router.push({
-					path: "/CityHotel",
+					path: "/Hotel",
 					query: {
-						city: this.currentCityName,
-						region: this.currentRegion,
+						people: this.adults+this.kids,
 						timeslot: this.chooseDate, //[{…}, {…}]this.chooseDate["xxx", "aaa"]
 						showLogin: this.showLogin
 					}

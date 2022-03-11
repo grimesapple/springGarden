@@ -4,6 +4,8 @@ import java.util.*;
 
 import javax.annotation.Resource;
 
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.db.sql.Order;
 import com.djq.springGarden.entity.OrderT;
 import com.djq.springGarden.entity.Orderitem;
 import com.djq.springGarden.entity.Product;
@@ -14,6 +16,8 @@ import com.djq.springGarden.mapper.UserMapper;
 import com.djq.springGarden.util.RandomUtils;
 import com.djq.springGarden.vo.OrderTConditionVo;
 import com.djq.springGarden.vo.OrderSearchVo;
+import com.djq.springGarden.vo.OrderTVo;
+import com.github.pagehelper.util.StringUtil;
 import lombok.Data;
 import org.springframework.stereotype.Service;
 import com.djq.springGarden.mapper.OrderMapper;
@@ -46,17 +50,81 @@ public class OrderServiceImpl implements OrderService {
     /**
      * 条件查询订单列表
      *
-     * @param orderT 订单
+     * @param orderTVo 查询条件
      * @return 订单
      */
     @Override
-    public List<Map<String, Object>> select(OrderT orderT) {
-        //查询条件，筛选入住时间，状态，支付时间，手机尾号，账号，身份证号码，订单编号。
-        //展示信息：订单编号，房间的信息(房间号)，预订人信息（账号名称，手机号码），预定时间（创建时间），选定时间:(入住时间，离开时间)，状态，总价格，备注，操作（入住，退房）
+    public List<Map<String, Object>> select(OrderTVo orderTVo) {
+        //查询条件，筛选入住时间，状态，支付时间，手机尾号，账号，订单编号。
+        //展示信息：订单编号，房间的信息(房间号)，预订人信息（账号名称，姓名，手机号码），预定时间（创建时间），选定时间:(入住时间，离开时间)，状态，总价格，备注，操作（入住，退房）
         List<Map<String,Object>> mapList = new ArrayList<>();
-        List<OrderT> orderTList = orderMapper.select(orderT);
-        //封装数据
+        //部分条件筛选
+        Example example = new Example(OrderT.class);
+        Example.Criteria criteria = example.createCriteria();
+        //状态：
+        Integer status = orderTVo.getStatus();
+        if (status != null) {
+            criteria.andEqualTo("status",status);
+        }
+        //订单编号
+        String orderCode = orderTVo.getOrderCode();
+        if (StringUtil.isNotEmpty(orderCode)) {
+            criteria.andEqualTo("orderCode",orderCode);
+        }
+        //入住时间筛选
+        Date startTime = orderTVo.getStartTime();
+        Date endTime = orderTVo.getEndTime();
+        if (startTime != null && endTime != null) {
+            criteria.andBetween("startTime",startTime,endTime);
+        }
+        //支付时间筛选
+        Date startTimePay = orderTVo.getStartTimePay();
+        Date endTimePay = orderTVo.getEndTimePay();
+        if (startTimePay != null && endTimePay != null) {
+            criteria.andBetween("payDate",startTimePay,endTimePay);
+        }
+        //查询
+        List<OrderT> orderTList = orderMapper.selectByExample(example);
+        //遍历结果继续筛选和封装数据
         for (OrderT t : orderTList) {
+            //各项数据查询
+            //房间的数据
+            Integer productId = t.getProductId();
+            Product product = new Product();
+            product.setId(productId);
+            Product productResult = productMapper.selectOne(product);
+
+            //账号信息
+            User user = new User();
+            user.setId(t.getUserId());
+            User userResult = userMapper.selectOne(user);
+
+            //入住人信息
+            Orderitem orderitem = new Orderitem();
+            orderitem.setId(t.getResidentId());
+            Orderitem orderitemReuslt = orderitemMapper.selectOne(orderitem);
+
+            //条件筛选
+            //手机尾号(四位)
+            String phone = orderTVo.getPhone();
+            if (StringUtil.isNotEmpty(phone)) {
+                String mobile = orderitemReuslt.getMobile();
+                String substring = mobile.substring(mobile.length() - 4, mobile.length() - 1);
+                if (!phone.equals(substring)) {
+                    continue;
+                }
+            }
+            //账号名称
+            String username = orderTVo.getUsername();
+            if (username != null) {
+                String name = userResult.getName();
+                if (!username.equals(name)) {
+                    continue;
+                }
+            }
+
+
+            //封装数据
             Map<String,Object> result = new HashMap<>();
             result.put("orderCode",t.getOrderCode());
             result.put("createTime",t.getCreateTime());
@@ -65,25 +133,15 @@ public class OrderServiceImpl implements OrderService {
             result.put("status",t.getStatus());
             result.put("totalCost",t.getTotal());
             result.put("con",t.getUserMessage());
-            //房间id
-            Integer productId = t.getProductId();
-            Product product = new Product();
-            product.setId(productId);
-            Product productResult = productMapper.selectOne(product);
+            //房间的数据
             if (productResult == null) {
                 result.put("productName",product.getName());
             }
-            //账号信息
-            User user = new User();
-            user.setId(t.getUserId());
-            User userResult = userMapper.selectOne(user);
+            // 账号信息
             if (userResult != null) {
                 result.put("username", user.getName());
             }
             //入住人信息
-            Orderitem orderitem = new Orderitem();
-            orderitem.setId(t.getResidentId());
-            Orderitem orderitemReuslt = orderitemMapper.selectOne(orderitem);
             if (orderitemReuslt != null) {
                 result.put("realName", orderitemReuslt.getReceiver());
                 result.put("phone", user.getTelphone());
@@ -92,6 +150,11 @@ public class OrderServiceImpl implements OrderService {
         }
 
         return mapList;
+    }
+
+    @Override
+    public List<OrderT> search(OrderT orderT) {
+        return orderMapper.select(orderT);
     }
 
     /**

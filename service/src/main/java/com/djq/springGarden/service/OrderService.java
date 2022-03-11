@@ -4,8 +4,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import cn.hutool.db.sql.Order;
 import com.djq.springGarden.entity.OrderT;
 import com.djq.springGarden.vo.OrderSearchVo;
+import com.djq.springGarden.vo.OrderTVo;
 
 /**
  * 订单Service接口
@@ -17,10 +19,19 @@ public interface OrderService {
     /**
      * 条件查询订单列表
      *
-     * @param orderT 订单
+     * @param orderTVo 查询条件
      * @return 订单集合
      */
-    List<Map<String, Object>> select(OrderT orderT);
+    List<Map<String, Object>> select(OrderTVo orderTVo);
+
+    /**
+     * 条件查询订单列表
+     *
+     * @param order 查询条件
+     * @return 订单集合
+     */
+    List<OrderT> search(OrderT order);
+
 
     /**
      * 条件查询订单:查询单个

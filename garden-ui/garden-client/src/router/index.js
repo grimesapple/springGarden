@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Index from "../views/Index";
-import CityHotel from "../views/customer/CityHotel";
+import Hotel from "../views/customer/Hotel";
 import Detail from "../views/customer/Detail";
 import OrderInfo from "../views/customer/OrderInfo";
 import PersonalCenter from "../views/customer/PersonalCenter";
@@ -32,13 +32,12 @@ const routes = [
     component:Index,
   },
   {
-    path: '/CityHotel',
-    name: 'CityHotel',
-    component:CityHotel,
+    path: '/Hotel',
+    name: 'Hotel',
+    component:Hotel,
     props:function(route){
       return {
-        city:route.query.city,
-        chooseregion:route.query.region,
+        people:route.query.people,
         timeslot:route.query.timeslot,
         showLogin:route.query.showLogin
       }

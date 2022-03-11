@@ -6,7 +6,7 @@
         <div class="unit-image">
             <el-carousel trigger="click"  height="610px" style="margin-top: 80px">
                 <el-carousel-item v-for="imgItem in houseData.img">
-                    <img ref="imgHeight" :src=imgItem  width="100%" height="100%" object-fit="cover">
+                    <img ref="imgHeight" :src="$data.root+imgItem.url"  width="100%" height="100%" object-fit="cover">
                 </el-carousel-item>
             </el-carousel>
         </div>
@@ -278,6 +278,7 @@
                 },
                 chooseDate:'',/*选择日期*/
                 dateSet:[],/*已订日期*/
+				root:this.API.ShowImage
             }
         },
         beforeCreate() {
@@ -374,9 +375,10 @@
             },
             getHouseDetail(){//得到房屋详情
                 this.houseData=JSON.parse(this.chooseHouse)
-                this.houseData.img=this.houseData.img.split(",")
-                this.houseData.chooseDate=this.houseData.chooseDate.split(",")
-                this.houseData.cityAndRegion=this.houseData.cityAndRegion.toString().replaceAll(",","")
+				console.log("housedata")
+				console.log(this.houseData)
+                // this.houseData.chooseDate=this.houseData.chooseDate.split(",")
+                // this.houseData.cityAndRegion=this.houseData.cityAndRegion.toString().replaceAll(",","")
             },
             async getOrder(){//得到房屋已存在的订单
                 const _this=this

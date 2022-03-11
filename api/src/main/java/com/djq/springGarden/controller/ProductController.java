@@ -78,11 +78,11 @@ public class ProductController {
      */
     @GetMapping("/searchForPage")
     @ApiOperation("房屋信息列表查询")
-    public ResultVO<Map<String, Object>> searchForPage(ProductSearchVo ProductSearchVo,
+    public ResultVO<Map<String, Object>> searchForPage(ProductSearchVo productSearchVo,
                                                        @RequestParam(value = "pageNum", required = false, defaultValue = "1") Integer pageNum,
                                                        @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
         Map<String, Object> map = new HashMap<>();
-        List<Map<String, Object>> list = productService.search(ProductSearchVo);
+        List<Map<String, Object>> list = productService.search(productSearchVo);
         map.put("total", list.size());
         map.put("list", list);
         return ResultVO.ok(map, "查询成功");

@@ -45,7 +45,7 @@ public class OrderController {
                                              @RequestParam(value = "pageSize" , required = false, defaultValue = "10" ) Integer pageSize) {
         HashMap<String, Object> map = new HashMap<>();
         Page<Object> info = PageHelper.startPage(pageNum, pageSize);
-        List<Map<String, Object>> list = orderService.select(orderT);
+        List<OrderT> list = orderService.search(orderT);
         map.put("total" , info.getTotal());
         map.put("list" , list);
         return ResultVO.ok(map,"查询成功");

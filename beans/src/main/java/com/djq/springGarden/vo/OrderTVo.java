@@ -33,6 +33,19 @@ public class OrderTVo extends OrderT {
 
     /** 手机尾号 */
     @ApiModelProperty("手机尾号" )
-    private Integer phoneNum;
+    private String phone ;
+
+    /** 账号名 */
+    @ApiModelProperty("账号名" )
+    private String username ;
+
+
+    /** 支付时间 */
+    @ApiModelProperty("支付时间-开始" )
+    private Date startTimePay;
+
+    /** 支付时间 */
+    @ApiModelProperty("支付时间-结束" )
+    private Date endTimePay;
 
 }
