@@ -1,5 +1,6 @@
 package com.djq.springGarden.service.impl;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 import javax.annotation.Resource;
@@ -152,6 +153,12 @@ public class OrderServiceImpl implements OrderService {
         return mapList;
     }
 
+
+    /**
+     * 简单条件查询列表
+     * @param orderT
+     * @return
+     */
     @Override
     public List<OrderT> search(OrderT orderT) {
         return orderMapper.select(orderT);
@@ -235,26 +242,50 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public int insertOrder(OrderSearchVo orderSearchVo) {
-        //插入订单
-        OrderT orderT = orderSearchVo.getOrderT();
+        //插入内容：预定时间，入住时间，离开时间，入住人数，房间id，预定人信息（姓名，联系方式，身份证）
+        //校验订单
         //预定或者入住的结束时间
-        Date startTime = new Date();
+        Date startTime = orderSearchVo.getStartTime();
         //预定或者入住的开始时间
-        Date endTime = new Date();
+        Date endTime = orderSearchVo.getEndTime();
         //校验对应房间是否已经被预定
-        if (!check(startTime,endTime,orderT.getProductId())) {
+        if (!check(startTime,endTime,orderSearchVo.getProductId())) {
             //有冲突，不能通过预定
             return -1;
         }
         //初始化订单编号
         String businessNum = RandomUtils.businessNum();
-        orderT.setOrderCode(businessNum);
-
+        orderSearchVo.setOrderCode(businessNum);
+        //时间初始化
+        orderSearchVo.setCreateTime(new Date());
+        //计算价格
+        long time = endTime.getTime() - startTime.getTime();
+        long day = time / 1000 / 3600 / 24;
+        //获取房屋的价格
+        Product product = new Product();
+        product.setId(orderSearchVo.getProductId());
+        product = productMapper.selectOne(product);
+        BigDecimal promotePrice = product.getPromotePrice();
+        BigDecimal price = promotePrice.multiply(new BigDecimal(day));
+        orderSearchVo.setTotal(price);
         //订单插入
-        int orderNum = orderMapper.insert(orderT);
+        int orderNum = orderMapper.insertUseGeneratedKeys(orderSearchVo);
 
-        //设置入住人信息
-        int itemNum = insertBatchOrderItem(orderSearchVo.getOrderitems());
+        //入住人信息插入
+        Integer id = orderSearchVo.getId();
+        List<Orderitem> orderitems = orderSearchVo.getOrderitems();
+        for (Orderitem orderitem : orderitems) {
+            orderitem.setOrderId(id);
+        }
+        int itemNum = insertBatchOrderItem(orderitems);
+
+        //查询入住人id,更新订单id
+        Orderitem orderitem = new Orderitem();
+        orderitem.setOrderId(id);
+        List<Orderitem> select = orderitemMapper.select(orderitem);
+        orderitem = select.get(0);
+        orderSearchVo.setResidentId(orderitem.getId());
+        orderMapper.updateByPrimaryKeySelective(orderSearchVo);
         if (orderNum == 0) {
             return 0;
         }
@@ -273,9 +304,8 @@ public class OrderServiceImpl implements OrderService {
      */
     public int intoHouse(OrderSearchVo orderSearchVo) {
         //对应订单:设置对应订单状态：
-        OrderT orderT = orderSearchVo.getOrderT();
-        orderT.setStatus(2);
-        int orderNum = orderMapper.updateByPrimaryKey(orderT);
+        orderSearchVo.setStatus(2);
+        int orderNum = orderMapper.updateByPrimaryKey(orderSearchVo);
 
         //办理入住：核对结果，添加住户信息,点击确认，办理入住,
         int orderItemNum = insertBatchOrderItem(orderSearchVo.getOrderitems());

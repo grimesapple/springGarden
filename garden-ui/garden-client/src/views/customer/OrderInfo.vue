@@ -74,7 +74,7 @@
             }
         },
         created() {
-            this.currentHouseData=JSON.parse(this.houseData)
+            // this.currentHouseData=JSON.parse(this.houseData)
         },
         methods:{
             loginOut(){//退出登录
@@ -108,7 +108,7 @@
                                     path:"/"
                                 }
                             )*/
-                            document.forms[2].submit()
+                            document.forms[2].submit() 
                         }, 3000);
                     }
                 })

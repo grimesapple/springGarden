@@ -29,7 +29,7 @@
 					<!--默认打开菜单0,1- -->
 					<el-submenu index="0">
 						<template slot="title">
-							<i class="el-icon-menu"></i>
+							<i class="el-icon-menu menustyle"></i>
 							<span>房源管理</span>
 						</template>
 						<!-- 					<el-menu-item index="/HouseList/examine"
@@ -50,6 +50,18 @@
 
 					</el-submenu>
 					<el-submenu index="1">
+						<template slot="title">
+							<i class="el-icon-menu"></i>
+							<span>订单模块</span>
+						</template>
+						<el-menu-item index="/OrderListInfo/add" :class="$route.path=='/OrderListInfo/add'?'is-active':''">
+							<i class="el-icon-document"></i>添加订单
+						</el-menu-item>
+						<el-menu-item index="/OrderList/seeAll" :class="$route.path=='/OrderList/seeAll'?'is-active':''">
+							<i class="el-icon-document"></i>订单管理
+						</el-menu-item>
+					</el-submenu>
+					<el-submenu index="2">
 						<template slot="title">
 							<i class="el-icon-menu"></i>
 							<span>发布通知</span>

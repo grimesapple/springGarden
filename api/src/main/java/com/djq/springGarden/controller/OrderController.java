@@ -4,12 +4,9 @@ import java.util.List;
 
 import com.djq.springGarden.entity.OrderT;
 import com.djq.springGarden.vo.OrderSearchVo;
+import com.djq.springGarden.vo.OrderTVo;
 import com.github.pagehelper.Page;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import com.djq.springGarden.service.OrderService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -30,7 +27,7 @@ import javax.annotation.Resource;
  */
 @Api(tags = "订单控制器" )
 @RestController
-@RequestMapping("/system/order" )
+@RequestMapping("/order" )
 public class OrderController {
     @Resource
     private OrderService orderService;
@@ -38,7 +35,7 @@ public class OrderController {
     /**
      * 查询订单列表
      */
-    @GetMapping("/list" )
+    @GetMapping("/search" )
     @ApiOperation("查询订单列表" )
     public ResultVO<Map<String,Object>> list(OrderT orderT,
                                              @RequestParam(value = "pageNum" , required = false, defaultValue = "1" ) Integer pageNum,
@@ -50,6 +47,23 @@ public class OrderController {
         map.put("list" , list);
         return ResultVO.ok(map,"查询成功");
     }
+
+    /**
+     * 条件查询订单列表
+     */
+    @GetMapping("/list" )
+    @ApiOperation("条件查询订单列表" )
+    public ResultVO<Map<String,Object>> list(OrderTVo orderTVo,
+                                             @RequestParam(value = "pageNum" , required = false, defaultValue = "1" ) Integer pageNum,
+                                             @RequestParam(value = "pageSize" , required = false, defaultValue = "10" ) Integer pageSize) {
+        HashMap<String, Object> map = new HashMap<>();
+        Page<Object> info = PageHelper.startPage(pageNum, pageSize);
+        List<Map<String, Object>> list = orderService.select(orderTVo);
+        map.put("total" , info.getTotal());
+        map.put("list" , list);
+        return ResultVO.ok(map,"查询成功");
+    }
+
 
     /**
      * 获取订单详细信息
@@ -65,8 +79,17 @@ public class OrderController {
      */
     @ApiOperation("新增订单" )
     @PostMapping("/add" )
-    public ResultVO<OrderT> add(OrderSearchVo orderSearchVo) {
-        return orderService.insertOrder(orderSearchVo) > 0 ? ResultVO.ok("新增成功" ) : ResultVO.error("新增失败" );
+    public ResultVO<OrderT> add(@RequestBody OrderSearchVo orderSearchVo) {
+        int i = orderService.insertOrder(orderSearchVo);
+        if (i == -1) {
+            return ResultVO.error("房间已被预定,请更换时间段");
+        } else if (i == 0) {
+            return ResultVO.error("订单插入失败");
+        } else if (i == 1) {
+            return ResultVO.error("入住信息插入失败");
+        } else {
+            return ResultVO.ok("预定成功");
+        }
     }
 
     /**

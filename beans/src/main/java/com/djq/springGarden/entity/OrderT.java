@@ -6,6 +6,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 import java.math.BigDecimal;
 import javax.persistence.*;
@@ -55,35 +57,41 @@ public class OrderT {
     /** 入住时间 */
     @ApiModelProperty("入住时间" )
     @Column(name = "start_time" )
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd" )
     private Date startTime;
     /** 离开时间 */
     @ApiModelProperty("离开时间" )
     @Column(name = "end_time" )
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd" )
     private Date endTime;
     /** 支付时间 */
     @ApiModelProperty("支付时间" )
     @Column(name = "pay_date" )
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd" )
     private Date payDate;
-    /** 提交时间 */
-    @ApiModelProperty("提交时间" )
+    /** 交付时间 */
+    @ApiModelProperty("交付时间:真实入住时间" )
     @Column(name = "delivery_date" )
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd" )
     private Date deliveryDate;
     /** 提交时间 */
-    @ApiModelProperty("提交时间" )
+    @ApiModelProperty("提交时间：预定时间" )
     @Column(name = "create_time" )
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd" )
     private Date createTime;
     /** 批准时间 */
     @ApiModelProperty("批准时间" )
     @Column(name = "confirm_date" )
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd" )
     private Date confirmDate;
     /** 状态：0离店、1预定、2已入住 */
-    @ApiModelProperty("状态：0离店、1预定、2已入住" )
+    @ApiModelProperty("状态：0离店、1预定、2已入住，3退订" )
     @Column(name = "status" )
     private Integer status;
     /** 价格总数 */

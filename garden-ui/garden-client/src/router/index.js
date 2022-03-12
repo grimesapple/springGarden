@@ -12,8 +12,10 @@ import Message from "../components/Message";
 import MerchantManage from "../views/landlord/MerchantManage";
 import HouseManager from "../components/HouseManager";
 import HouseInfo from "../components/HouseInfo";
+import OrderListInfo from "../components/OrderInfo";
 import Administrator from "../views/administrators/Administrator";
 import HouseList from "../components/HouseList";
+import OrderList from "../components/OrderList";
 import Property from "../components/Property";
 import Notice from "../components/Notice";
 import CashBox from "../components/CashBox";
@@ -111,16 +113,7 @@ const routes = [
     component:MerchantManage,
     redirect:"/MerchantOrder/landlord",
     children:[
-      {
-        path:'/MerchantOrder/:type',
-        name:"MerchantOrder",
-        component:Order,
-        props:function(route){
-          return {
-            type:route.params.type,
-          }
-        },
-      },
+     
       {
         path:'/HouseManager',
         name:"HouseManager",
@@ -180,6 +173,16 @@ const routes = [
         },
       },
 	  {
+        path:'/OrderList/:operation',
+        name:"OrderList",
+        component:OrderList,
+        props:function(route){
+          return {
+            operation:route.params.operation,
+          }
+        },
+      },
+	  {
 	    path:'/Property',
 	    name:"Property",
 	    component:Property,
@@ -197,6 +200,27 @@ const routes = [
 	      return {
 	        operation:route.params.operation,
 	        houseData:route.query.data,
+	      }
+	    },
+	  },
+	  {
+	    path:'/OrderListInfo/:operation',
+	    name:"OrderListInfo",
+	    component:OrderListInfo,
+	    props:function(route){
+	      return {
+	        operation:route.params.operation,
+	        houseData:route.query.data,
+	      }
+	    },
+	  },
+	  {
+	    path:'/MerchantOrder/:type',
+	    name:"MerchantOrder",
+	    component:Order,
+	    props:function(route){
+	      return {
+	        type:route.params.type,
 	      }
 	    },
 	  },

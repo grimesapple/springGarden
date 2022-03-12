@@ -13,12 +13,7 @@ import java.util.List;
  * @date 2022/3/2 16:09
  */
 @Data
-public class OrderSearchVo {
-    /**
-     * 订单
-     */
-    private OrderT orderT;
-
+public class OrderSearchVo extends OrderT{
     /**
      * 订单信息
      */

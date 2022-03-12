@@ -8,13 +8,8 @@
 		<div class="loading" v-loading="loading" v-show="loading"></div>
 		<!--搜索-->
 		<div class="search" v-if="operation=='seeAll'">
-			<span>房间名称：</span>
-			<el-input placeholder="请输入内容" v-model="title" style="width: 250px" clearable>
+			<el-input class="inputS" placeholder="房间名称" v-model="subTitle" clearable>
 			</el-input>
-			<span>房间类型：</span>
-			<el-input placeholder="请输入内容" v-model="title" style="width: 250px" clearable>
-			</el-input>
-
 			<div style="margin-left: 20px;height: 40px;padding-top: 5px">
 				<el-button type="primary" icon="el-icon-search" size="mini" @click="getHouseData()">搜索</el-button>
 			</div>
@@ -33,7 +28,7 @@
 			<el-table-column prop="house.id" label="房屋id" width="70" align="center"></el-table-column>
 			<el-table-column prop="house.name" label="房屋名字" align="center"></el-table-column>
 			<el-table-column prop="house.subTitle" label="房屋标题" align="center"></el-table-column>
-			<el-table-column label="房屋照片" width="300" align="center">
+			<el-table-column label="房屋照片" width="215" align="center">
 				<template slot-scope="scope">
 					<el-carousel trigger="click" :autoplay="false" height="96px" indicator-position="none">
 						<el-carousel-item v-for="(imgItem,key) in scope.row.img" :key="key">
@@ -122,29 +117,34 @@
 		props: ["operation"],
 		data() {
 			return {
-				tableData: [],
 				/*表格数据*/
-				pageSize: 5,
+				tableData: [],
 				/*每页显示数量*/
-				total: 0,
+				pageSize: 5,
 				/*房屋总数*/
-				currentPage: 1,
+				total: 0,
 				/*当前页码*/
-				loading: false,
+				currentPage: 1,
 				/*整个页面是否显示加载图标*/
-				state: '',
+				loading: false,
 				/*状态*/
-				city: '',
-				/*城市*/
-				username: '',
-				/*用户名*/
-				title: '',
+				state: '',
 				/*房屋标题*/
+				subTitle: '',
+				/*图片回显地址*/
 				root: this.API.ShowImage,
-
+				/*搜索条件：房屋标题*/
+				subTitle:"",
+				/*搜索条件：选择日期*/
+				chooseDate:"",
+				/*搜索条件：房屋标题*/
+				subTitle:"",
+				/*搜索条件：房屋标题*/
+				subTitle:"",
 				//添加弹出框
 				dialogVisible: false,
 				dialogType: "",
+				/*表单数据*/
 				form: {
 					name: '大床房',
 					subTitle: '浪漫',
@@ -154,13 +154,11 @@
 					categoryId: '1',
 					//图片地址
 					fileList: [],
-
 				},
 				//房间类型
 				categorys: [],
 				//图片上传地址
 				actionurl: "",
-
 			}
 		},
 		created() {
@@ -401,6 +399,12 @@
 		box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
 		background: #ededed;
 		border-radius: 10px;
+	}
+
+	.inputS {
+		margin-left: 20px;
+		height: 33px;
+		width: 175px;
 	}
 
 	/*加载图标*/
