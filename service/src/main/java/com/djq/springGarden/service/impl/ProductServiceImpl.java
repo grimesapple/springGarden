@@ -112,10 +112,11 @@ public class ProductServiceImpl implements ProductService {
             }
 
             //判断当前房间在对应时间是否有订单
+             int status = 0;
             if (productSearchVo.getStartTime() != null && productSearchVo.getEndTime() != null) {
                 if (!orderService.check(productSearchVo.getStartTime(), productSearchVo.getEndTime(), proId)) {
                     //有订单，该房间不能被租
-                    continue;
+                    status = 1;
                 }
             }
 
@@ -167,6 +168,8 @@ public class ProductServiceImpl implements ProductService {
             result.put("img", imageList);
             //属性
             result.put("property", maps);
+            //房间状态
+            result.put("status", status);
 
             //评价
 //            result.put("housePrice", pro.getOrignalPrice());

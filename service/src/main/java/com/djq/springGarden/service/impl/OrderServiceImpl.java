@@ -1,12 +1,11 @@
 package com.djq.springGarden.service.impl;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import javax.annotation.Resource;
 
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.db.sql.Order;
 import com.djq.springGarden.entity.OrderT;
 import com.djq.springGarden.entity.Orderitem;
 import com.djq.springGarden.entity.Product;
@@ -47,7 +46,6 @@ public class OrderServiceImpl implements OrderService {
     private ProductMapper productMapper;
 
 
-
     /**
      * 条件查询订单列表
      *
@@ -58,31 +56,31 @@ public class OrderServiceImpl implements OrderService {
     public List<Map<String, Object>> select(OrderTVo orderTVo) {
         //查询条件，筛选入住时间，状态，支付时间，手机尾号，账号，订单编号。
         //展示信息：订单编号，房间的信息(房间号)，预订人信息（账号名称，姓名，手机号码），预定时间（创建时间），选定时间:(入住时间，离开时间)，状态，总价格，备注，操作（入住，退房）
-        List<Map<String,Object>> mapList = new ArrayList<>();
+        List<Map<String, Object>> mapList = new ArrayList<>();
         //部分条件筛选
         Example example = new Example(OrderT.class);
         Example.Criteria criteria = example.createCriteria();
         //状态：
         Integer status = orderTVo.getStatus();
         if (status != null) {
-            criteria.andEqualTo("status",status);
+            criteria.andEqualTo("status", status);
         }
         //订单编号
         String orderCode = orderTVo.getOrderCode();
         if (StringUtil.isNotEmpty(orderCode)) {
-            criteria.andEqualTo("orderCode",orderCode);
+            criteria.andEqualTo("orderCode", orderCode);
         }
         //入住时间筛选
-        Date startTime = orderTVo.getStartTime();
-        Date endTime = orderTVo.getEndTime();
-        if (startTime != null && endTime != null) {
-            criteria.andBetween("startTime",startTime,endTime);
+        Date startTimeVo = orderTVo.getStartTimeVo();
+        Date endTimeVO = orderTVo.getEntTimeVo();
+        if (startTimeVo != null && endTimeVO != null) {
+            criteria.andBetween("startTime", startTimeVo, endTimeVO);
         }
         //支付时间筛选
         Date startTimePay = orderTVo.getStartTimePay();
         Date endTimePay = orderTVo.getEndTimePay();
         if (startTimePay != null && endTimePay != null) {
-            criteria.andBetween("payDate",startTimePay,endTimePay);
+            criteria.andBetween("payDate", startTimePay, endTimePay);
         }
         //查询
         List<OrderT> orderTList = orderMapper.selectByExample(example);
@@ -96,9 +94,13 @@ public class OrderServiceImpl implements OrderService {
             Product productResult = productMapper.selectOne(product);
 
             //账号信息
-            User user = new User();
-            user.setId(t.getUserId());
-            User userResult = userMapper.selectOne(user);
+            User user;
+            User userResult = null;
+            if (t.getUserId() != null) {
+                user = new User();
+                user.setId(t.getUserId());
+                userResult = userMapper.selectOne(user);
+            }
 
             //入住人信息
             Orderitem orderitem = new Orderitem();
@@ -117,7 +119,7 @@ public class OrderServiceImpl implements OrderService {
             }
             //账号名称
             String username = orderTVo.getUsername();
-            if (username != null) {
+            if (username != null && userResult != null) {
                 String name = userResult.getName();
                 if (!username.equals(name)) {
                     continue;
@@ -126,36 +128,36 @@ public class OrderServiceImpl implements OrderService {
 
 
             //封装数据
-            Map<String,Object> result = new HashMap<>();
-            result.put("orderCode",t.getOrderCode());
-            result.put("createTime",t.getCreateTime());
-            result.put("startTime",t.getStartTime());
-            result.put("endTime",t.getEndTime());
-            result.put("status",t.getStatus());
-            result.put("totalCost",t.getTotal());
-            result.put("con",t.getUserMessage());
+            Map<String, Object> result = new HashMap<>();
+            result.put("orderCode", t.getOrderCode());
+            result.put("createTime", dateformat(t.getCreateTime()));
+            result.put("startTime", dateformat(t.getStartTime()));
+            result.put("endTime", dateformat(t.getEndTime()));
+            result.put("status", t.getStatus());
+            result.put("totalCost", t.getTotal());
+            result.put("remark", t.getUserMessage());
             //房间的数据
-            if (productResult == null) {
-                result.put("productName",product.getName());
-            }
+            result.put("productName", productResult == null ? null : productResult.getName());
             // 账号信息
-            if (userResult != null) {
-                result.put("username", user.getName());
-            }
+            result.put("username", userResult == null ? null : userResult.getName());
             //入住人信息
-            if (orderitemReuslt != null) {
-                result.put("realName", orderitemReuslt.getReceiver());
-                result.put("phone", user.getTelphone());
-            }
+            result.put("realName", orderitemReuslt == null ? null : orderitemReuslt.getReceiver());
+            result.put("phone", orderitemReuslt == null ? null : orderitemReuslt.getMobile());
             mapList.add(result);
         }
 
         return mapList;
     }
 
+    private String dateformat(Date time) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        return format.format(time);
+    }
+
 
     /**
      * 简单条件查询列表
+     *
      * @param orderT
      * @return
      */
@@ -188,7 +190,7 @@ public class OrderServiceImpl implements OrderService {
         String username = orderConditionVo.getUsername();
         Example userExample = new Example(User.class);
         Example.Criteria criteria4User = userExample.createCriteria();
-        criteria4User.andLike("name","%"+username+"%");
+        criteria4User.andLike("name", "%" + username + "%");
         List<User> users = userMapper.selectByExample(userExample);
         ArrayList<String> userIdList = new ArrayList<>();
         for (User user : users) {
@@ -201,7 +203,7 @@ public class OrderServiceImpl implements OrderService {
         String productName = orderConditionVo.getProductName();
         Example productExample = new Example(Product.class);
         Example.Criteria criteria4product = productExample.createCriteria();
-        criteria4product.andLike("name","%"+productName+"%");
+        criteria4product.andLike("name", "%" + productName + "%");
         List<Product> products = productMapper.selectByExample(productExample);
         ArrayList<String> productIdList = new ArrayList<>();
         for (Product product : products) {
@@ -222,10 +224,10 @@ public class OrderServiceImpl implements OrderService {
             criteria.andBetween("startTime", firstTime, lastTime);
         }
         if (userIdList.size() != 0) {
-            criteria.andIn("userId",userIdList);
+            criteria.andIn("userId", userIdList);
         }
         if (productIdList.size() != 0) {
-            criteria.andIn("userId",productIdList);
+            criteria.andIn("userId", productIdList);
         }
 
         //封装订单信息
@@ -249,7 +251,7 @@ public class OrderServiceImpl implements OrderService {
         //预定或者入住的开始时间
         Date endTime = orderSearchVo.getEndTime();
         //校验对应房间是否已经被预定
-        if (!check(startTime,endTime,orderSearchVo.getProductId())) {
+        if (!check(startTime, endTime, orderSearchVo.getProductId())) {
             //有冲突，不能通过预定
             return -1;
         }
@@ -277,15 +279,18 @@ public class OrderServiceImpl implements OrderService {
         for (Orderitem orderitem : orderitems) {
             orderitem.setOrderId(id);
         }
-        int itemNum = insertBatchOrderItem(orderitems);
+        Orderitem orderitem = orderitems.get(0);
+        int itemNum = orderitemMapper.insertUseGeneratedKeys(orderitem);
 
         //查询入住人id,更新订单id
-        Orderitem orderitem = new Orderitem();
-        orderitem.setOrderId(id);
-        List<Orderitem> select = orderitemMapper.select(orderitem);
-        orderitem = select.get(0);
         orderSearchVo.setResidentId(orderitem.getId());
-        orderMapper.updateByPrimaryKeySelective(orderSearchVo);
+
+        //如果是入住则调用入住接口
+        if (orderSearchVo.getStatus() == 2) {
+            intoHouse(orderSearchVo);
+        } else {
+            orderMapper.updateByPrimaryKeySelective(orderSearchVo);
+        }
         if (orderNum == 0) {
             return 0;
         }
@@ -305,7 +310,7 @@ public class OrderServiceImpl implements OrderService {
     public int intoHouse(OrderSearchVo orderSearchVo) {
         //对应订单:设置对应订单状态：
         orderSearchVo.setStatus(2);
-        int orderNum = orderMapper.updateByPrimaryKey(orderSearchVo);
+        int orderNum = orderMapper.updateByPrimaryKeySelective(orderSearchVo);
 
         //办理入住：核对结果，添加住户信息,点击确认，办理入住,
         int orderItemNum = insertBatchOrderItem(orderSearchVo.getOrderitems());
@@ -339,8 +344,15 @@ public class OrderServiceImpl implements OrderService {
     public int insertBatchOrderItem(List<Orderitem> orderitems) {
         int orderItemNum = 0;
         if (orderitems != null && !orderitems.isEmpty() && orderitems.get(0) != null) {
-            for (Orderitem orderitem : orderitems) {
-                orderItemNum += orderitemMapper.insert(orderitem);
+            for (int i = 0; i < orderitems.size(); i++) {
+                Orderitem orderitem = orderitems.get(i);
+                if (i == 0) {
+                    //更新
+                    orderItemNum = orderitemMapper.updateByPrimaryKey(orderitem);
+                } else {
+                    //插入
+                    orderItemNum += orderitemMapper.insert(orderitem);
+                }
             }
         }
         return orderItemNum;
@@ -350,13 +362,13 @@ public class OrderServiceImpl implements OrderService {
     /**
      * 判断当前选定时间是否可以入住是可预定
      *
-     * @param endTime 预定或者入住的结束时间
+     * @param endTime   预定或者入住的结束时间
      * @param startTime 预定或者入住的开始时间
      * @param productId 房间id
      * @return true:无冲突，可以预定.false：有冲突。
      */
     @Override
-    public boolean check(Date startTime,Date endTime,Integer productId) {
+    public boolean check(Date startTime, Date endTime, Integer productId) {
         //查询对应的房间列表：预定
         OrderT orderTForSearch = new OrderT();
         orderTForSearch.setProductId(productId);
@@ -364,29 +376,85 @@ public class OrderServiceImpl implements OrderService {
         List<OrderT> orderTList = orderMapper.select(orderTForSearch);
         //查询对应的房间列表：已入住
         orderTForSearch.setStatus(2);
-        List<OrderT> list2 = orderMapper.select(orderTForSearch);
-        //两种订单合并
-        orderTList.addAll(list2);
-        //订单需要根据时间进行排序：前一个订单和后一个订单的时间不会有交叉，最多是相等。(升序)
-        orderTList.sort(Comparator.comparing(OrderT::getStartTime));
+        Example example = new Example(OrderT.class);
+        Example.Criteria criteria = example.createCriteria();
+        Example.Criteria criteriaAnd = example.and();
+        Example.Criteria criteriaAnd2 = example.and();
+        criteria.andEqualTo("productId",productId);
+        criteriaAnd.andEqualTo("status",1);
+        criteriaAnd.orEqualTo("status",2);
+        criteriaAnd2.andBetween("startTime",startTime,endTime);
+        criteriaAnd2.orBetween("endTime",startTime,endTime);
+        List<OrderT> list2 = orderMapper.selectByExample(example);
+
+        if (list2.size() == 0) {
+            return true;
+        }
+        //判断订单时间是否是筛选时间的边缘
+        for (OrderT orderT : list2) {
+            Date startTime1 = orderT.getStartTime();
+            Date endTime1 = orderT.getEndTime();
+            //订单在时间之前
+            if (endTime1.equals(startTime) && startTime1.before(startTime) ||endTime1.equals(startTime) && startTime1.before(startTime)) {
+
+            }
+        }
+
+        return false;
+//        //两种订单合并
+//        orderTList.addAll(list2);
+//        //订单需要根据时间进行排序：前一个订单和后一个订单的时间不会有交叉，最多是相等。(降序)
+//        orderTList.sort(Comparator.comparing(OrderT::getStartTime).reversed());
 
         //遍历订单在选定时间中是否有冲突
-        boolean flag = true;
-        for (int i = orderTList.size() - 1; i > 0; i++) {
+/*        boolean flag = true;
+        for (OrderT orderT : list2) {
+            return true;
+        }*/
+
+
+       /* if (orderTList.size() == 1) {
+            OrderT orderT = orderTList.get(0);
+            long startTime1 = orderT.getStartTime().getTime();
+            long endTime1 = orderT.getEndTime().getTime();
+            //大于0 小于l 订单包含开始时间,大于l 在后面，小于0在前面
+            long l = endTime1 - startTime1;
+            long i1 = l - startTime.getTime() - startTime1;
+            //大于0 小于l 订单包含结束时间,大于l 在后面，小于0在前面
+            long i2 = l - endTime.getTime() - startTime1;
+            if ((i1 > 0 && i1 < l) || (i2 > 0 && i2 < l)) {
+                return true;
+            }
+        }
+
+        for (int i = 0; i < orderTList.size()-1; i++) {
             //当前订单
             OrderT firstOrderT = orderTList.get(i);
-            //下一时间段订单
-            OrderT secondOrderT = orderTList.get(--i);
+            //前一段订单
+            OrderT secondOrderT = orderTList.get(i+1);
+            //判断选择的时间在所有订单之后
+            if (i == 0) {
+                if (firstOrderT.getEndTime().before(startTime)) {
+                    return true;
+                }
+            }
+            //判断选择的时间在所有订单之前
+            if (i == orderTList.size()-2) {
+                if (secondOrderT.getStartTime().after(startTime)) {
+                    return true;
+                }
+            }
+
 
             //判断选定时间是否在这两个订单之间
-            if (firstOrderT.getEndTime().before(startTime) && secondOrderT.getStartTime().after(endTime)) {
+            if (secondOrderT.getEndTime().before(startTime) && firstOrderT.getStartTime().after(endTime)) {
                 //订单不冲突
                 flag = true;
                 break;
             }
             flag = false;
-        }
-        return flag;
+        }*/
+//        return flag;
     }
 
     /**

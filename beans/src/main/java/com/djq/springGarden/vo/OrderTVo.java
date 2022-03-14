@@ -26,10 +26,10 @@ public class OrderTVo extends OrderT {
 
     /** 入住时间筛选-开始 */
     @ApiModelProperty("入住时间筛选-开始" )
-    private Date startTime;
+    private Date startTimeVo;
     /** 入住时间筛选-结束 */
     @ApiModelProperty("入住时间筛选-结束" )
-    private Date entTime;
+    private Date entTimeVo;
 
     /** 手机尾号 */
     @ApiModelProperty("手机尾号" )
