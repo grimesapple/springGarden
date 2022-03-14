@@ -112,13 +112,12 @@ public class ProductServiceImpl implements ProductService {
             }
 
             //判断当前房间在对应时间是否有订单
-            if (!orderService.check(productSearchVo.getStartTime(), productSearchVo.getEndTime(), proId)) {
-                //有订单，该房间不能被租
-                continue;
+            if (productSearchVo.getStartTime() != null && productSearchVo.getEndTime() != null) {
+                if (!orderService.check(productSearchVo.getStartTime(), productSearchVo.getEndTime(), proId)) {
+                    //有订单，该房间不能被租
+                    continue;
+                }
             }
-
-
-
 
             //封装房间的属性
             Propertyvalue propertyvalue = new Propertyvalue();
