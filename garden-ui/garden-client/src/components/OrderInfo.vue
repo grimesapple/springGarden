@@ -157,6 +157,8 @@
 				active: 0,
 				/*房间id*/
 				id: '',
+				/*订单id*/
+				orderId: '',
 				/*床数*/
 				bedNumber: '',
 				/*入住人数*/
@@ -205,6 +207,7 @@
 					endTime: '',
 				},
 				allField: {
+					id:'',
 					startTime: '',
 					endTime: '',
 					number: '',
@@ -267,6 +270,7 @@
 				this.chooseDate[0] = this.orderData.startTime
 				this.chooseDate[1] = this.orderData.endTime
 				this.peopleNumber = this.orderData.number
+				this.orderId = this.orderData.orderId
 				await this.getHouseData();
 				this.bedNumber = this.tableData[0].house.bedNumber
 				this.choese(this.tableData[0])
@@ -397,6 +401,8 @@
 					})
 				} else {
 					//更新
+					this.allField.status = 2
+					this.allField.id = this.orderId
 					await axios.post(this.API.StayIn, this.allField).then(resp => {
 						let _this = this
 						if (resp.data.code == 200) {

@@ -333,6 +333,33 @@ public class OrderServiceImpl implements OrderService {
 
 
     /**
+     * 办理退房
+     *
+     * @param orderSearchVo 对应订单
+     * @return 返回结果
+     */
+    @Override
+    public int stayOUt(OrderSearchVo orderSearchVo) {
+        //对应订单:设置对应订单状态：
+        orderSearchVo.setStatus(0);
+        return orderMapper.updateByPrimaryKeySelective(orderSearchVo);
+    }
+
+    /**
+     * 取消预订
+     *
+     * @param orderSearchVo 对应订单
+     * @return 返回结果
+     */
+    @Override
+    public int cancelPre(OrderSearchVo orderSearchVo) {
+        //对应订单:设置对应订单状态：
+        orderSearchVo.setStatus(3);
+        return orderMapper.updateByPrimaryKeySelective(orderSearchVo);
+    }
+
+
+    /**
      * 新增订单
      *
      * @return 返回结果

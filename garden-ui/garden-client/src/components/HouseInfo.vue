@@ -502,10 +502,11 @@
 			},
 			//头像上传之前
 			beforeAvatarUpload(file) {
-				const isPNG = file.type === 'image/png';
+				console.log(file.type)
+				const isPNG = file.type === 'image/png' || file.type === 'image/jpeg';
 				const isLt2M = file.size / 1024 / 1024 < 2;
 				if (!isPNG) {
-					this.$message.error('上传图片只能是 PNG 格式!');
+					this.$message.error('上传图片只能是 PNG或者JPG 格式!');
 				}
 				if (!isLt2M) {
 					this.$message.error('上传图片大小不能超过 2MB!');
@@ -536,13 +537,6 @@
 						console.log(err.message)
 					})
 				console.log(url)
-				let result = {}
-				if (this.operation == "addHouse"){
-					return result = {
-						url:url
-					}
-				}
-				
 				return url;
 			},
 
@@ -573,23 +567,53 @@
 				this.$message.success("上传成功!")
 			},
 			handleAvatarSuccess1(res, file) {
-				this.imageUrl[0].url = res;
+				if (this.operation == "addHouse") {
+					this.imageUrl[0] = {
+						url: res
+					}
+				} else {
+					this.imageUrl[0].url = res;
+				}
 				this.handleAvatarSuccess(res, file)
 			},
 			handleAvatarSuccess2(res, file) {
-				this.imageUrl[1].url = res;
+				if (this.operation == "addHouse") {
+					this.imageUrl[1] = {
+						url: res
+					}
+				} else {
+					this.imageUrl[1].url = res;
+				}
 				this.handleAvatarSuccess(res, file)
 			},
 			handleAvatarSuccess3(res, file) {
-				this.imageUrl[2].url = res;
+				if (this.operation == "addHouse") {
+					this.imageUrl[2] = {
+						url: res
+					}
+				} else {
+					this.imageUrl[2].url = res;
+				}
 				this.handleAvatarSuccess(res, file)
 			},
 			handleAvatarSuccess4(res, file) {
-				this.imageUrl[3].url = res;
+				if (this.operation == "addHouse") {
+					this.imageUrl[3] = {
+						url: res
+					}
+				} else {
+					this.imageUrl[3].url = res;
+				}
 				this.handleAvatarSuccess(res, file)
 			},
 			handleAvatarSuccess5(res, file) {
-				this.imageUrl[4].url = res;
+				if (this.operation == "addHouse") {
+					this.imageUrl[4] = {
+						url: res
+					}
+				} else {
+					this.imageUrl[4].url = res;
+				}
 				this.handleAvatarSuccess(res, file)
 			},
 			//上传失败
@@ -639,7 +663,7 @@
 					// 			"propertyId": this.matchingList[i],
 					// 			"id": ''
 					// 		}
-						// }
+					// }
 
 					// }
 				}

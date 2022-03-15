@@ -59,6 +59,24 @@ public interface OrderService {
     int intoHouse(OrderSearchVo orderSearchVo);
 
     /**
+     * 办理退房
+     *
+     * @param orderSearchVo 对应订单
+     * @return 返回结果
+     */
+    int stayOUt(OrderSearchVo orderSearchVo);
+
+    /**
+     * 取消预订
+     *
+     * @param orderSearchVo 对应订单
+     * @return 返回结果
+     */
+    int cancelPre(OrderSearchVo orderSearchVo);
+
+
+
+    /**
      * 修改订单
      *
      * @param orderT 订单

@@ -67,8 +67,11 @@
 					<el-button v-if="scope.row.status == 1" @click="stayIn(scope.row)" type="text"
 						style="margin-right: 10px;">入住
 					</el-button>
-					<el-popconfirm title="确定退房吗？" @confirm="del(scope.row)">
-						<el-button type="text" slot="reference">退房</el-button>
+					<el-popconfirm v-if = "scope.row.status == 1" title="确定取消预订？" @confirm="cancelPre(scope.row)">
+						<el-button type="text" slot="reference" >取消预订</el-button>
+					</el-popconfirm>
+					<el-popconfirm v-if = "scope.row.status == 2" title="确定退房吗？" @confirm="stayOut(scope.row)">
+						<el-button type="text" slot="reference" >退房</el-button>
 					</el-popconfirm>
 				</template>
 			</el-table-column>
@@ -286,9 +289,62 @@
 			page(currentPage) { //换页
 				this.getData(currentPage)
 			},
-
-
-
+			//退房
+			async stayOut(row){
+				console.log(row)
+				let _this = this
+				let item = {
+					id : row.orderId
+				}
+				await axios.post(_this.API.StayOut, item).then(res => {
+						let data = res.data.result;
+						if (data.code == 200) {
+							_this.$message({
+								message: res.data.msg,
+								type: 'success'
+							})
+						}
+						if (data.code == 500) {
+							_this.$message({
+								showClose: true,
+								message: res.data.msg,
+								type: 'error'
+							})
+						}
+					})
+					.catch(err => {
+						console.log(err.message)
+					})
+				await this.getData()
+			},
+			//取消预订
+			async cancelPre(row){
+				console.log(row)
+				let _this = this
+				let item = {
+					id : row.orderId
+				}
+				await axios.post(_this.API.CancelPre, item).then(res => {
+						let data = res.data.result;
+						if (data.code == 200) {
+							_this.$message({
+								message: res.data.msg,
+								type: 'success'
+							})
+						}
+						if (data.code == 500) {
+							_this.$message({
+								showClose: true,
+								message: res.data.msg,
+								type: 'error'
+							})
+						}
+					})
+					.catch(err => {
+						console.log(err.message)
+					})
+				await this.getData()
+			},
 
 			//发送请求
 			async requestSend(url, item, methods) {

@@ -93,7 +93,7 @@ public class OrderController {
     }
 
     /**
-     * 新增订单
+     * 办理入住
      */
     @ApiOperation("办理入住" )
     @PostMapping("/stayIn" )
@@ -108,6 +108,26 @@ public class OrderController {
             return ResultVO.ok("预定成功");
         }
     }
+
+
+    /**
+     * 办理退房
+     */
+    @ApiOperation("办理退房" )
+    @PostMapping("/stayOut" )
+    public ResultVO<OrderT> stayOut(@RequestBody OrderSearchVo orderSearchVo) {
+        return orderService.stayOUt(orderSearchVo) > 0 ?  ResultVO.ok("退房成功"): ResultVO.error("退房失败");
+    }
+
+    /**
+     * 取消预订
+     */
+    @ApiOperation("取消预订" )
+    @PostMapping("/cancelPre" )
+    public ResultVO<OrderT> cancelPre(@RequestBody OrderSearchVo orderSearchVo) {
+        return orderService.cancelPre(orderSearchVo) > 0 ?  ResultVO.ok("取消成功"): ResultVO.error("取消失败");
+    }
+
 
 
     /**

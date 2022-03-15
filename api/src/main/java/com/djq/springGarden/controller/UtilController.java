@@ -33,7 +33,8 @@ public class UtilController {
 
         log.info("您已进入图片上传服务");
         //获取文件在服务器的储存位置
-        String path = "D:\\01_yr\\03_studyProject\\springGarden\\resource\\imgs";
+//        String path = "D:\\01_yr\\03_studyProject\\springGarden\\resource\\imgs";
+        String path = System.getProperty("user.dir")+"\\resource\\imgs";
         File filePath = new File(path);
         log.info("文件的保存路径：" + path);
         if (!filePath.exists() && !filePath.isDirectory()) {

@@ -52,10 +52,15 @@ const API = {
 	GetOrderList: ApiRootUrl + 'order/list/',
 	//添加订单接口，order
 	AddOrder: ApiRootUrl + 'order/add',
-	GetOrderByTitle: ApiRootUrl +
-		'order/getOrderByTitle/', //根据房屋和房东名得到当前房屋已存在订单的接口，+this.houseData.username+"/"+this.houseData.title
 	//办理入住
 	StayIn: ApiRootUrl + 'order/stayIn', //修改订单接口，order
+	//办理退房
+	StayOut: ApiRootUrl + 'order/stayOut', //修改订单接口，order
+	//取消预订
+	CancelPre: ApiRootUrl + 'order/cancelPre', //修改订单接口，order
+	
+	GetOrderByTitle: ApiRootUrl +
+		'order/getOrderByTitle/', //根据房屋和房东名得到当前房屋已存在订单的接口，+this.houseData.username+"/"+this.houseData.title
 	UpdateOrder: ApiRootUrl + 'order/updateOrder', //修改订单接口，order
 	DeleteOrder: ApiRootUrl + 'order/deleteOrder/', //删除订单接口，id
 	CancelOrder: ApiRootUrl + 'order/cancelOrder', //取消订单，order
