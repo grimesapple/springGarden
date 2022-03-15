@@ -2,6 +2,7 @@ package com.djq.springGarden.service.impl;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.*;
 
 import javax.annotation.Resource;
@@ -82,6 +83,8 @@ public class OrderServiceImpl implements OrderService {
         if (startTimePay != null && endTimePay != null) {
             criteria.andBetween("payDate", startTimePay, endTimePay);
         }
+        //按时间顺序排列
+        example.orderBy("createTime").desc();
         //查询
         List<OrderT> orderTList = orderMapper.selectByExample(example);
         //遍历结果继续筛选和封装数据
@@ -129,6 +132,7 @@ public class OrderServiceImpl implements OrderService {
 
             //封装数据
             Map<String, Object> result = new HashMap<>();
+            result.put("orderId", t.getId());
             result.put("orderCode", t.getOrderCode());
             result.put("createTime", dateformat(t.getCreateTime()));
             result.put("startTime", dateformat(t.getStartTime()));
@@ -136,9 +140,12 @@ public class OrderServiceImpl implements OrderService {
             result.put("status", t.getStatus());
             result.put("totalCost", t.getTotal());
             result.put("remark", t.getUserMessage());
+            result.put("number", t.getNumber());
             //房间的数据
+            result.put("productId", productResult == null ? null : productResult.getId());
             result.put("productName", productResult == null ? null : productResult.getName());
             // 账号信息
+            result.put("userId", userResult == null ? null : userResult.getId());
             result.put("username", userResult == null ? null : userResult.getName());
             //入住人信息
             result.put("realName", orderitemReuslt == null ? null : orderitemReuslt.getReceiver());
@@ -307,6 +314,7 @@ public class OrderServiceImpl implements OrderService {
      * @param orderSearchVo 对应订单
      * @return 返回结果
      */
+    @Override
     public int intoHouse(OrderSearchVo orderSearchVo) {
         //对应订单:设置对应订单状态：
         orderSearchVo.setStatus(2);
@@ -369,36 +377,47 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public boolean check(Date startTime, Date endTime, Integer productId) {
-        //查询对应的房间列表：预定
-        OrderT orderTForSearch = new OrderT();
-        orderTForSearch.setProductId(productId);
-        orderTForSearch.setStatus(1);
-        List<OrderT> orderTList = orderMapper.select(orderTForSearch);
-        //查询对应的房间列表：已入住
-        orderTForSearch.setStatus(2);
+//        //查询对应的房间列表：预定
+//        OrderT orderTForSearch = new OrderT();
+//        orderTForSearch.setProductId(productId);
+//        orderTForSearch.setStatus(1);
+//        List<OrderT> orderTList = orderMapper.select(orderTForSearch);
+//        //查询对应的房间列表：已入住
+//        orderTForSearch.setStatus(2);
         Example example = new Example(OrderT.class);
         Example.Criteria criteria = example.createCriteria();
         Example.Criteria criteriaAnd = example.and();
         Example.Criteria criteriaAnd2 = example.and();
-        criteria.andEqualTo("productId",productId);
-        criteriaAnd.andEqualTo("status",1);
-        criteriaAnd.orEqualTo("status",2);
-        criteriaAnd2.andBetween("startTime",startTime,endTime);
-        criteriaAnd2.orBetween("endTime",startTime,endTime);
+        criteria.andEqualTo("productId", productId);
+        criteriaAnd.andEqualTo("status", 1);
+        criteriaAnd.orEqualTo("status", 2);
+        criteriaAnd2.andBetween("startTime", startTime, endTime);
+        criteriaAnd2.orBetween("endTime", startTime, endTime);
         List<OrderT> list2 = orderMapper.selectByExample(example);
 
         if (list2.size() == 0) {
             return true;
-        }
-        //判断订单时间是否是筛选时间的边缘
-        for (OrderT orderT : list2) {
-            Date startTime1 = orderT.getStartTime();
-            Date endTime1 = orderT.getEndTime();
-            //订单在时间之前
-            if (endTime1.equals(startTime) && startTime1.before(startTime) ||endTime1.equals(startTime) && startTime1.before(startTime)) {
-
+        } else if (list2.size() == 1) {
+            //判断订单时间是否是筛选时间的边缘
+            OrderT orderT = list2.get(0);
+            Date orderStartTime1 = orderT.getStartTime();
+            Date orderEndTime1 = orderT.getEndTime();
+            //第一个订单是否在边缘，是为true，否为FALSE
+            boolean a = orderEndTime1.equals(startTime) || orderStartTime1.equals(endTime);
+            if (list2.size() == 1) {
+                //只有一个订单，判断订单是否在时间段边缘
+                return a;
+            } else {
+                //有两个订单,判断是否两个都在时间段边缘
+                OrderT orderT1 = list2.get(1);
+                Date orderStartTime2 = orderT1.getStartTime();
+                Date orderEndTime2 = orderT1.getEndTime();
+                //第二个订单是否在边缘，是为true，否为FALSE
+                boolean b = orderEndTime2.equals(startTime) || orderStartTime2.equals(endTime);
+                return a && b;
             }
         }
+
 
         return false;
 //        //两种订单合并

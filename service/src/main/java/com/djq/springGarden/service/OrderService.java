@@ -51,6 +51,14 @@ public interface OrderService {
     int insertOrder(OrderSearchVo orderSearchVo);
 
     /**
+     * 办理入住
+     *
+     * @param orderSearchVo 对应订单
+     * @return 返回结果
+     */
+    int intoHouse(OrderSearchVo orderSearchVo);
+
+    /**
      * 修改订单
      *
      * @param orderT 订单

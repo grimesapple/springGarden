@@ -210,7 +210,7 @@ const routes = [
 	    props:function(route){
 	      return {
 	        operation:route.params.operation,
-	        houseData:route.query.data,
+	        orderData:route.query.data,
 	      }
 	    },
 	  },

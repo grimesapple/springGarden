@@ -54,9 +54,15 @@ const API = {
 	AddOrder: ApiRootUrl + 'order/add',
 	GetOrderByTitle: ApiRootUrl +
 		'order/getOrderByTitle/', //根据房屋和房东名得到当前房屋已存在订单的接口，+this.houseData.username+"/"+this.houseData.title
+	//办理入住
+	StayIn: ApiRootUrl + 'order/stayIn', //修改订单接口，order
 	UpdateOrder: ApiRootUrl + 'order/updateOrder', //修改订单接口，order
 	DeleteOrder: ApiRootUrl + 'order/deleteOrder/', //删除订单接口，id
 	CancelOrder: ApiRootUrl + 'order/cancelOrder', //取消订单，order
+	
+	//======================入住人信息相关接口=======================
+	 //入住人信息列表查询
+	GetOrderItems: ApiRootUrl + 'orderitem/list',
 
 
 	GetCategory: ApiRootUrl + 'category/list',

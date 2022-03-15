@@ -58,13 +58,13 @@ public class OrderT {
     @ApiModelProperty("入住时间" )
     @Column(name = "start_time" )
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(pattern = "yyyy-MM-dd" )
+    @JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8" )
     private Date startTime;
     /** 离开时间 */
     @ApiModelProperty("离开时间" )
     @Column(name = "end_time" )
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(pattern = "yyyy-MM-dd" )
+    @JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8" )
     private Date endTime;
     /** 支付时间 */
     @ApiModelProperty("支付时间" )

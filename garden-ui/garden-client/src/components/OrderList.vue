@@ -37,7 +37,7 @@
 
 		<!--内容区域-->
 		<el-table :data="tableData" height="90%" stripe
-			:header-cell-style="{'font-weight':bolder,'color': 'rgb(81, 90, 110)'}">
+			:header-cell-style="{'color': 'rgb(81, 90, 110)'}">
 			<el-table-column type="index" label="序号" width="70" align="center"></el-table-column>
 			<el-table-column prop="orderCode" label="订单编号" width="190" align="center"></el-table-column>
 			<el-table-column prop="productName" label="房间号" align="center"></el-table-column>
@@ -50,10 +50,10 @@
 			</el-table-column>
 			<el-table-column prop="status" label="状态" align="center">
 				<template slot-scope="scope">
-					<el-tag v-if="scope.row.status==0">离店</el-tag>
+					<el-tag v-if="scope.row.status==0" type="info">离店</el-tag>
 					<el-tag v-else-if="scope.row.status==1">已预定</el-tag>
-					<el-tag v-else-if="scope.row.status==2">已入住</el-tag>
-					<el-tag v-else-if="scope.row.status==3">取消订单</el-tag>
+					<el-tag v-else-if="scope.row.status==2" type="success">已入住</el-tag>
+					<el-tag v-else-if="scope.row.status==3" type="danger">取消订单</el-tag>
 				</template>
 			</el-table-column>
 			<el-table-column prop="totalCost" label="总价格" align="center">
@@ -62,12 +62,13 @@
 				</template>
 			</el-table-column>
 			<el-table-column prop="remark" label="备注" align="center"></el-table-column>
-			<el-table-column label="操作" align="center">
+			<el-table-column label="操作" width="200px" align="center">
 				<template slot-scope="scope">
-					<el-button @click="dialogType='edit', set(form, scope.row), dialogVisible=true" type="text"
-						size="small">入住</el-button>
-					<el-popconfirm title="这是一段内容确定退房吗？" @confirm="del(scope.row)">
-						<el-button type="text" size="small" slot="reference">退房</el-button>
+					<el-button v-if="scope.row.status == 1" @click="stayIn(scope.row)" type="text"
+						style="margin-right: 10px;">入住
+					</el-button>
+					<el-popconfirm title="确定退房吗？" @confirm="del(scope.row)">
+						<el-button type="text" slot="reference">退房</el-button>
 					</el-popconfirm>
 				</template>
 			</el-table-column>
@@ -310,34 +311,15 @@
 				return result;
 			},
 
-
-
-			//图片上传
-
-			async uploadImage(req) {
-				const config = {
-					headers: {
-						'Content-Type': 'multipart/form-data'
+			//跳转到入住页面
+			stayIn(row) {
+				this.$router.push({
+					path: "/OrderListInfo/stay",
+					query: {
+						data: JSON.stringify(row)
 					}
-				};
-				let filetype = ''
-				if (req.file.type === 'image/png') {
-					filetype = 'png'
-				} else {
-					filetype = 'jpg'
-				}
-				// const keyName = this.bucket +  "-" + Types.ObjectId().toString() +  '.' + fileType;
-				const formdata = new FormData();
-				formdata.append('picture', req.file);
-				axios.post(this.API.UploadImage, formdata, config)
-					.then(res => {
-						this.form.fileList.push(res.data.result.filename);
-						console.log('image upload succeed.');
-					})
-					.catch(err => {
-						console.log(err.message)
-					})
-			},
+				})
+			}
 		},
 	}
 </script>

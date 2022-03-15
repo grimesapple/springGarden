@@ -90,8 +90,9 @@
 					<el-table-column prop="house.promotePrice" label="促销价格(元/晚)" align="center"></el-table-column>
 					<el-table-column prop="tag" label="其他属性" align="center">
 						<template slot-scope="scope">
-							<el-tag style="margin: 0 5px 0 5px;" size="mini" v-for="(imgItem,key) in scope.row.property" :key="key"
-								:type="key%2 === 1 ? 'primary' : 'success'" disable-transitions>{{imgItem.propertyName}}
+							<el-tag style="margin: 0 5px 0 5px;" size="mini" v-for="(imgItem,key) in scope.row.property"
+								:key="key" :type="key%2 === 1 ? 'primary' : 'success'" disable-transitions>
+								{{imgItem.propertyName}}
 							</el-tag>
 						</template>
 					</el-table-column>
@@ -105,30 +106,31 @@
 				</div>
 				<div class="item-contain">
 					<el-input v-model="item.receiver" placeholder="请输入住户姓名" style="width: 150px" size="small"
-						maxlength="6" clearable></el-input>
+						maxlength="12" clearable></el-input>
 				</div>
 				<div class="item-title">
 					<h2>联系方式</h2>
 				</div>
 				<div class="item-contain">
 					<el-input v-model="item.mobile" placeholder="请输入联系方式" style="width: 150px" size="small"
-						maxlength="6" clearable></el-input>
+						maxlength="11" clearable></el-input>
 				</div>
 				<div class="item-title">
 					<h2>身份证号码</h2>
 				</div>
 				<div class="item-contain">
 					<el-input v-model="item.cardid" placeholder="请输入身份证号码" style="width: 150px" size="small"
-						maxlength="6" clearable></el-input>
+						maxlength="18" clearable></el-input>
 				</div>
 			</div>
 		</section>
 		<div class="footer">
 			<el-button style="margin-top: 12px;" @click="prev" v-show="active!=0">上一步</el-button>
 			<el-button style="margin-top: 12px;" @click="next" v-show="active!=2">下一步</el-button>
-			<el-button style="margin-top: 12px;" v-if="this.operation == 'add'" @click="addData" v-show="active===2">
+			<el-button style="margin-top: 12px;" v-if="this.operation == 'add'" @click="addData('pre')"
+				v-show="active===2">
 				办理预定</el-button>
-			<el-button style="margin-top: 12px;" @click="addData" v-show="active===2">办理入住</el-button>
+			<el-button style="margin-top: 12px;" @click="addData('stayin')" v-show="active===2">办理入住</el-button>
 		</div>
 	</section>
 </template>
@@ -168,7 +170,7 @@
 				/*促销价格*/
 				promotePrice: '',
 				/*入住时段*/
-				chooseDate: '',
+				chooseDate: [],
 				//房间数据
 				houseData: '',
 				//选中房间
@@ -196,6 +198,7 @@
 				dialogVisible: false,
 				dialogType: "",
 				form: {
+					id: '',
 					people: '',
 					startTime: '',
 					bedNumber: '',
@@ -251,11 +254,24 @@
 			};
 		},
 		mounted() {},
-		created() {
+		async created() {
 			if (this.operation == "add") {
 				console.log("添加")
 			}
 			if (this.operation == "stay") {
+				this.orderData = JSON.parse(this.orderData)
+				console.log("data")
+				console.log(this.orderData)
+				//查询房间信息
+				this.form.id = this.orderData.productId
+				this.chooseDate[0] = this.orderData.startTime
+				this.chooseDate[1] = this.orderData.endTime
+				this.peopleNumber = this.orderData.number
+				await this.getHouseData();
+				this.bedNumber = this.tableData[0].house.bedNumber
+				this.choese(this.tableData[0])
+				await this.getPeopleList(this.orderData.orderId)
+				// this.active == 2
 
 			}
 			// this.getHouseData()
@@ -267,16 +283,16 @@
 				if (this.active < 0) this.active = 0;
 			},
 			//下一步
-			next() {
+			async next() {
 				if (this.active == 0) {
 					if (this.peopleNumber != '' && this.bedNumber != '' && this.chooseDate != '') {
 						this.form.people = this.peopleNumber
 						this.form.bedNumber = this.bedNumber
 						this.form.startTime = this.chooseDate[0]
 						this.form.endTime = this.chooseDate[1]
-						this.getHouseData(1);
+						await this.getHouseData(1);
 						console.log("查询")
-						++this.active
+							++this.active
 					} else {
 						this.$message({
 							type: 'warning',
@@ -313,16 +329,23 @@
 					let data = resp.data.result.list
 					let resutl = []
 					let i = 0;
-					data.forEach(item => {
-						if (item.status == 0) {
-							resutl[++i] = item
-						}
-					})
-					_this.tableData = resutl
+					if (this.form.id == '') {
+						data.forEach(item => {
+							if (item.status == 0) {
+								resutl[i++] = item
+							}
+						})
+						_this.tableData = resutl
+					} else {
+						_this.tableData = data
+					}
+
+					console.log(_this.tableData)
+					// console.log(resutl)
 				})
 			},
-			//选中房间新仙尼
-			choese(res, oldres) {
+			//选中房间信息
+			choese(res) {
 				this.chooseHouse = res.house
 				console.log(res)
 			},
@@ -330,22 +353,75 @@
 				this.getHouseData(currentPage)
 			},
 			//添加订单
-			async addData() {
+			async addData(type) {
 				this.allField.startTime = this.chooseDate[0]
 				this.allField.endTime = this.chooseDate[1]
 				this.allField.number = this.peopleNumber
 				this.allField.productId = this.chooseHouse.id
 				this.allField.orderitems = this.orderitems
 				if (this.operation == 'add') {
-					this.allField.status = 1
+					//新增
+					let message = '';
+					if (type == 'pre') {
+						//只预定
+						this.allField.status = 1
+						message = "预定"
+					} else {
+						//入住
+						this.allField.status = 2
+						message = "入住"
+					}
+					await axios.post(this.API.AddOrder, this.allField).then(resp => {
+						let _this = this
+						if (resp.data.code == 200) {
+							_this.$message({
+								message: message + '成功',
+								type: 'success'
+							})
+							setTimeout(() => {
+								_this.$router.push({
+									path: "/OrderList/seeAll"
+								})
+							}, 1000);
+						}
+						if (resp.data.code == 500) {
+							_this.$message({
+								showClose: true,
+								message: message + '失败',
+								type: 'error'
+							})
+						}
+						console.log(resp.data)
+						_this.total = resp.data.result.total
+						_this.tableData = resp.data.result.list
+					})
 				} else {
-					this.allField.status = 2
+					//更新
+					await axios.post(this.API.StayIn, this.allField).then(resp => {
+						let _this = this
+						if (resp.data.code == 200) {
+							_this.$message({
+								message: '入住成功',
+								type: 'success'
+							})
+							setTimeout(() => {
+								_this.$router.push({
+									path: "/OrderList/seeAll"
+								})
+							}, 1000);
+						}
+						if (resp.data.code == 500) {
+							_this.$message({
+								showClose: true,
+								message: '入住失败',
+								type: 'error'
+							})
+						}
+					})
+
 				}
-				await axios.post(this.API.AddOrder, this.allField).then(resp => {
-					console.log(resp.data)
-					_this.total = resp.data.result.total
-					_this.tableData = resp.data.result.list
-				})
+
+
 			},
 			//改变入住人信息数量
 			changePeople() {
@@ -363,7 +439,32 @@
 			format(value) {
 				console.log("row")
 				console.log(value)
+			},
+			//获取入住人信息
+			async getPeopleList(orderId) {
+				await axios.get(this.API.GetOrderItems, {
+					params: {
+						orderId: orderId
+					}
+				}).then(resp => {
+					let _this = this
+					if (resp.data.code == 200) {
+						this.orderitems = resp.data.result.list
+						if (this.peopleNumber > this.orderitems.length) {
+							let item = []
+							for (let i = this.peopleNumber+1; i < this.peopleNumber - this.peopleNumber; i++) {
+								this.orderitems[i] = {
+									receiver: '',
+									mobile: '',
+									cardid: '',
+								}
+							}
+						}
+					}
+					if (resp.data.code == 500) {
 
+					}
+				})
 			}
 		}
 	}

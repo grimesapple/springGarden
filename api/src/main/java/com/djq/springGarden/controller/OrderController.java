@@ -77,7 +77,7 @@ public class OrderController {
     /**
      * 新增订单
      */
-    @ApiOperation("新增订单" )
+    @ApiOperation("预定" )
     @PostMapping("/add" )
     public ResultVO<OrderT> add(@RequestBody OrderSearchVo orderSearchVo) {
         int i = orderService.insertOrder(orderSearchVo);
@@ -91,6 +91,24 @@ public class OrderController {
             return ResultVO.ok("预定成功");
         }
     }
+
+    /**
+     * 新增订单
+     */
+    @ApiOperation("办理入住" )
+    @PostMapping("/stayIn" )
+    public ResultVO<OrderT> stayIn(@RequestBody OrderSearchVo orderSearchVo) {
+        int i = orderService.intoHouse(orderSearchVo);
+
+        if (i == 0) {
+            return ResultVO.error("订单更新失败");
+        } else if (i == 1) {
+            return ResultVO.error("入住信息更新失败");
+        } else {
+            return ResultVO.ok("预定成功");
+        }
+    }
+
 
     /**
      * 修改订单

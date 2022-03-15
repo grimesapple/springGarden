@@ -28,7 +28,7 @@ import javax.annotation.Resource;
  */
 @Api(tags = "客房图片控制器" )
 @RestController
-@RequestMapping("/system/productimage" )
+@RequestMapping("/productimage" )
 public class ProductimageController {
     @Resource
     private ProductimageService productimageService;

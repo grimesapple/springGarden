@@ -28,7 +28,7 @@ import javax.annotation.Resource;
  */
 @Api(tags = "房间属性情况控制器" )
 @RestController
-@RequestMapping("/system/propertyvalue" )
+@RequestMapping("/propertyvalue" )
 public class PropertyvalueController {
     @Resource
     private PropertyvalueService propertyvalueService;

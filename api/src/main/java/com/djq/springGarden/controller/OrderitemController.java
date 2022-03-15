@@ -28,7 +28,7 @@ import javax.annotation.Resource;
  */
 @Api(tags = "订单详情-入住人信息控制器" )
 @RestController
-@RequestMapping("/system/orderitem" )
+@RequestMapping("/orderitem" )
 public class OrderitemController {
     @Resource
     private OrderitemService orderitemService;
