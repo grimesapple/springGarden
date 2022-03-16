@@ -16,27 +16,27 @@ const API = {
 	GetNotice: ApiRootUrl + 'notice/getNotice/', //用户通知接口,+username
 	AddNotice: ApiRootUrl + 'notice/addNotice', //添加通知接口，notice
 	//======================房屋相关接口=======================
-	//得到房屋总数量接口,allFilters
-	GetHouseTotal: ApiRootUrl + 'house/getHouseTotal',
-	//得到房屋列表接口，1/'+this.pageSize,this.allFilters
+	//得到房屋列表接口
 	GetHouseList: ApiRootUrl + 'product/searchForPage',
-
-	GetHouse: ApiRootUrl + 'house/getHouse/', //得到单个房屋接口，+this.$store.state.userInfo.username+'/null'
-	//管理员得到房屋接口
-	GetHouseByAdmin: ApiRootUrl + 'product/listByAdmin/',
+	//删除房屋
+	delHouse: ApiRootUrl + 'product/delete',
+	//添加房屋接口,house
+	AddHouse: ApiRootUrl + 'product/add',
+	//修改房屋接口，house
+	UpdateHouse: ApiRootUrl + 'product/update',
 	//上传图片
 	UploadImage: ApiRootUrl + 'util/upload/',
 	//回显图片路径
 	ShowImage: ApiRootUrl + 'api/upload/resource/imgs/',
+	//管理员得到房屋接口
+	GetHouseByAdmin: ApiRootUrl + 'product/listByAdmin/',
+	//房屋预定的时间列表
+	GetHouseTimeList: ApiRootUrl + 'product/timeList/',
 
-
+	//得到房屋总数量接口,allFilters
+	GetHouseTotal: ApiRootUrl + 'house/getHouseTotal',
+	GetHouse: ApiRootUrl + 'house/getHouse/', //得到单个房屋接口，+this.$store.state.userInfo.username+'/null'
 	// GetHouseTotalByAdmin:ApiRootUrl + 'product/list/',//管理员得到得到房屋数量，+state
-	//修改房屋接口，house
-	UpdateHouse: ApiRootUrl + 'product/update',
-	//添加房屋接口,house
-	AddHouse: ApiRootUrl + 'product/add',
-	//删除房屋
-	delHouse: ApiRootUrl + 'product/delete',
 	//所有房屋类型
 	GetCategory: ApiRootUrl + 'category/list',
 

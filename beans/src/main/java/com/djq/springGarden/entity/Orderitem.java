@@ -41,5 +41,4 @@ public class Orderitem {
     @ApiModelProperty("联系方式" )
     @Column(name = "mobile" )
     private String mobile;
-
 }

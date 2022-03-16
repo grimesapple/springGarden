@@ -53,6 +53,23 @@ public class ProductController {
     }
 
     /**
+     * 对应房间能有房和无房的时间列表
+     *
+     * @param productId 房间id
+     * @return 时间列表
+     */
+    @GetMapping("/timeList")
+    @ApiOperation("查询对应房间能有房和无房的时间列表")
+    public ResultVO<Map<String, Object>> timeList(Integer productId) {
+        HashMap<String, Object> map = new HashMap<>();
+        List<String> list = productService.timeList(productId);
+        map.put("total", list.size());
+        map.put("list", list);
+        return ResultVO.ok(map, "查询成功");
+    }
+
+
+    /**
      * 管理员查询所有房屋列表
      *
      * @return 返回结果
@@ -87,8 +104,6 @@ public class ProductController {
         map.put("list", list);
         return ResultVO.ok(map, "查询成功");
     }
-
-
 
 
     /**

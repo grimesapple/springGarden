@@ -302,7 +302,7 @@
 							@click="currentRegion='',searchHotelByAllFilters()"></i>
 					</span>
 				</span> -->
-<!-- 				<span v-show="allFilters.houseType!=''">
+				<!-- 				<span v-show="allFilters.houseType!=''">
 					<span class="el-tag el-tag--info">
 						{{allFilters.houseType}}居<i class="el-icon-close"
 							@click="houseType='',searchHotelByAllFilters()"></i>
@@ -356,15 +356,15 @@
 				</section>
 				<!--房屋子项-->
 				<section class="tj-unit-list clearfix">
-					<article class="tj-unit-item-layout"  v-for="(item,key) in houseData" :key="key">
+					<article class="tj-unit-item-layout" v-for="(item,key) in houseData" :key="key">
 						<div class="tj-unit-item">
 							<div class="unit-item-pic-wrapper">
 								<div class="swiper-container pic-swiper swiper-container-horizontal"
 									@click="toDetail(item)">
 									<el-carousel trigger="click" :autoplay="false" height="296px">
 										<el-carousel-item v-for="imgItem in item.img">
-											<img ref="imgHeight" :src="$data.rootImgs+imgItem.url" width="100%" height="100%"
-												object-fit="cover">
+											<img ref="imgHeight" :src="$data.rootImgs+imgItem.url" width="100%"
+												height="100%" object-fit="cover">
 										</el-carousel-item>
 									</el-carousel>
 								</div>
@@ -383,7 +383,8 @@
 								</ul>
 								<div class="unit-desc-list-extra">
 									<ul class="unit-little-label-list">
-										<li  class="unit-little-label-list-item" v-for="(resp,key) in item.property"  >{{resp.propertyName}}</li>
+										<li class="unit-little-label-list-item" v-for="(resp,key) in item.property">
+											{{resp.propertyName}}</li>
 									</ul>
 								</div>
 								<div class="unit-price-content">
@@ -497,7 +498,7 @@
 				property: [],
 				/*图片回显地址*/
 				rootImgs: this.API.ShowImage,
-				
+
 
 				houseNumber: '',
 				/*房型条件的个数*/
@@ -847,6 +848,7 @@
 				});
 			},
 			toDetail(item) { //去详情页
+				item.chooseDate = this.chooseDate
 				this.$router.push({
 					path: "/Detail",
 					query: {

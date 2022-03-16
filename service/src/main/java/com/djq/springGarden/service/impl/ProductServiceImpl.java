@@ -1,5 +1,6 @@
 package com.djq.springGarden.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import javax.annotation.Resource;
@@ -7,6 +8,7 @@ import javax.xml.crypto.Data;
 
 import cn.hutool.core.convert.Convert;
 import com.djq.springGarden.entity.*;
+import com.djq.springGarden.mapper.OrderMapper;
 import com.djq.springGarden.mapper.ProductimageMapper;
 import com.djq.springGarden.mapper.PropertyvalueMapper;
 import com.djq.springGarden.service.*;
@@ -61,6 +63,14 @@ public class ProductServiceImpl implements ProductService {
     @Resource
     private PropertyvalueMapper propertyvalueMapper;
 
+    /**
+     * 房间的属性情况
+     */
+    @Resource
+    private OrderMapper orderMapper;
+
+
+
 
     /**
      * 订单
@@ -78,6 +88,48 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> select(Product product) {
         return productMapper.select(product);
+    }
+
+
+    /**
+     *
+     * 对应房间能有房和无房的时间列表
+     *
+     * @param productId 房间id
+     * @return 时间列表
+     */
+    @Override
+    public List<String> timeList(Integer productId) {
+        //查询对应房间的今天之后的所有订单
+        Example example = new Example(OrderT.class);
+        Example.Criteria criteria = example.createCriteria();
+        Example.Criteria and = example.and();
+        criteria.andEqualTo("productId",productId);
+        criteria.andCondition("start_Time >=",new Date());
+        and.andEqualTo("status",1);
+        and.orEqualTo("status",2);
+
+        List<OrderT> orderTList = orderMapper.selectByExample(example);
+
+        //封装时间
+        ArrayList<String> timeList = new ArrayList<>();
+        for (OrderT orderT : orderTList) {
+            Date startTime = orderT.getStartTime();
+            Date endTime  = orderT.getEndTime();
+            long diff = (endTime.getTime() - startTime.getTime())/1000/3600/24;
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            String startString = format.format(startTime);
+            Calendar c = Calendar.getInstance();
+            //设置当前日期
+            c.setTime(startTime);
+            for (int i = 0; i < diff; i++) {
+                c.add(Calendar.DATE, i);
+                String time = format.format(c.getTime());
+                timeList.add(time);
+            }
+        }
+
+        return timeList;
     }
 
 

@@ -1,5 +1,6 @@
 package com.djq.springGarden.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +22,16 @@ public interface ProductService {
      * @return 客房;商品信息相关：分类，商品图片，商品规格，商品参数集合
      */
     List<Product> select(Product product);
+
+    /**
+     *
+     * 对应房间能有房和无房的时间列表
+     *
+     * @param productId 房间id
+     * @return 时间列表
+     */
+    List<String> timeList(Integer productId);
+
 
 
     /**
