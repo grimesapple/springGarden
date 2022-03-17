@@ -229,7 +229,7 @@
 						<el-date-picker format="yyyy-MM-dd" value-format="yyyy-MM-dd" v-model="chooseDate"
 							type="daterange" range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期"
 							:picker-options="pickerOptions" style="width: 100%"
-							@change="totalPrice=DateDiff(chooseDate[0],chooseDate[1])*houseData.housePrice">
+							@change="totalPrice=DateDiff(chooseDate[0],chooseDate[1])*houseData.house.promotePrice,flag=0">
 						</el-date-picker>
 					</div>
 					<button class="common__button button--abled" @click="toOrderInfo">
@@ -238,7 +238,7 @@
 							{{totalPrice}}）</span>
 					</button>
 				</div>
-				<div class="unit-contact">
+				<!-- <div class="unit-contact">
 					<div class="unit-contact__land">
 						<img :src="houseData.headImg" class="unit-contact__land__photo" alt="">
 						<div class="unit-contact__land__main">
@@ -261,7 +261,7 @@
 						</div>
 					</div>
 				</div>
-			</div>
+	 -->		</div>
 		</div>
 		<Chat :is-show.sync="showChat" :username.sync="houseData.username" v-if="showChat"></Chat>
 	</article>
@@ -312,6 +312,7 @@
 				//时间范围
 				firstTime: '',
 				secondeTime: '',
+				flag : '',
 			}
 		},
 		beforeCreate() {
@@ -328,8 +329,9 @@
 			await this.getTimeList(this.houseData.house.id)
 			//限制选定的日期
 			this.chooseDate = this.houseData.chooseDate
+			//计算总价格
+			this.totalPrice=this.DateDiff(this.chooseDate[0],this.chooseDate[1])*this.houseData.house.promotePrice
 			const _this = this;
-			let j = 0;
 			this.pickerOptions = {
 				onPick(time) {
 					if (!time.maxDate) {
@@ -337,17 +339,27 @@
 						console.log(time)
 						//筛选出最近的订单时间
 						let min = time.minDate.getTime()
+						let max = -time.minDate.getTime() ;
 						for (let i = 0; i < _this.dateSet.length; i++) {
 							let date1 = new Date(_this.dateSet[i]).getTime() - 28800000;
 							let now = time.minDate.getTime()
 							let diff = date1 - now;
-							if ()
-								console.log(date1)
-							console.log(min)
-							if (min < date1) {
-								console.log("成功")
+							if (diff < 0) {
+								if (max < diff  ){
+									max = diff
+								}
+							} else {
+								if (min > diff){
+									min = diff
+								}
 							}
 						}
+						_this.firstTime = time.minDate.getTime()+max
+						_this.secondeTime = time.minDate.getTime()+min
+					} else{
+						_this.firstTime = ''
+						_this.secondeTime = ''
+						_this.flag = 1;
 					}
 				},
 				disabledDate(time) {
@@ -357,21 +369,35 @@
 					// 	return true;
 					// }
 					if (time.getTime() < Date.now() - 86400000 || time.getTime() < (new Date(_this.houseData
-							.chooseDate[0]).getTime() - 28800000)) {
+							.chooseDate[0]).getTime() - 28800000 )) {
 						return true;
 					}
-					for (let i = 0; i < _this.dateSet.length; i++) {
-						if (time.getTime() == (new Date(_this.dateSet[i])).getTime() - 28800000) {
+					if (_this.secondeTime != ''){
+						if (time.getTime() > _this.secondeTime ){
 							return true
 						}
-					}
-				},
-				cellClassName(time) {
-					for (let i = 0; i < _this.dateSet.length; i++) {
-						if (time.getTime() == (new Date(_this.dateSet[i])).getTime() - 28800000) {
-							return 'red';
+						if (time.getTime() < _this.firstTime + 86400000){
+							return true
+						}
+					} else {
+						
+						for (let i = 0; i < _this.dateSet.length && _this.flag != 1; i++) {
+							if (time.getTime() == (new Date(_this.dateSet[i])).getTime() - 28800000) {
+								return true
+							}
 						}
 					}
+					
+					
+				},
+				cellClassName(time) {
+					if (_this.secondeTime == ''){
+						for (let i = 0; i < _this.dateSet.length; i++) {
+							if (time.getTime() == (new Date(_this.dateSet[i])).getTime() - 28800000) {
+								return 'red';
+							}
+						}
+					}	
 				}
 			}
 			//得到评论

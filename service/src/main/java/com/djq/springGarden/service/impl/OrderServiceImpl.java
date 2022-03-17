@@ -251,7 +251,7 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public int insertOrder(OrderSearchVo orderSearchVo) {
-        //插入内容：预定时间，入住时间，离开时间，入住人数，房间id，预定人信息（姓名，联系方式，身份证）
+        //插入内容：预定时间，入住时间，离开时间，入住人数，房间id，预定人信息（姓名，联系方式，身份证）,账号
         //校验订单
         //预定或者入住的结束时间
         Date startTime = orderSearchVo.getStartTime();
