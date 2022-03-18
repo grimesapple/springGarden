@@ -232,6 +232,13 @@
 							@change="totalPrice=DateDiff(chooseDate[0],chooseDate[1])*houseData.house.promotePrice,flag=0">
 						</el-date-picker>
 					</div>
+					<div class="unit-price__calandar">
+						<el-select v-model="peopleNumber" placeholder="请选择人数" >
+							<el-option v-for="item in options" :key="item.value" :label="item.value+'人'"
+								:value="item.value">
+							</el-option>
+						</el-select>
+					</div>
 					<button class="common__button button--abled" @click="toOrderInfo">
 						<span
 							class="common__button_price">立刻预订（{{chooseDate==''?'0':DateDiff(chooseDate[0],chooseDate[1])}}晚¥
@@ -313,6 +320,8 @@
 				firstTime: '',
 				secondeTime: '',
 				flag : '',
+				options: [],
+				peopleNumber:''
 			}
 		},
 		beforeCreate() {
@@ -400,6 +409,11 @@
 					}	
 				}
 			}
+			for (let i = 0; i < this.houseData.house.people; i++) {
+				this.options[i] = {
+					value:i+1,
+				}
+			}
 			//得到评论
 			// this.getComments()
 		},
@@ -462,6 +476,7 @@
 					_this.thisnotice = resp.data
 				})
 			},
+			
 			getHouseDetail() { //得到房屋详情
 				this.houseData = JSON.parse(this.chooseHouse)
 				console.log("housedata")
@@ -532,6 +547,7 @@
 					return false;
 				}
 				this.houseData.chooseDate = this.chooseDate
+				this.houseData.people = this.peopleNumber
 				this.$router.push({
 					path: "/OrderInfo/",
 					query: {

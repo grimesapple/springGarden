@@ -34,20 +34,19 @@
 					<div class="orderinfo-main">
 						<el-form label-width="120">
 							<el-form-item label="入住人数：" style="margin-bottom: 0">
-								<el-select v-model="form.number" placeholder="人数" :disabled="!isEdit">
-									<el-option v-for="(item,index) in options" label="{{item.name}}"
-										value="0"></el-option>
-									<el-option label="女" value="1"></el-option>
+								<el-select v-model="form.number" placeholder="请输入人数" :disabled="!isEdit">
+									<el-option v-for="(item,index) in options" :label="item.value+'人'"
+										:value="item.value"></el-option>
 								</el-select>
 							</el-form-item>
 							<el-form-item label="姓名：">
-								<el-input v-model="form.orderitems.receiver" :disabled="!isEdit"></el-input>
+								<el-input v-model="form.orderitems[0].receiver" :disabled="!isEdit"></el-input>
 							</el-form-item>
 							<el-form-item label="电话号码：">
-								<el-input v-model="form.orderitems.mobile" :disabled="!isEdit"></el-input>
+								<el-input v-model="form.orderitems[0].mobile" :disabled="!isEdit"></el-input>
 							</el-form-item>
 							<el-form-item label="身份证号：">
-								<el-input v-model="form.orderitems.cardid" :disabled="!isEdit"></el-input>
+								<el-input v-model="form.orderitems[0].cardid" :disabled="!isEdit"></el-input>
 							</el-form-item>
 						</el-form>
 					</div>
@@ -79,30 +78,35 @@
 					startTime: '',
 					endTime: '',
 					number: '',
+					userId: '',
 					productId: '',
-					orderitems: {
+					orderitems: [{
 						receiver: '',
 						cardid: '',
 						mobile: '',
-					},
+					}, ]
 				},
 				isEdit: false,
-				options: []
+				options: [],
+				//判断是否为完善的信息
+				flag: true,
 			}
 		},
 		created() {
 			this.currentHouseData = JSON.parse(this.houseData)
 			this.form.startTime = this.currentHouseData.chooseDate[0]
 			this.form.endTime = this.currentHouseData.chooseDate[1]
-			this.form.number = this.currentHouseData.house.people
 			this.form.productId = this.currentHouseData.house.id
+			this.form.number = this.currentHouseData.people
+			this.form.userId = this.$store.state.userInfo.userId
 
 			for (let i = 0; i < this.currentHouseData.house.people; i++) {
 				this.options[i] = {
-					number:i+1,
-					name:i+'人'
+					value: i + 1,
 				}
 			}
+
+			this.getOrderItem()
 
 		},
 		methods: {
@@ -116,60 +120,120 @@
 			},
 			placeOrder() {
 				/*提交订单*/
-				let orderT = {
-					"id": null,
-					"timeSlot": this.currentHouseData.chooseDate.toString(),
-					"money": this.totalPrice,
-					"title": this.currentHouseData.title,
-					"username": this.currentHouseData.username,
-					"customerId": this.$store.state.userInfo.username,
-					"state": 1
-				}
+				// let orderT = {
+				// 	"id": null,
+				// 	"timeSlot": this.currentHouseData.chooseDate.toString(),
+				// 	"money": this.totalPrice,
+				// 	"title": this.currentHouseData.title,
+				// 	"username": this.currentHouseData.username,
+				// 	"customerId": this.$store.state.userInfo.username,
+				// 	"state": 1
+				// }
+
 				const _this = this
-				axios.post(this.API.AddOrder, orderT).then(function(resp) {
-					if (resp.data == "error") {
+				_this.form.realname = _this.form.orderitems[0].receiver
+				let key
+				for (key in this.form) {
+					console.log("判断：" + key)
+					if (key == "orderitems") {
+						for (let v in this.form[key]) {
+							console.log("判断：" + v + "  " + this.form[key]. [v])
+							if (this.form[key]. [v] == '' || this.form[key]. [v] == null) {
+								console.log("发送信息" + key)
+								_this.$message({
+									message: '请先完善个人信息：' + key,
+									type: 'warning'
+								})
+								return false
+							}
+						}
+					}
+					if (this.form[key] === "") {
+						console.log("发送信息" + key)
+						_this.$message({
+							message: '请先完善个人信息：' + key,
+							type: 'warning'
+						})
+						return false
+					}
+					console.log("未发送信息" + key)
+				}
+
+				if (!this.flag) {
+					//将信息保存到用户信息中
+					let userInfo = {
+						id: this.$store.state.userInfo.userId,
+						realname: _this.form.orderitems[0].receiver,
+						telphone: _this.form.orderitems[0].mobile,
+						cardid: _this.form.orderitems[0].cardid,
+					}
+					axios.post(this.API.UpdateUser, userInfo).then(function(resp) {
+						if (resp.data.code == 500) {
+							_this.$notify.error({
+								title: '错误',
+								message: '保存个人信息错误'
+							});
+						}
+						if (resp.data.code == 200) {
+							_this.$notify({
+								title: '成功',
+								message: '保存个人信息成功',
+								type: 'success'
+							});
+						}
+					})
+				}
+
+				axios.post(this.API.AddOrder, this.form).then(function(resp) {
+					if (resp.data.code == 500) {
 						_this.$notify.error({
 							title: '错误',
 							message: '该房间已经被他人抢先预定!'
 						});
 					}
-					if (resp.data == "success") {
+					if (resp.data.code == 200) {
 						_this.$notify({
 							title: '成功',
-							message: '您已成功预定!3秒后去支付',
+							message: '您已成功预定!',
 							type: 'success'
 						});
 						setTimeout(() => {
-							/*                            _this.$router.push({
-							                                    path:"/"
-							                                }
-							                            )*/
-							document.forms[2].submit()
+							_this.$router.push({
+								path: "/Order/user"
+							})
 						}, 3000);
 					}
 				})
 			},
+			// Js
+			changeSelect() {
+				this.$forceUpdate() // 强制刷新
+			},
 			getOrderItem() {
-				axios.get(this.API.AddOrder, orderT).then(function(resp) {
-					if (resp.data == "error") {
-						_this.$notify.error({
-							title: '错误',
-							message: '该房间已经被他人抢先预定!'
-						});
+				const _this = this
+
+				axios.get(this.API.GetUser, {
+					params: {
+						id: this.$store.state.userInfo.userId,
 					}
-					if (resp.data == "success") {
-						_this.$notify({
-							title: '成功',
-							message: '您已成功预定!3秒后去支付',
-							type: 'success'
-						});
-						setTimeout(() => {
-							/*                            _this.$router.push({
-							                                    path:"/"
-							                                }
-							                            )*/
-							document.forms[2].submit()
-						}, 3000);
+				}).then(function(resp) {
+
+					let data = resp.data.result
+					if (resp.data.code == 200) {
+						console.log("resp")
+						console.log(resp)
+						_this.form.realname = data.realname
+						_this.form.orderitems[0].receiver = data.realname
+						_this.form.orderitems[0].cardid = data.cardid
+						_this.form.orderitems[0].mobile = data.telphone
+						if (_this.form.realname == null) {
+							_this.flag = false
+						}
+						_this.changeSelect()
+					}
+					if (resp.data.code == 500) {
+
+
 					}
 				})
 			}

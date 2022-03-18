@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public int updateUser(User user) {
-        return userMapper.updateByPrimaryKey(user);
+        return userMapper.updateByPrimaryKeySelective(user);
     }
 
     /**

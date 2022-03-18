@@ -277,6 +277,8 @@ public class OrderServiceImpl implements OrderService {
         BigDecimal promotePrice = product.getPromotePrice();
         BigDecimal price = promotePrice.multiply(new BigDecimal(day));
         orderSearchVo.setTotal(price);
+        //预定信息
+        orderSearchVo.setStatus(1);
         //订单插入
         int orderNum = orderMapper.insertUseGeneratedKeys(orderSearchVo);
 

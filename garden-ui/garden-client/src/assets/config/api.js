@@ -3,12 +3,16 @@ const ApiRootUrl = 'http://localhost:8010/';
 const API = {
 	//根路径
 	ApiRootUrl: ApiRootUrl,
+
+	//======================用户相关接口=======================
 	//注册：id，name，password，realname，telphone，eamil，cardid
 	Register: ApiRootUrl + 'user/register/',
 	//登录接口，+this.phoneNumber+'/null/'+this.passWord
 	Login: ApiRootUrl + 'user/login/',
-
-	UpdateUser: ApiRootUrl + 'user/updateUser', // 修改用户接口,User
+	//获取用户信息接口
+	GetUser: ApiRootUrl + 'user/searchOne/',
+	// 修改用户接口,User
+	UpdateUser: ApiRootUrl + 'user/update',
 
 	//地区接口，+cityName+"/"+type
 	GetRegion: ApiRootUrl + 'region/getRegion/',
@@ -50,7 +54,7 @@ const API = {
 	//======================订单相关接口=======================
 	//条件查询
 	GetOrderList: ApiRootUrl + 'order/list/',
-	//添加订单接口，order
+	//预定接口，order
 	AddOrder: ApiRootUrl + 'order/add',
 	//办理入住
 	StayIn: ApiRootUrl + 'order/stayIn', //修改订单接口，order
@@ -58,17 +62,14 @@ const API = {
 	StayOut: ApiRootUrl + 'order/stayOut', //修改订单接口，order
 	//取消预订
 	CancelPre: ApiRootUrl + 'order/cancelPre', //修改订单接口，order
-	
-	GetOrderByTitle: ApiRootUrl +
-		'order/getOrderByTitle/', //根据房屋和房东名得到当前房屋已存在订单的接口，+this.houseData.username+"/"+this.houseData.title
+
 	UpdateOrder: ApiRootUrl + 'order/updateOrder', //修改订单接口，order
 	DeleteOrder: ApiRootUrl + 'order/deleteOrder/', //删除订单接口，id
 	CancelOrder: ApiRootUrl + 'order/cancelOrder', //取消订单，order
-	
-	//======================入住人信息相关接口=======================
-	 //入住人信息列表查询
-	GetOrderItems: ApiRootUrl + 'orderitem/list',
 
+	//======================入住人信息相关接口=======================
+	//入住人信息列表查询
+	GetOrderItems: ApiRootUrl + 'orderitem/list',
 
 	GetCategory: ApiRootUrl + 'category/list',
 	GetCollect: ApiRootUrl + 'collect/getCollect/', //得到收藏接口，+this.$store.state.userInfo.username

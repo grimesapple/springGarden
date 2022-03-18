@@ -70,8 +70,6 @@ public class ProductServiceImpl implements ProductService {
     private OrderMapper orderMapper;
 
 
-
-
     /**
      * 订单
      */
@@ -92,7 +90,6 @@ public class ProductServiceImpl implements ProductService {
 
 
     /**
-     *
      * 对应房间能有房和无房的时间列表
      *
      * @param productId 房间id
@@ -104,19 +101,20 @@ public class ProductServiceImpl implements ProductService {
         Example example = new Example(OrderT.class);
         Example.Criteria criteria = example.createCriteria();
         Example.Criteria and = example.and();
-        criteria.andEqualTo("productId",productId);
-        criteria.andCondition("start_Time >=",new Date());
-        and.andEqualTo("status",1);
-        and.orEqualTo("status",2);
-
+        criteria.andEqualTo("productId", productId);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.DAY_OF_YEAR, -1);
+        criteria.andCondition("start_Time >=", calendar.getTime());
+        and.andEqualTo("status", 1);
+        and.orEqualTo("status", 2);
         List<OrderT> orderTList = orderMapper.selectByExample(example);
-
         //封装时间
         ArrayList<String> timeList = new ArrayList<>();
         for (OrderT orderT : orderTList) {
             Date startTime = orderT.getStartTime();
-            Date endTime  = orderT.getEndTime();
-            long diff = (endTime.getTime() - startTime.getTime())/1000/3600/24;
+            Date endTime = orderT.getEndTime();
+            long diff = (endTime.getTime() - startTime.getTime()) / 1000 / 3600 / 24;
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
             String startString = format.format(startTime);
             Calendar c = Calendar.getInstance();
@@ -128,7 +126,6 @@ public class ProductServiceImpl implements ProductService {
                 timeList.add(time);
             }
         }
-
         return timeList;
     }
 
@@ -164,7 +161,7 @@ public class ProductServiceImpl implements ProductService {
             }
 
             //判断当前房间在对应时间是否有订单
-             int status = 0;
+            int status = 0;
             if (productSearchVo.getStartTime() != null && productSearchVo.getEndTime() != null) {
                 if (!orderService.check(productSearchVo.getStartTime(), productSearchVo.getEndTime(), proId)) {
                     //有订单，该房间不能被租

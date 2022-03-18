@@ -492,7 +492,6 @@
 					console.log(localStorage.getItem('store'))
 					console.log(this.$store.state)
 					// //修改用户在线状态
-					_this.$store.state.userInfo.isOnline = 'true'
 					// await axios.put(this.API.UpdateUser, _this.$store.state.userInfo)
 					// this.getUserNotice(this.$store.state.userInfo.username) //得到用户通知
 					this.passWord = ''

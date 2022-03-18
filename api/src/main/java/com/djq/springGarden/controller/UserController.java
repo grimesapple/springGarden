@@ -70,8 +70,8 @@ public class UserController {
      * 修改用户
      */
     @ApiOperation("修改用户")
-    @PostMapping("/update")
-    public ResultVO<User> edit(User user) {
+        @PostMapping("/update")
+    public ResultVO<User> edit(@RequestBody User user) {
         return userService.updateUser(user) > 0 ? ResultVO.ok("更新成功") : ResultVO.error("更新失败");
     }
 
@@ -103,6 +103,7 @@ public class UserController {
         //放入用户信息
         Map<String, String> userResult = new HashMap<>();
         userResult.put("username", user.getName());
+        userResult.put("userId", login.getId().toString());
         //查询用户的角色信息
         if (login.getRoleId() == 1) {
             userResult.put("role", "admin");
