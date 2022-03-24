@@ -11,6 +11,8 @@ const API = {
 	Login: ApiRootUrl + 'user/login/',
 	//获取用户信息接口
 	GetUser: ApiRootUrl + 'user/searchOne/',
+	//获取用户列表接口
+	GetUserList: ApiRootUrl + 'user/list/',
 	// 修改用户接口,User
 	UpdateUser: ApiRootUrl + 'user/update',
 
@@ -60,6 +62,8 @@ const API = {
 	StayIn: ApiRootUrl + 'order/stayIn', //修改订单接口，order
 	//办理退房
 	StayOut: ApiRootUrl + 'order/stayOut', //修改订单接口，order
+	//办理续住
+	ContinueIn: ApiRootUrl + 'order/continue', //修改订单接口，order
 	//取消预订
 	CancelPre: ApiRootUrl + 'order/cancelPre', //修改订单接口，order
 

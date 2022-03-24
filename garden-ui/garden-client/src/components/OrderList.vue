@@ -1,4 +1,4 @@
-<!--房屋列表-->
+<!--订单列表-->
 <template>
 	<article style="height: 90%">
 		<div style="height: 50px;">
@@ -36,8 +36,7 @@
 		</div> -->
 
 		<!--内容区域-->
-		<el-table :data="tableData" height="90%" stripe
-			:header-cell-style="{'color': 'rgb(81, 90, 110)'}">
+		<el-table :data="tableData" height="90%" stripe :header-cell-style="{'color': 'rgb(81, 90, 110)'}">
 			<el-table-column type="index" label="序号" width="70" align="center"></el-table-column>
 			<el-table-column prop="orderCode" label="订单编号" width="190" align="center"></el-table-column>
 			<el-table-column prop="productName" label="房间号" align="center"></el-table-column>
@@ -67,11 +66,15 @@
 					<el-button v-if="scope.row.status == 1" @click="stayIn(scope.row)" type="text"
 						style="margin-right: 10px;">入住
 					</el-button>
-					<el-popconfirm v-if = "scope.row.status == 1" title="确定取消预订？" @confirm="cancelPre(scope.row)">
-						<el-button type="text" slot="reference" >取消预订</el-button>
+					<el-popconfirm v-if="scope.row.status == 1" title="确定取消预订？" @confirm="cancelPre(scope.row)">
+						<el-button type="text" slot="reference">取消预订</el-button>
 					</el-popconfirm>
-					<el-popconfirm v-if = "scope.row.status == 2" title="确定退房吗？" @confirm="stayOut(scope.row)">
-						<el-button type="text" slot="reference" >退房</el-button>
+					<el-button v-if="scope.row.status == 2" type="text" slot="reference"
+						@click="dialogVisible=true,endTime = scope.row.endTime,endTime1=scope.row.endTime,orderId=scope.row.orderId">
+						续住
+					</el-button>
+					<el-popconfirm v-if="scope.row.status == 2" title="确定退房吗？" @confirm="stayOut(scope.row)">
+						<el-button type="text" slot="reference">退房</el-button>
 					</el-popconfirm>
 				</template>
 			</el-table-column>
@@ -80,22 +83,17 @@
 		<el-pagination background layout="prev, pager, next" :page-size=pageSize :total="total"
 			:current-page="currentPage" @current-change="page" @next-click="currentPage += 1, page(currentPage)">
 		</el-pagination>
-		<!-- 新增窗口 -->
+		<!-- 弹出窗口 -->
 		<el-dialog :visible.sync="dialogVisible" width="28%">
-			<el-form ref="form" :model="form" label-width="80px">
-				<el-form-item label="房间类型">
-					<el-input v-model="form.categoryId" placeholder="房间类型"></el-input>
-				</el-form-item>
-				<el-form-item label="属性名称">
-					<el-input v-model="form.name" placeholder="属性名称"></el-input>
-				</el-form-item>
-			</el-form>
+			<div class="block">
+				<el-date-picker v-model="endTime" align="right" type="date" placeholder="选择日期"
+					:picker-options="pickerOptions">
+				</el-date-picker>
+			</div>
 			<span slot="footer" class="dialog-footer">
 				<el-button @click="dialogVisible = false">取 消</el-button>
-				<el-button type="primary" @click="add(),dialogVisible = false" v-if="dialogType=='add'">确
+				<el-button type="primary" @click="continueIn(),dialogVisible = false">确
 					定</el-button>
-				<el-button type="primary" @click="edit(), dialogVisible = false" v-if="dialogType=='edit'">确 定
-				</el-button>
 			</span>
 		</el-dialog>
 	</article>
@@ -106,6 +104,7 @@
 	export default {
 		props: ["operation"],
 		data() {
+			var _this = this
 			return {
 				tableData: [],
 				/*表格数据*/
@@ -129,10 +128,16 @@
 				status: '',
 				/*订单编号*/
 				orderCode: '',
-				/*入住时间*/
-				phone: '',
 				/*手机尾号*/
+				phone: '',
+				/*入住时间*/
 				startTime: '',
+				/*退房时间*/
+				endTime: '',
+				/*退房显示时间*/
+				endTime1: '',
+				/*订单id*/
+				orderId: '',
 				/*属性名称*/
 				name: '',
 				//添加弹出框
@@ -148,6 +153,33 @@
 				categorys: [],
 				//图片上传地址
 				actionurl: "",
+				pickerOptions: {
+					disabledDate(time) {
+						return time.getTime() < new Date(_this.endTime1).getTime();
+					},
+					shortcuts: [{
+						text: '加一天',
+						onClick(picker) {
+							let date = new Date(_this.endTime1)
+							date.setTime(date.getTime() + 3600 * 1000 * 24);
+							picker.$emit('pick', date);
+						}
+					}, {
+						text: '加两天',
+						onClick(picker) {
+							let date = new Date(_this.endTime1)
+							date.setTime(date.getTime() + 3600 * 1000 * 24 * 2);
+							picker.$emit('pick', date);
+						}
+					}, {
+						text: '加三天',
+						onClick(picker) {
+							let date = new Date(_this.endTime1)
+							date.setTime(date.getTime() + 3600 * 1000 * 24 * 3);
+							picker.$emit('pick', date);
+						}
+					}]
+				}
 
 			}
 		},
@@ -290,21 +322,21 @@
 				this.getData(currentPage)
 			},
 			//退房
-			async stayOut(row){
+			async stayOut(row) {
 				console.log(row)
 				let _this = this
 				let item = {
-					id : row.orderId
+					id: row.orderId
 				}
 				await axios.post(_this.API.StayOut, item).then(res => {
 						let data = res.data.result;
-						if (data.code == 200) {
+						if (res.data.code == 200) {
 							_this.$message({
 								message: res.data.msg,
 								type: 'success'
 							})
 						}
-						if (data.code == 500) {
+						if (res.data.code == 500) {
 							_this.$message({
 								showClose: true,
 								message: res.data.msg,
@@ -317,22 +349,51 @@
 					})
 				await this.getData()
 			},
+			//续住功能
+			async continueIn() {
+				let _this = this
+				let item = {
+					id: _this.orderId,
+					endTime: _this.endTime
+				}
+				await axios.post(_this.API.ContinueIn, item).then(res => {
+						let data = res.data.result;
+						if (res.data.code == 200) {
+							_this.$notify({
+								title: '成功',
+								message: res.data.msg,
+								type: 'success'
+							});
+						}
+						if (res.data.code == 500) {
+							_this.$notify({
+								title: '错误',
+								message: res.data.msg,
+								type: 'error'
+							});
+						}
+					})
+					.catch(err => {
+						console.log(err)
+					})
+				await this.getData()
+			},
 			//取消预订
-			async cancelPre(row){
+			async cancelPre(row) {
 				console.log(row)
 				let _this = this
 				let item = {
-					id : row.orderId
+					id: row.orderId
 				}
 				await axios.post(_this.API.CancelPre, item).then(res => {
 						let data = res.data.result;
-						if (data.code == 200) {
+						if (res.data.code == 200) {
 							_this.$message({
 								message: res.data.msg,
 								type: 'success'
 							})
 						}
-						if (data.code == 500) {
+						if (res.data.code == 500) {
 							_this.$message({
 								showClose: true,
 								message: res.data.msg,
@@ -375,7 +436,8 @@
 						data: JSON.stringify(row)
 					}
 				})
-			}
+			},
+
 		},
 	}
 </script>

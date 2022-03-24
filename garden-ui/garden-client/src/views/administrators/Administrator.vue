@@ -64,6 +64,15 @@
 					<el-submenu index="2">
 						<template slot="title">
 							<i class="el-icon-menu"></i>
+							<span>用户模块</span>
+						</template>
+						<el-menu-item index="/UserList" :class="$route.path=='/UserList'?'is-active':''">
+							<i class="el-icon-document"></i>用户管理
+						</el-menu-item>
+					</el-submenu>
+					<el-submenu index="3">
+						<template slot="title">
+							<i class="el-icon-menu"></i>
 							<span>发布通知</span>
 						</template>
 						<el-menu-item index="/Notice/all" :class="$route.path=='/Notice/all'?'is-active':''">

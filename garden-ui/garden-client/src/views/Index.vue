@@ -1,5 +1,5 @@
 <template>
-	<el-container  >
+	<el-container>
 		<el-header class="header-wrapper">
 			<!--登录-->
 			<div class="login-dialog">
@@ -7,66 +7,74 @@
 					<div class="m-login-wrap">
 						<div class="login-tabs">
 							<a :class="{'isActive ':toggleLoginBody}"
-								@click="toggleLoginBody=true,rgst_username='zhangsan',rgst_password='123456', rgst_repassword = '123456' ,showError=false">注册</a>
+								@click="toggleLoginBody=true,form.rgst_username='zhangsan',form.rgst_password='123456', rgst_repassword = '123456' ,showError=false">注册</a>
 							<a :class="{'isActive':!toggleLoginBody}"
-								@click="toggleLoginBody=false,username='zhangsan',passWord='123456',showError=false">登录</a>
+								@click="toggleLoginBody=false,form1.username='zhangsan',form1.passWord='123456',showError=false">登录</a>
 						</div>
 						<div class="login-body" v-show="toggleLoginBody">
-							<div class="control-group">
-								<el-input placeholder="账号" v-model="rgst_username">
-									<template slot="prepend"><i class="el-icon-user"></i></template>
-								</el-input>
-							</div>
-							<div class="controls">
-								<el-input placeholder="密码" v-model="rgst_password" show-password>
-									<template slot="prepend"><i class="el-icon-lock"></i></template>
-								</el-input>
-							</div>
-							<div class="controls">
-								<el-input placeholder="请再次输入密码" v-model="rgst_repassword" show-password>
-									<template slot="prepend"><i class="el-icon-lock"></i></template>
-								</el-input>
-							</div>
-							<div class="control-group">
-								<el-input placeholder="真实姓名" v-model="rgst_realname">
-									<template slot="prepend"><i class="el-icon-user"></i></template>
-								</el-input>
-							</div>
-							<div class="control-group">
-								<el-input placeholder="身份证号码" v-model="rgst_carid">
-									<template slot="prepend"><i class="el-icon-document"></i></template>
-								</el-input>
-							</div>
-							<div class="control-group">
-								<el-input placeholder="手机号码" v-model="rgst_phonenumber">
-									<template slot="prepend"><i class="el-icon-phone"></i></template>
-								</el-input>
-							</div>
-							<div class="control-group">
-								<el-input placeholder="电子邮件" v-model="rgst_mail">
-									<template slot="prepend"><i class="el-icon-s-promotion"></i></template>
-								</el-input>
-							</div>
-							<el-alert :title="errorInfo" type="error" v-if="showError" style="margin-bottom: 20px"
-								:closable="false">
+							<el-form :rules="rules" :model="form" ref="form" status-icon>
+								<el-form-item prop="rgst_username">
+									<el-input placeholder="账号" v-model="form.rgst_username">
+										<template slot="prepend"><i class="el-icon-user"></i></template>
+									</el-input>
+								</el-form-item>
+								<el-form-item prop="rgst_password">
+									<el-input placeholder="密码" v-model="form.rgst_password" show-password>
+										<template slot="prepend"><i class="el-icon-lock"></i></template>
+									</el-input>
+								</el-form-item>
+								<el-form-item prop="rgst_repassword">
+									<el-input placeholder="请再次输入密码" v-model="form.rgst_repassword" show-password>
+										<template slot="prepend"><i class="el-icon-lock"></i></template>
+									</el-input>
+								</el-form-item>
+								<el-form-item prop="rgst_phonenumber">
+									<el-input placeholder="手机号码" v-model="form.rgst_phonenumber">
+										<template slot="prepend"><i class="el-icon-phone"></i></template>
+									</el-input>
+								</el-form-item>
+								<el-form-item prop="rgst_realname">
+									<el-input placeholder="真实姓名" v-model="form.rgst_realname">
+										<template slot="prepend"><i class="el-icon-user"></i></template>
+									</el-input>
+								</el-form-item>
+								<el-form-item prop="rgst_carid">
+									<el-input placeholder="身份证号码" v-model="form.rgst_carid">
+										<template slot="prepend"><i class="el-icon-document"></i></template>
+									</el-input>
+								</el-form-item>
+								<el-form-item prop="rgst_mail">
+									<el-input placeholder="电子邮件" v-model="form.rgst_mail">
+										<template slot="prepend"><i class="el-icon-s-promotion"></i></template>
+									</el-input>
+								</el-form-item>
+							</el-form>
+
+							<!-- <el-alert :title="errorInfo" type="error" v-if="showError" style="margin-bottom: 20px":closable="false"> -->
 							</el-alert>
 							<el-button type="warning" class="login-btn" @click="loginOrRegister(false)">注册</el-button>
 						</div>
 						<div class="login-body" v-show="!toggleLoginBody">
-							<div class="control-group">
-								<el-input placeholder="请输入账号" v-model="username">
-									<template slot="prepend"><i class="el-icon-user"></i></template>
-								</el-input>
-							</div>
-							<div class="controls">
-								<el-input placeholder="输入密码" v-model="passWord" show-password>
-									<template slot="prepend"><i class="el-icon-lock"></i></template>
-								</el-input>
-							</div>
-							<el-alert :title="errorInfo" type="error" v-if="showError" style="margin-bottom: 20px"
+							<el-form :rules="rules1" :model="form1" ref="form1" status-icon>
+								<el-form-item prop="username">
+									<el-input placeholder="请输入账号" v-model="form1.username">
+										<template slot="prepend"><i class="el-icon-user"></i></template>
+									</el-input>
+								</el-form-item>
+								<el-form-item prop="passWord">
+									<el-input placeholder="输入密码" v-model="form1.passWord" show-password>
+										<template slot="prepend"><i class="el-icon-lock"></i></template>
+									</el-input>
+								</el-form-item>
+								<el-form-item>
+									<el-button type="success" class="login-btn" @click="loginOrRegister(true)">登录
+									</el-button>
+								</el-form-item>
+							</el-form>
+							<!-- 							<el-alert :title="errorInfo" type="error" v-if="showError" style="margin-bottom: 20px"
 								:closable="false">
-							</el-alert>
-							<el-button type="success" class="login-btn" @click="loginOrRegister(true)">登录</el-button>
+							</el-alert> -->
+
 						</div>
 					</div>
 				</el-drawer>
@@ -160,7 +168,7 @@
 					<div class="block">
 						<el-date-picker style="" v-model="chooseDate" value-format="yyyy-MM-dd" type="daterange"
 							range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期"
-							:picker-options="pickerOptions">
+							:picker-options="pickerOptions" :clearable ="false" >
 						</el-date-picker>
 					</div>
 				</section>
@@ -176,18 +184,21 @@
 						<section class="hc-search-group-tabs">
 							<div class="search-group-tab-list">
 								<label class="city-wrap">成人</label>
-								<el-input-number v-model="adults" @change="personNumber=adults+kids+'   人'" size="small"  :min="1" :max="10" ></el-input-number>
+								<el-input-number v-model="adults" @change="personNumber=adults+kids+'   人'" size="small"
+									:min="1" :max="10"></el-input-number>
 							</div>
 							<div class="search-group-tab-list">
 								<label class="city-wrap">孩子</label>
-								<el-input-number v-model="kids" size="small" @change="personNumber=adults+kids+'   人'" :min="0" :max="10" ></el-input-number>
+								<el-input-number v-model="kids" size="small" @change="personNumber=adults+kids+'   人'"
+									:min="0" :max="10"></el-input-number>
 							</div>
-							<dev style = "margin: 10px 0; padding: 20px;">
-								<el-button type="info" @click="adults=1,kids=0"  round>清除</el-button>
-								<el-button type="success" @click = "personNumber = adults+kids+'   人', toggle=true" round>确定</el-button>
+							<dev style="margin: 10px 0; padding: 20px;">
+								<el-button type="info" @click="adults=1,kids=0" round>清除</el-button>
+								<el-button type="success" @click="personNumber = adults+kids+'   人', toggle=true" round>
+									确定</el-button>
 							</dev>
 
-							
+
 							<!-- <ul class="search-group-tab-list">
 								<li class="search-group-tab-list-item active">热门城市</li>
 								<li class="search-group-tab-list-item">按字母排序</li>
@@ -213,53 +224,53 @@
 						<li class="hot-item">
 							<a href="">
 								<div class="photo-wrapper">
-									<img src="../assets/img/upload/static/宽窄巷子.jpg">
+									<img src="../assets/img/upload/static/101.jpg">
 								</div>
 							</a>
 							<div class="info-wrapper">
-								<h3>巴适成都</h3>
-								<p>来这儿体验慢生活，暂别奔忙</p>
+								<h3>小轻奢-熙梦里</h3>
+								<p>私人影院的观影体验。简约的厨房</p>
 							</div>
 						</li>
 						<li class="hot-item">
 							<a href="">
 								<div class="photo-wrapper">
-									<img src="../assets/img/upload/static/古都西安.jpg">
+									<img src="../assets/img/upload/static/102.jpg">
 								</div>
 							</a>
 							<div class="info-wrapper">
-								<h3>古都西安</h3>
-								<p>闲庭信步古城墙，一夜看尽长安花。</p>
+								<h3>路清</h3>
+								<p>浪漫的，轻松，优雅的氛围</p>
 							</div>
 						</li>
 						<li class="hot-item">
 							<a href="">
 								<div class="photo-wrapper">
-									<img src="../assets/img/upload/static/文艺厦门.jpg">
+									<img src="../assets/img/upload/static/103.jpg">
 								</div>
 							</a>
 							<div class="info-wrapper">
-								<h3>文艺厦门</h3>
-								<p>碧海白鹭，老街古厝，温柔好时光。</p>
+								<h3>轻奢复式loft</h3>
+								<p>非常有私密空间，出差优选</p>
 							</div>
 						</li>
 						<li class="hot-item">
 							<a href="">
 								<div class="photo-wrapper">
-									<img src="../assets/img/upload/static/摩登上海.jpg">
+									<img src="../assets/img/upload/static/104.jpg">
 								</div>
 							</a>
 							<div class="info-wrapper">
-								<h3>摩登上海</h3>
-								<p>体味老弄堂与摩天楼的双面风情。</p>
+								<h3>绿光森林</h3>
+								<p>舒适的睡眠。房源适合家人和朋友出行</p>
 							</div>
 						</li>
 					</ul>
 				</div>
 			</div>
-			<div class="g-home-special-layout">
+			<!-- <div class="g-home-special-layout">
 				<div class="g-home-special-wrapper">
-					<h2>超值特惠</h2>
+					<h2>关于我们</h2>
 					<div class="special-module">
 						<div class="special-triple-wrapper">
 							<div class="left-col">
@@ -296,7 +307,7 @@
 						</div>
 					</div>
 				</div>
-			</div>
+			</div> -->
 		</el-main>
 		<el-footer style="padding: 0">
 			<Footer></Footer>
@@ -314,34 +325,65 @@
 			Footer
 		},
 		data() {
+			var validatePass = (rule, value, callback) => {
+				if (value === '') {
+					callback(new Error('请输入密码'));
+				} else {
+					if (this.form.rgst_repassword != '') {
+						this.$refs.form.validateField('rgst_repassword');
+					}
+					callback();
+				}
+			};
+			var validatePass2 = (rule, value, callback) => {
+				if (value === '') {
+					callback(new Error('请再次输入密码'));
+				} else if (value !== this.form.rgst_password) {
+					callback(new Error('两次输入密码不一致!'));
+				} else {
+					callback();
+				}
+			};
 			return {
 				//注册相关
-				rgst_username: '',
-				rgst_password: '',
-				rgst_repassword: '',
-				rgst_realname: '',
-				rgst_carid: '',
-				rgst_phonenumber: '',
-				rgst_mail: '',
+				// rgst_username: '',
+				// rgst_password: '',
+				// rgst_repassword: '',
+				// rgst_realname: '',
+				// rgst_carid: '',
+				// rgst_phonenumber: '',
+				// rgst_mail: '',
+				form: {
+					rgst_username: '',
+					rgst_password: '',
+					rgst_repassword: '',
+					rgst_realname: '',
+					rgst_carid: '',
+					rgst_phonenumber: '',
+					rgst_mail: '',
+				},
 				//登录相关
-				username: 'zhangsan', //用户名
-				passWord: '123456', //密码
-				errorInfo: '错误', //错误提示
-				showError: false,
+				form1: {
+					username: 'zhangsan', //用户名
+					passWord: '123456', //密码
+					// errorInfo: '错误', //错误提示
+				},
 				/*是否显示错误信息*/
-				toggleLoginBody: true,
+				showError: false,
 				/*切换登录方式*/
-				showLogin: !this.$store.state.isLogin,
-				/*是否显示登录界面*/
-				queryCityName: '',
+				toggleLoginBody: false,
 				
+				/*是否显示登录界面*/
+				showLogin: !this.$store.state.isLogin,
+				queryCityName: '',
+
 				// 显示人数
 				personNumber: "请选择人数",
 				//成人数量
-				adults:1,
+				adults: 1,
 				//小孩数量
-				kids:0,
-				
+				kids: 0,
+
 				/*建议的城市名称*/
 				currentCityName: "选择人数",
 				/*当前选择的城市*/
@@ -371,6 +413,80 @@
 						return time.getTime() < Date.now() - 8.64e7;
 					}
 				},
+				rules: {
+					rgst_username: [{
+							required: true,
+							message: '请输入账号',
+							trigger: 'blur'
+						},
+						{
+							min: 3,
+							max: 10,
+							message: '长度在 3 到 10 个字符',
+							trigger: 'blur'
+						}
+					],
+					rgst_password: [{
+							validator: validatePass,
+							trigger: 'blur'
+						},
+						{
+							min: 6,
+							max: 18,
+							message: '长度在 6 到 18 个字符',
+							trigger: 'blur'
+						},
+					],
+					rgst_repassword: [{
+							validator: validatePass2,
+							trigger: 'blur'
+						},
+						{
+							min: 6,
+							max: 18,
+							message: '长度在 6 到 18 个字符',
+							trigger: 'blur'
+						}
+					],
+					rgst_phonenumber: [{
+							required: true,
+							message: '请输入手机号码',
+							trigger: 'blur'
+						},
+						{
+							min: 11,
+							max: 11,
+							message: '手机号码为11位',
+							trigger: 'blur'
+						}
+					],
+				},
+				rules1: {
+					username: [{
+							required: true,
+							message: '请输入账号',
+							trigger: 'blur'
+						},
+						{
+							min: 3,
+							max: 10,
+							message: '长度在 3 到 10 个字符',
+							trigger: 'blur'
+						}
+					],
+					passWord: [{
+							required: true,
+							message: '请输入密码',
+							trigger: 'blur'
+						},
+						{
+							min: 6,
+							max: 18,
+							message: '长度在 6 到 18 个字符',
+							trigger: 'blur'
+						},
+					],
+				}
 			}
 		},
 		beforeCreate() { //在创造之前数据和方法还未绑定到app上
@@ -379,6 +495,18 @@
 			if (JSON.parse(sessionStorage.getItem('store')) != null) {
 				this.getUserNotice(this.$store.state.userInfo.username) //得到用户通知
 			}
+			//['2022-03-09', '2022-03-10']
+			let startTime = new Date();
+			let endTime = new Date();
+			let y = startTime.getFullYear()
+			let m = startTime.getMonth() + 1
+			let d = startTime.getDate()
+			startTime = y + '-' + m + '-' + d;
+			y = endTime.getFullYear()
+			m = endTime.getMonth() + 1
+			d = endTime.getDate() + 1
+			endTime = y + '-' + m + '-' + d;
+			this.chooseDate = [startTime, endTime];
 		},
 		mounted() { //挂载之后数据已渲染在页面上,类名可以获取
 			//绑定键盘按下事件
@@ -392,10 +520,6 @@
 		methods: {
 			async loginOrRegister(onlyLogin) { //点击登录或者注册
 				const _this = this
-				if (this.username.trim() == '') {
-					this.$message.error('账号不能为空!')
-					return false
-				}
 				let isSuccess = false;
 				//加载提示
 				const loading = this.$loading({
@@ -404,86 +528,70 @@
 					spinner: 'el-icon-loading',
 					background: 'rgba(0, 0, 0, 0.3)'
 				});
-				if (onlyLogin) { //仅登录
-					if (this.passWord.trim() == '') {
-						this.$message.error('密码不能为空!')
-						loading.close();
-						return false
-					}
+				if (onlyLogin) {
+					//登录
+					let flag = false;
+					_this.$refs.form1.validate((valid) => {
+						if (valid) {
+							flag = true
+						} else {
+							_this.$message("请完善信息再进行注册");
+						}
+					})
+
 					//根据用户名和密码查询用户信息
-					await axios.post(this.API.Login, Qs.stringify({
-						username: this.username,
-						password: this.passWord
-					})).then(function(resp) {
-						// console.log(resp);
-						let data = resp.data;
-						if (data.code != 200) {
-							_this.errorInfo = data.msg
-							_this.showError = true;
-							_this.passWord = ''
-							return false
-						}
-						_this.$store.state.token = data.result.token;
-						_this.$store.state.userInfo = data.result.user;
-						isSuccess = true;
-					}).catch(function(error) {
-						console.log(error)
-					});
-
-				} else { //登录或者注册
-					if (this.rgst_password.trim() == '') {
-						this.$message.error('密码不能为空!')
-						loading.close();
-						return false
+					if (flag){
+						await axios.post(this.API.Login, Qs.stringify({
+							username: this.form1.username,
+							password: this.form1.passWord
+						})).then(function(resp) {
+							let data = resp.data;
+							if (data.code != 200) {
+								_this.errorInfo = data.msg
+								_this.showError = true;
+								_this.passWord = ''
+								return false
+							}
+							_this.$store.state.token = data.result.token;
+							_this.$store.state.userInfo = data.result.user;
+							isSuccess = true;
+						}).catch(function(error) {
+							console.log(error)
+						});
 					}
-					if (this.rgst_password != this.rgst_repassword) {
-						this.$message.error('密码不一致!')
-						loading.close();
-						return false
-					}
+				} else {
+					await _this.$refs.form.validate((valid) => {
+						if (valid) {
+							//注册
+							axios.post(this.API.Register, Qs.stringify({
+								name: this.form.rgst_username,
+								password: this.form.rgst_password,
+								realname: this.form.rgst_realname,
+								telphone: this.form.rgst_phonenumber,
+								eamil: this.form.rgst_mail,
+								cardid: this.form.rgst_carid,
+							})).then(function(resp) {
+								let data = resp.data;
+								if (data.code != 200) {
+									_this.rgst_repassword = ''
+									_this.$message(data.msg);
+									return false
+								}
+								_this.toggleLoginBody = false
+								_this.$message("注册成功，请到登录页面进行登录");
 
-					//注册
-					await axios.post(this.API.Register, Qs.stringify({
-						name: this.rgst_username,
-						password: this.rgst_password,
-						realname: this.rgst_realname,
-						telphone: this.rgst_phonenumber,
-						eamil: this.rgst_mail,
-						cardid: this.rgst_carid,
-					})).then(function(resp) {
-						let data = resp.data;
-						// console.log(resp.data)
-						if (data.code != 200) {
-							_this.errorInfo = data.msg
-							_this.showError = true;
-							_this.rgst_password = ''
-							_this.rgst_repassword = ''
-							return false
+							}).catch(function(error) {
+								console.log(error)
+							});
+						} else {
+							_this.$message("请完善信息再进行注册");
+							return false;
 						}
-						_this.$message("注册成功，请到登录页面进行登录");
-
-					}).catch(function(error) {
-						console.log(error)
 					});
-
-
-					// //根据用户名和验证码查询用户信息
-					// await axios.get(this.API.Login + this.username + '/' + this.passWord + "/null").then(function(
-					// 	resp) {
-					// 	if (resp.data == "") {
-					// 		_this.errorInfo = "手机号或验证码错误"
-					// 		_this.showError = true;
-					// 		_this.passWord = ''
-					// 		return false
-					// 	}
-					// 	_this.$store.state.userInfo = resp.data
-					// 	isSuccess = true;
-					// }).catch(function(error) {
-					// 	console.log(error)
-					// });
 				}
+				console.log("登录结果");
+				console.log(isSuccess);
 				if (isSuccess) {
-
 					//登录成功
 					this.$store.state.isLogin = true
 					this.showLogin = false
@@ -494,8 +602,8 @@
 					// //修改用户在线状态
 					// await axios.put(this.API.UpdateUser, _this.$store.state.userInfo)
 					// this.getUserNotice(this.$store.state.userInfo.username) //得到用户通知
-					this.passWord = ''
-					this.username = ''
+					this.form1.passWord = ''
+					this.form1.username = ''
 					if (_this.$store.state.userInfo.role == 'admin') { //如果是管理员
 						await _this.$router.push({
 							path: "/Administrator",
@@ -531,85 +639,6 @@
 					this.keywordToggle = false
 				this.toggle = !this.toggle
 			},
-			//是否显示关键字查询模态框
-			toggleKeywordClass() {
-				if (!this.toggle) {
-					this.toggle = true
-				}
-				this.keywordToggle = !this.keywordToggle
-
-			},
-			//当前地区索引的样式
-			currentRegionTypeClass(index) {
-				this.currentRegionTypeIndex = index
-			},
-			//得到城市
-			getCityAsync() {
-				//故意制造延迟，让加载效果出来
-				setTimeout(() => {
-					this.cities = [{
-							"value": "北京"
-						}, {
-							"value": "上海"
-						}, {
-							"value": "广州"
-						}, {
-							"value": "成都"
-						}, {
-							"value": "重庆"
-						}, {
-							"value": "德阳"
-						},
-						{
-							"value": "自贡"
-						}, {
-							"value": "泸州"
-						}, {
-							"value": "内江"
-						}, {
-							"value": "宜宾"
-						}, {
-							"value": "重庆"
-						}, {
-							"value": "福州"
-						},
-						{
-							"value": "南昌"
-						}, {
-							"value": "郑州"
-						}, {
-							"value": "黄冈"
-						}, {
-							"value": "珠海"
-						}, {
-							"value": "乌鲁木齐"
-						}, {
-							"value": "兰州"
-						},
-						{
-							"value": "昆明"
-						}, {
-							"value": "玉溪"
-						}, {
-							"value": "大理"
-						},
-					]
-					this.loadingCity = false;
-				}, 3000);
-			},
-			// getRegionAsync(cityName, type) { //得到地区
-			// 	const _this = this
-			// 	this.currentRegion = '' //每次切换选择的城市后把当前选择的城市清空
-			// 	axios.get(this.API.GetRegion + cityName + "/" + type).then(function(resp) {
-			// 		_this.region = resp.data
-			// 	})
-			// },
-			async getUserNotice(username) { //得到用户通知
-				const _this = this
-				await axios.get(this.API.GetNotice + username).then(function(resp) {
-					_this.notice = resp.data
-				})
-			},
 			//如果是回车则执行登录方法
 			keyDown(e) {
 				if (e.keyCode == 13 && this.showLogin) { //如果键盘按下回车并且登录页面打开
@@ -621,12 +650,12 @@
 					return false //阻止冒泡
 				}
 			},
-			//跳转去城市旅馆页面
+			//跳转去旅馆页面
 			toCityHotel() {
 				this.$router.push({
 					path: "/Hotel",
 					query: {
-						people: this.adults+this.kids,
+						people: this.adults + this.kids,
 						timeslot: this.chooseDate, //[{…}, {…}]this.chooseDate["xxx", "aaa"]
 						showLogin: this.showLogin
 					}
@@ -940,7 +969,7 @@
 		line-height: 50px;
 		font-size: 20px;
 		color: #fff;
-		background-image: linear-gradient(90deg, #85ce61,#67c23a );
+		background-image: linear-gradient(90deg, #85ce61, #67c23a);
 		-webkit-box-shadow: 0 20px 22px -13px rgba(229, 100, 0, .2);
 		box-shadow: 0 20px 22px -13px rgba(229, 100, 0, .2);
 		border-radius: 25px;
@@ -952,7 +981,7 @@
 	.search:hover {
 		color: #fff;
 		;
-		background-image: linear-gradient(90deg, #67c23a,#85ce61);
+		background-image: linear-gradient(90deg, #67c23a, #85ce61);
 	}
 
 	/*内容区域*/

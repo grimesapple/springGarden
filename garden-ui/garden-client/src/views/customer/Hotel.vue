@@ -54,118 +54,15 @@
 							<div class="block">
 								<el-date-picker format="yyyy-MM-dd" value-format="yyyy-MM-dd" v-model="chooseDate"
 									type="daterange" range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期"
-									:picker-options="pickerOptions" @change="currentPage=1,searchHotelByAllFilters()">
+									:picker-options="pickerOptions" @change="currentPage=1,searchHotelByAllFilters()" :clearable ="false">
 								</el-date-picker>
 							</div>
 						</section>
 					</section>
 				</section>
-
-				<!-- 				<section class="g-unitList-select-location-layout">
-					<section class="locationUI">
-						<span class="title">位置</span>
-						<el-dropdown @command="chooseLocation" placement="bottom">
-							<span class="locationItem el-dropdown-link"> 热门推荐 <i
-									class="el-icon-caret-bottom"></i></span>
-							<el-dropdown-menu slot="dropdown" class="suggest">
-								<ul class="suggest-contain">
-									<li v-for="(item,key) in hotSearch">
-										<el-dropdown-item :command="item.name">{{item.name}}</el-dropdown-item>
-									</li>
-								</ul>
-							</el-dropdown-menu>
-						</el-dropdown>
-						<el-dropdown @command="chooseLocation">
-							<span class="locationItem el-dropdown-link"> 观光景点 <i
-									class="el-icon-caret-bottom"></i></span>
-							<el-dropdown-menu slot="dropdown" class="suggest">
-								<ul class="suggest-contain">
-									<li v-for="(item,key) in scenicSpot">
-										<el-dropdown-item :command="item.name">{{item.name}}</el-dropdown-item>
-									</li>
-								</ul>
-							</el-dropdown-menu>
-						</el-dropdown>
-						<el-dropdown @command="chooseLocation">
-							<span class="locationItem el-dropdown-link"> 商圈 <i class="el-icon-caret-bottom"></i></span>
-							<el-dropdown-menu slot="dropdown" class="suggest">
-								<ul class="suggest-contain">
-									<li v-for="(item,key) in businessDistrict">
-										<el-dropdown-item :command="item.name">{{item.name}}</el-dropdown-item>
-									</li>
-								</ul>
-							</el-dropdown-menu>
-						</el-dropdown>
-						<el-dropdown @command="chooseLocation">
-							<span class="locationItem el-dropdown-link"> 行政区 <i class="el-icon-caret-bottom"></i></span>
-							<el-dropdown-menu slot="dropdown" class="suggest">
-								<ul class="suggest-contain">
-									<li v-for="(item,key) in district">
-										<el-dropdown-item :command="item.name">{{item.name}}</el-dropdown-item>
-									</li>
-								</ul>
-							</el-dropdown-menu>
-						</el-dropdown>
-						<el-dropdown @command="chooseLocation">
-							<span class="locationItem el-dropdown-link"> 地铁线路 <i
-									class="el-icon-caret-bottom"></i></span>
-							<el-dropdown-menu slot="dropdown" class="suggest">
-								<ul class="suggest-contain">
-									<li v-for="(item,key) in metroLine">
-										<el-dropdown-item :command="item.name">{{item.name}}</el-dropdown-item>
-									</li>
-								</ul>
-							</el-dropdown-menu>
-						</el-dropdown>
-						<el-dropdown @command="chooseLocation">
-							<span class="locationItem el-dropdown-link"> 机场/车站 <i
-									class="el-icon-caret-bottom"></i></span>
-							<el-dropdown-menu slot="dropdown" class="suggest">
-								<ul class="suggest-contain">
-									<li v-for="(item,key) in airportOrStation">
-										<el-dropdown-item :command="item.name">{{item.name}}</el-dropdown-item>
-									</li>
-								</ul>
-							</el-dropdown-menu>
-						</el-dropdown>
-						<el-dropdown @command="chooseLocation">
-							<span class="locationItem el-dropdown-link"> 高校 <i class="el-icon-caret-bottom"></i></span>
-							<el-dropdown-menu slot="dropdown" class="suggest">
-								<ul class="suggest-contain">
-									<li v-for="(item,key) in universities">
-										<el-dropdown-item :command="item.name">{{item.name}}</el-dropdown-item>
-									</li>
-								</ul>
-							</el-dropdown-menu>
-						</el-dropdown>
-						<el-dropdown @command="chooseLocation">
-							<span class="locationItem el-dropdown-link"> 医院 <i class="el-icon-caret-bottom"></i></span>
-							<el-dropdown-menu slot="dropdown" class="suggest">
-								<ul class="suggest-contain">
-									<li v-for="(item,key) in hospital">
-										<el-dropdown-item :command="item.name">{{item.name}}</el-dropdown-item>
-									</li>
-								</ul>
-							</el-dropdown-menu>
-						</el-dropdown>
-					</section>
-	
-				</section> -->
 			</section>
 			<!--户型，房价-->
 			<section class="selectRow">
-				<section class="g-unitList-radioUI-layout">
-					<section class="radioUI">
-						<span class="title">房间类型</span>
-						<!-- <el-radio-group v-model="houseType" @change="changeHouseType"> -->
-						<el-radio-group v-model="houseType" @change="changeHouseType">
-							<el-radio :label="1">一居</el-radio>
-							<el-radio :label="2">二居</el-radio>
-							<el-radio :label="3">三居</el-radio>
-							<el-radio :label="4">四居及以上</el-radio>
-						</el-radio-group>
-					</section>
-				</section>
 				<section class="g-unitList-select-housePrice-layout">
 					<section class="housePriceUI">
 						<span class="title">房价</span>
@@ -179,18 +76,7 @@
 						</div>
 					</section>
 				</section>
-			</section>
-			<!--出租类型，配套-->
-			<section class="selectRow">
-				<!-- <section class="g-unitList-radioUI-layout" style="width: 20%">
-					<section class="radioUI">
-						<span class="title">出租类型</span>
-						<el-radio-group v-model="rentalType" @change="changeRentalType">
-							<el-radio :label="'complete'">整套</el-radio>
-							<el-radio :label="'single'">单间</el-radio>
-						</el-radio-group>
-					</section>
-				</section> -->
+				
 				<section class="g-unitList-selectUI-layout">
 					<section class="selectUI">
 						<span class="title">配套</span>
@@ -198,7 +84,7 @@
 							<el-dropdown trigger="click" @command="" placement="bottom">
 								<section @click="showMatching=!showMatching">
 									<el-input v-model="matchNumber" placeholder="请选择" :suffix-icon="!showMatching?
-                                    'el-icon-caret-bottom':'el-icon-caret-top'" :readonly=true></el-input>
+				                    'el-icon-caret-bottom':'el-icon-caret-top'" :readonly=true></el-input>
 								</section>
 								<el-dropdown-menu slot="dropdown">
 									<div class="matching">
@@ -234,8 +120,20 @@
 						</div>
 					</section>
 				</section>
-				<section class="g-unitList-selectUI-layout">
-					<!-- <section class="selectUI">
+			</section>
+			<!--出租类型，配套-->
+			<section class="selectRow">
+				<!-- <section class="g-unitList-radioUI-layout" style="width: 20%">
+					<section class="radioUI">
+						<span class="title">出租类型</span>
+						<el-radio-group v-model="rentalType" @change="changeRentalType">
+							<el-radio :label="'complete'">整套</el-radio>
+							<el-radio :label="'single'">单间</el-radio>
+						</el-radio-group>
+					</section>
+				</section> -->
+				<!--<section class="g-unitList-selectUI-layout">
+					 <section class="selectUI">
 						<span class="title">房型</span>
 						<div class="el-select selectBox">
 							<el-dropdown trigger="click" @command="" placement="bottom">
@@ -270,20 +168,20 @@
 								</el-dropdown-menu>
 							</el-dropdown>
 						</div>
-					</section> -->
-				</section>
+					</section> 
+				</section>-->
 			</section>
 			<section class="selectRow"></section>
 		</section>
 		<section id="fixedHeaderRoot" class="g-unitList-selected-layout"
 			:class="isFixedTop?'g-unitList-selected-isFixed':''">
 			<section class="selectedBox">
-				<span v-show="this.chooseDate!=''">
+<!-- 				<span v-show="this.chooseDate!=''">
 					<span class="el-tag el-tag--info">
 						{{this.chooseDate}} <i class="el-icon-close"
 							@click="chooseDate='',searchHotelByAllFilters()"></i>
 					</span>
-				</span>
+				</span> -->
 				<span v-show="allFilters.people!=''">
 					<span class="el-tag el-tag--info">
 						{{allFilters.people}}人 <i class="el-icon-close"
@@ -338,7 +236,7 @@
 		<section class="g-unitList-list-layout">
 			<section>
 				<!--排序-->
-				<section class="sortBox">
+<!-- 				<section class="sortBox">
 					<span class="anchor"><span class="houseNum">{{total}}套房屋符合条件</span></span>
 					<section class="sort">
 						<span :class="sortOrder=='price'?'currentSortType':''"
@@ -353,7 +251,7 @@
 						<span :class="sortOrder=='comment'?'currentSortType':''"
 							@click="sortOrder='comment',sortImg='',houseSort('comment')">好评优先</span>
 					</section>
-				</section>
+				</section> -->
 				<!--房屋子项-->
 				<section class="tj-unit-list clearfix">
 					<article class="tj-unit-item-layout" v-for="(item,key) in houseData" :key="key">
@@ -551,7 +449,8 @@
 			if (JSON.parse(sessionStorage.getItem('store')) != null) {
 				this.getUserNotice(this.$store.state.userInfo.username) //得到用户通知
 			}
-			if (this.timeslot == '') {
+			console.log(this.timeslot)
+			if (this.timeslot == ''|| this.timeslot == undefined) {
 				//['2022-03-09', '2022-03-10']
 				let startTime = new Date();
 				let endTime = new Date();
@@ -705,8 +604,8 @@
 				this.bedNumber = ''
 				this.startPrice = ''
 				this.endPrice = ''
-				this.startTime = ''
-				this.endTime = ''
+				// this.startTime = ''
+				// this.endTime = ''
 				// this.currentRegion = ''
 				// this.houseType = ''
 				// this.realHousePrice = ''
@@ -1216,15 +1115,16 @@
 	.g-unitList-select-housePrice-layout .housePriceUI {
 		padding: 11px;
 		width: 100%;
-		position: absolute;
-		bottom: 0;
+		/* position: absolute; */
+		/* bottom: 0; */
 
 	}
 
 	.g-unitList-select-housePrice-layout .housePriceUI .title {
 		white-space: nowrap;
 		float: left;
-		margin-right: 10px;
+		margin-right: 50px;
+		margin-left: 50px;
 		line-height: 39px;
 	}
 

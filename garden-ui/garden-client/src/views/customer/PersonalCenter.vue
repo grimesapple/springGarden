@@ -3,9 +3,9 @@
         <el-menu
                 class="el-menu-demo"
                 mode="horizontal"
-                background-color="#545c64"
-                text-color="#fff"
-                active-text-color="#ffd04b"
+                background-color="#edf4ed"
+                text-color="#111111"
+                active-text-color="#2e963d"
                 style="display: flex;justify-content: flex-end">
             <h2 class="title"><i class="el-icon-s-custom"></i>个人中心</h2>
             <el-menu-item index="1">
@@ -27,9 +27,9 @@
             <!--侧边栏-->
             <el-aside width="200px" style="background-color: rgb(238, 241, 246)">
                 <el-menu router :default-openeds="['0','1']"
-                         background-color="#545c64"
-                         text-color="#fff"
-                         active-text-color="#ffd04b"><!--默认打开菜单--->
+                         background-color="#edf4ed"
+                         text-color="#111111"
+                         active-text-color="#2e963d">
                     <el-submenu index="0">
                         <template slot="title">
                             <i class="el-icon-menu"></i>
@@ -41,12 +41,12 @@
                         <el-menu-item index="/Order/user" :class="$route.path=='/Order/user'?'is-active':''" >
                             <i class="el-icon-tickets"></i>我的订单
                         </el-menu-item>
-                        <el-menu-item index="/Collection" :class="$route.path=='/Collection'?'is-active':''" >
+                       <!-- <el-menu-item index="/Collection" :class="$route.path=='/Collection'?'is-active':''" >
                             <i class="el-icon-star-off"></i>我的收藏
                         </el-menu-item>
                         <el-menu-item index="/Message" :class="$route.path=='/Message'?'is-active':''" >
                             <i class="el-icon-chat-dot-round"></i>我的消息
-                        </el-menu-item>
+                        </el-menu-item> -->
                     </el-submenu>
                 </el-menu>
             </el-aside>
@@ -119,6 +119,6 @@
     }
     .title{
         margin-right: 30%;
-        color: #fff;
+        color: #2e963d;
     }
 </style>

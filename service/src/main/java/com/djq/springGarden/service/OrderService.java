@@ -8,6 +8,7 @@ import cn.hutool.db.sql.Order;
 import com.djq.springGarden.entity.OrderT;
 import com.djq.springGarden.vo.OrderSearchVo;
 import com.djq.springGarden.vo.OrderTVo;
+import com.djq.springGarden.vo.ResultVO;
 
 /**
  * 订单Service接口
@@ -67,6 +68,15 @@ public interface OrderService {
     int stayOUt(OrderSearchVo orderSearchVo);
 
     /**
+     * 办理续住
+     *
+     * @param orderSearchVo 对应订单
+     * @return 返回结果
+     */
+    int continueIn(OrderSearchVo orderSearchVo);
+
+
+    /**
      * 取消预订
      *
      * @param orderSearchVo 对应订单
@@ -101,4 +111,5 @@ public interface OrderService {
      * @return true:无冲突，可以预定.false：有冲突。
      */
     boolean check(Date startTime, Date endTime, Integer productId);
+
 }

@@ -53,5 +53,8 @@ public class User {
     @ApiModelProperty("身份证号码" )
     @Column(name = "cardID" )
     private String cardid;
-
+    /** 身份证号码 */
+    @ApiModelProperty("状态" )
+    @Column(name = "status" )
+    private Integer status;
 }

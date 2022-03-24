@@ -83,6 +83,10 @@ public class OrderServiceImpl implements OrderService {
         if (startTimePay != null && endTimePay != null) {
             criteria.andBetween("payDate", startTimePay, endTimePay);
         }
+        //用户id筛选
+        if (orderTVo.getUserId() != null) {
+            criteria.andEqualTo("userId",orderTVo.getUserId());
+        }
         //按时间顺序排列
         example.orderBy("createTime").desc();
         //查询
@@ -344,6 +348,23 @@ public class OrderServiceImpl implements OrderService {
     public int stayOUt(OrderSearchVo orderSearchVo) {
         //对应订单:设置对应订单状态：
         orderSearchVo.setStatus(0);
+        return orderMapper.updateByPrimaryKeySelective(orderSearchVo);
+    }
+
+    /**
+     * 办理续住
+     *
+     * @param orderSearchVo 对应订单
+     * @return 返回结果
+     */
+    @Override
+    public int continueIn(OrderSearchVo orderSearchVo) {
+        //订单id，退房日期
+        //更新退房日期
+        Date endTime = orderSearchVo.getEndTime();
+        if (endTime == null) {
+            return -1;
+        }
         return orderMapper.updateByPrimaryKeySelective(orderSearchVo);
     }
 

@@ -17,6 +17,7 @@ import Administrator from "../views/administrators/Administrator";
 import HouseList from "../components/HouseList";
 import OrderList from "../components/OrderList";
 import Property from "../components/Property";
+import UserList from "../components/UserList";
 import Notice from "../components/Notice";
 import CashBox from "../components/CashBox";
 import Page404 from "../views/Page404";
@@ -186,6 +187,16 @@ const routes = [
 	    path:'/Property',
 	    name:"Property",
 	    component:Property,
+	    props:function(route){
+	      return {
+	        operation:route.params.operation,
+	      }
+	    },
+	  },
+	  {
+	    path:'/UserList',
+	    name:"UserList",
+	    component:UserList,
 	    props:function(route){
 	      return {
 	        operation:route.params.operation,

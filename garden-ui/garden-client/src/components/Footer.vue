@@ -6,19 +6,17 @@
             <a href="">用户协议</a><i>| </i>
             <a href="">关于我们</a><i>| </i>
             <a href="">我是房客</a><i>| </i>
-            <a href="">加入红尘</a><i>| </i>
-            <a href="">网站地图</a><i>| </i>
+            <a href="">加入我们</a><i>| </i>
         </div>
         <div class="phone-cont">
             国内客服电话：400-188-1234 国内商服电话：010-81400100 海外及港澳台客服电话：0086-571-28089451 0086-10-80697258
         </div>
         <section class="g-copyright-layout">
                     <span>
-                         © 2020 hongchen.com红尘版权所有
+                         © 2020 qingting.com青庭版权所有
                          <a href="">津ICP备17006480号</a>
-                         <a href="" class="record-icon"> 京公网安备11010802031847号</a>
+                         <a href="" class="record-icon"> 京公网安备110123141047号</a>
                          <a href=""> 营业执照</a>
-                         <a href=""> 途家保障计划</a>
                     </span>
             <div class="m-copyright-imgs">
                 <a href="" class="u-icon-copyright1"></a>

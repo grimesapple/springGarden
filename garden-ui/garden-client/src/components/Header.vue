@@ -1,7 +1,7 @@
 <!--头部-->
 <template>
 	<!--顶部导航-->
-	<div class="hc-home-header-wrapper">
+	<div :class="$route.path=='/'?'hc-home-header-wrapper':'hc-home-header-wrapper1'">
 		<div class="hc-header">
 			<div class="logo-area">
 				<a href="/">
@@ -15,10 +15,10 @@
 				<div class="tools-item">
 					<span @click="toHouse">民宿房源</span>
 				</div>
-				<div class="tools-item">
+<!-- 				<div class="tools-item">
 					<span>关于我们</span>
-				</div>
-				<div class="tools-item" v-if="this.$store.state.isLogin">
+				</div> -->
+				<div class="tools-item" v-if="this.$store.state.userInfo.role == 'admin'">
 					<span @click="toMerchantManage">商户系统</span>
 				</div>
 			</div>
@@ -31,7 +31,7 @@
 				<div class="tools-item" v-if="this.$store.state.isLogin">
 					<el-dropdown trigger="click">
 						<!-- <div class="el-dropdown-link header-avatar"> -->
-						<div class="el-dropdown-link">
+						<div class="el-dropdown-link userstyle">
 							<span>{{$store.state.userInfo.username}}</span>
 						</div>
 						<el-dropdown-menu slot="dropdown">
@@ -41,7 +41,7 @@
 					</el-dropdown>
 
 				</div>
-				<div class="tools-item" v-if="$store.state.isLogin">
+			<!-- 	<div class="tools-item" v-if="$store.state.isLogin">
 					<el-dropdown trigger="click">
 						<span class="el-dropdown-link">通知</span>
 						<el-dropdown-menu slot="dropdown" class="dropdown-notice">
@@ -71,7 +71,7 @@
 						</el-dropdown-menu>
 					</el-dropdown>
 				</div>
-			</div>
+	 -->		</div>
 		</div>
 	</div>
 
@@ -87,7 +87,9 @@
 				drawer: false
 			}
 		},
-		created() {},
+		created() {
+			
+		},
 		methods: {
 			handleClose(done) {
 				done();
@@ -153,9 +155,8 @@
 				this.$router.push({
 					path: "/Hotel",
 					query: {
-						city: 0,
-						region: 0,
-						timeslot: 0, //[{…}, {…}]this.chooseDate["xxx", "aaa"]
+						people: 1,
+						timeslot: this.chooseDate, //[{…}, {…}]this.chooseDate["xxx", "aaa"]
 						showLogin: this.showLogin
 					}
 				})
@@ -187,7 +188,7 @@
 
 <style scoped>
 	/*头部导航*/
-	.hc-home-header-wrapper {
+	.hc-home-header-wrapper1 {
 		position: absolute;
 		top: 0;
 		z-index: 1;
@@ -195,6 +196,21 @@
 		right: 0;
 		/* background: linear-gradient(180deg, rgba(0, 0, 0, .3), transparent); */
 		background: #edf4ec;
+		color: #fff;
+		height: 90px;
+		min-width: 1180px;
+		font-weight: 700;
+		display: block;
+		/* background-color: white; */
+	}
+	.hc-home-header-wrapper {
+		position: absolute;
+		top: 0;
+		z-index: 1;
+		left: 0;
+		right: 0;
+		background: linear-gradient(180deg, rgba(0, 0, 0, .3), transparent); 
+		/* background: #edf4ec; */
 		color: #fff;
 		height: 90px;
 		min-width: 1180px;
@@ -252,10 +268,16 @@
 		overflow: hidden;
 	}
 
-	.hc-home-header-wrapper span {
+	.hc-home-header-wrapper1 span {
 		font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
 		color: #41ac52;
 	}
+	
+	.userstyle {
+		font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+		color: white;
+	}
+	
 
 	.dropdown-notice {
 		width: 250px;

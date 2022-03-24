@@ -120,6 +120,19 @@ public class OrderController {
     }
 
     /**
+     * 办理续住
+     */
+    @ApiOperation("办理续住" )
+    @PostMapping("/continue" )
+    public ResultVO<OrderT> continueIn(@RequestBody OrderSearchVo orderSearchVo) {
+        int i = orderService.continueIn(orderSearchVo);
+        if (i == -1) {
+            return ResultVO.error("时间为空");
+        }
+        return  i > 0 ?  ResultVO.ok("续住成功"): ResultVO.error("续住失败");
+    }
+
+    /**
      * 取消预订
      */
     @ApiOperation("取消预订" )

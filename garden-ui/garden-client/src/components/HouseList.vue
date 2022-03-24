@@ -49,7 +49,7 @@
 					</el-tag>
 				</template>
 			</el-table-column>
-			<el-table-column prop="house.content" label="房间描述" align="center">
+			<el-table-column prop="house.content" :show-overflow-tooltip="true" label="房间描述" align="center">
 				<template slot-scope="scope">
 					<p v-html="scope.row.house.content"></p>
 				</template>
@@ -134,13 +134,13 @@
 				/*图片回显地址*/
 				root: this.API.ShowImage,
 				/*搜索条件：房屋标题*/
-				subTitle:"",
+				subTitle: "",
 				/*搜索条件：选择日期*/
-				chooseDate:"",
+				chooseDate: "",
 				/*搜索条件：房屋标题*/
-				subTitle:"",
+				subTitle: "",
 				/*搜索条件：房屋标题*/
-				subTitle:"",
+				subTitle: "",
 				//添加弹出框
 				dialogVisible: false,
 				dialogType: "",
@@ -378,6 +378,17 @@
 		},
 	}
 </script>
+
+<style>
+ .el-tooltip__popper{
+    max-width:20%;
+  }
+  .el-tooltip__popper,.el-tooltip__popper.is-dark{
+    background:rgb(48, 65, 86) !important;
+    color: #fff !important;
+    line-height: 24px;
+  }
+</style>
 
 <style scoped>
 	/*滚动条样式*/

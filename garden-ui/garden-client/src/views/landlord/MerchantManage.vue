@@ -8,7 +8,7 @@
                 active-text-color="#ffd04b"
                 style="display: flex;justify-content: flex-end"
         >
-            <h2 class="title">红尘商户管理</h2>
+            <h2 class="title">商户管理</h2>
             <el-menu-item index="1">
                 <el-dropdown trigger="click">
                     <div class="el-dropdown-link header-avatar">
