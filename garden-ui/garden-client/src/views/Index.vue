@@ -7,14 +7,14 @@
 					<div class="m-login-wrap">
 						<div class="login-tabs">
 							<a :class="{'isActive ':toggleLoginBody}"
-								@click="toggleLoginBody=true,form.rgst_username='zhangsan',form.rgst_password='123456', rgst_repassword = '123456' ,showError=false">注册</a>
+								@click="toggleLoginBody=true,showError=false">注册</a>
 							<a :class="{'isActive':!toggleLoginBody}"
-								@click="toggleLoginBody=false,form1.username='zhangsan',form1.passWord='123456',showError=false">登录</a>
+								@click="toggleLoginBody=false,showError=false">登录</a>
 						</div>
 						<div class="login-body" v-show="toggleLoginBody">
 							<el-form :rules="rules" :model="form" ref="form" status-icon>
 								<el-form-item prop="rgst_username">
-									<el-input placeholder="账号" v-model="form.rgst_username">
+									<el-input  placeholder="账号" v-model="form.rgst_username">
 										<template slot="prepend"><i class="el-icon-user"></i></template>
 									</el-input>
 								</el-form-item>
@@ -458,7 +458,8 @@
 							max: 11,
 							message: '手机号码为11位',
 							trigger: 'blur'
-						}
+						},
+						
 					],
 				},
 				rules1: {
@@ -535,7 +536,7 @@
 						if (valid) {
 							flag = true
 						} else {
-							_this.$message("请完善信息再进行注册");
+							_this.$message("请完善信息再进行登录");
 						}
 					})
 
@@ -547,9 +548,8 @@
 						})).then(function(resp) {
 							let data = resp.data;
 							if (data.code != 200) {
-								_this.errorInfo = data.msg
-								_this.showError = true;
 								_this.passWord = ''
+								_this.$message(data.msg);
 								return false
 							}
 							_this.$store.state.token = data.result.token;

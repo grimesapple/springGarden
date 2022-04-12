@@ -3,7 +3,10 @@ package com.djq.springGarden.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.djq.springGarden.mapper.UserMapper;
 import com.djq.springGarden.util.JwtUtil;
+import com.djq.springGarden.vo.UserVo;
+import com.github.pagehelper.Page;
 import org.springframework.web.bind.annotation.*;
 import com.djq.springGarden.entity.User;
 import com.djq.springGarden.service.UserService;
@@ -16,6 +19,7 @@ import java.util.Map;
 import com.github.pagehelper.PageInfo;
 import com.github.pagehelper.PageHelper;
 import com.djq.springGarden.vo.ResultVO;
+import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
 
@@ -31,19 +35,21 @@ import javax.annotation.Resource;
 public class UserController {
     @Resource
     private UserService userService;
+    @Resource
+    private UserMapper userMapper;
 
     /**
      * 查询用户列表
      */
     @GetMapping("/list")
     @ApiOperation("查询用户列表")
-    public ResultVO<Map<String, Object>> list(User user,
+    public ResultVO<Map<String, Object>> list(UserVo userVo,
                                               @RequestParam(value = "pageNum", required = false, defaultValue = "1") Integer pageNum,
                                               @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
         HashMap<String, Object> map = new HashMap<>();
-        PageHelper.startPage(pageNum, pageSize);
-        List<User> list = userService.select(user);
-        map.put("total", list.size());
+        Page<User> info = PageHelper.startPage(pageNum, pageSize);
+        List<User> list = userService.select(userVo);
+        map.put("total", info.getTotal());
         map.put("list", list);
         return ResultVO.ok(map, "查询成功");
     }
@@ -98,6 +104,11 @@ public class UserController {
         if (login == null) {
             return ResultVO.error("账号或者密码错误");
         }
+        //查询是否被冻结
+        if (login.getStatus() == 1) {
+            //被冻结无法登录
+            return ResultVO.error("账号已冻结，请联系管理员解冻");
+        }
         //添加token
         map.put("token", JwtUtil.createToken());
         //放入用户信息
@@ -124,10 +135,11 @@ public class UserController {
         user.setRoleId(3);
 
         //账号名不能重复和手机号码不能重复
-        User userNew = new User();
-        userNew.setTelphone(user.getTelphone());
-        userNew.setName(user.getName());
-        List<User> select = userService.select(userNew);
+        Example example = new Example(User.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("name",user.getName());
+        criteria.orEqualTo("telphone",user.getTelphone());
+        List<User> select = userMapper.selectByExample(example);
         if (select != null && select.size() >= 1) {
             return ResultVO.error("账号名或者手机号重复");
         }

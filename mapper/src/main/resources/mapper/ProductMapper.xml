@@ -33,7 +33,7 @@
         <where>
             <if test="id != null">and id = #{id}</if>
             <if test="name != null  and name != ''">and name like concat('%',#{name},'%')</if>
-            <if test="subTitle != null  and subTitle != ''">and sub_title=#{subTitle}</if>
+            <if test="subTitle != null  and subTitle != ''">and  sub_title like concat('%',#{subTitle},'%')</if>
             <if test="orignalPrice != null">and orignal_price=#{orignalPrice}</if>
             <if test="promotePrice != null">and promote_price=#{promotePrice}</if>
             <if test="bedNumber != null">and bed_number=#{bedNumber}</if>

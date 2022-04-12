@@ -1,10 +1,10 @@
 <template>
 	<article class="g-unit-detail">
 		<!--顶部导航-->
-		<Header :thatnotice.sync="thisnotice" :thatshow-login.sync="thisshowLogin"></Header>
+		<Header :thatnotice.sync="thisnotice" :thatshow-login.sync="thisshowLogin" class="hc-home-header-wrapper1" style="z-index:999;"></Header>
 		<!--背景大图-->
 		<div class="unit-image">
-			<el-carousel trigger="click" height="610px" style="margin-top: 80px">
+			<el-carousel trigger="click" height="750px" >
 				<el-carousel-item v-for="imgItem in houseData.img">
 					<img ref="imgHeight" :src="$data.root+imgItem.url" width="100%" height="100%" object-fit="cover">
 				</el-carousel-item>
@@ -22,8 +22,8 @@
 									@click="navIndex=1,scroll(1610)">交易规则</a></li>
 							<li class="unit-navbar__nav__item"><a :class="navIndex==2?'item--select':''"
 									@click="navIndex=2,scroll(2100)">入住须知</a></li>
-							<li class="unit-navbar__nav__item"><a :class="navIndex==3?'item--select':''"
-									@click="navIndex=3,scroll(2400)">房屋点评</a></li>
+<!-- 							<li class="unit-navbar__nav__item"><a :class="navIndex==3?'item--select':''"
+									@click="navIndex=3,scroll(2400)">房屋点评</a></li> -->
 						</ul>
 					</div>
 				</div>
@@ -81,7 +81,7 @@
 						<div class="unit-facilities">
 							<ul class="simple-version">
 								<li>
-									<p v-for="(item,index) in houseData.property"><i>{{item.propertyName}}</i></p>
+									<p v-for="(item,index) in houseData.property">{{item.propertyName}}</p>
 								</li>
 
 								<!-- <li>
@@ -117,7 +117,7 @@
 							<ul class="trade-lists">
 								<li>
 									<span>付款方式：</span>
-									<div class="rules__intro">全额预付房费</div>
+									<div class="rules__intro">线上支付房费，到店支付押金</div>
 								</li>
 								<li>
 									<span>无须确认：</span>
@@ -125,17 +125,17 @@
 								</li>
 								<li>
 									<span>入住押金：</span>
-									<div class="rules__intro">免收</div>
+									<div class="rules__intro">100元</div>
 								</li>
 								<li>
 									<span>清洁费：</span>
 									<div class="rules__intro">一客一扫，在线收取清洁费25元，已包含在当前价格中</div>
 								</li>
 							</ul>
-							<el-steps :active="1" style="width: 90%">
-								<el-step title="预定成功" icon="el-icon-success" description="支付费用"></el-step>
-								<el-step title="入住当天" icon="el-icon-s-home" description="取消订单收取房费的100%"></el-step>
-								<el-step title="离店当天" icon="el-icon-house" description="提前离店收取剩余房费的100%"></el-step>
+							<el-steps :active="1" align-center>
+								<el-step title="预定成功" icon="el-icon-success" description="当晚8:00之后取消订单收取房费的100%"></el-step>
+								<el-step title="入住当天" icon="el-icon-s-home" description="支付押金"></el-step>
+								<el-step title="离店当天" icon="el-icon-house" description="验房退还押金"></el-step>
 							</el-steps>
 						</div>
 					</div>
@@ -177,7 +177,7 @@
 				</div>
 				<!--评论-->
 				<div class="comment">
-					<div class="unit-comment">
+<!-- 					<div class="unit-comment">
 						<div class="unit-comment__nav clearfix">
 							<span
 								class="unit-comment__nav__this nav--choose">本房屋点评（{{houseData.commentsNumber}}条）</span>
@@ -192,7 +192,6 @@
 								</el-rate>
 								<span>分</span>
 							</div>
-							<!--评论列表-->
 							<ul class="unit-comment__container__comments">
 								<li class="unit-comment__container__item" v-for="item in comments">
 									<div class="unit-comment__container__item__top">
@@ -207,7 +206,6 @@
 									<div class="one-px__border"></div>
 								</li>
 							</ul>
-							<!--页码条-->
 							<div class="unit-comment__container__page clearfix">
 								<el-pagination background layout="prev, pager, next" :total="total"
 									:page-size="pageSize" :current-page="currentPage" @current-change="pageChange"
@@ -215,7 +213,7 @@
 								</el-pagination>
 							</div>
 						</div>
-					</div>
+					</div> -->
 				</div>
 			</div>
 			<!--右边的浮动，预定功能-->
@@ -377,8 +375,7 @@
 					// 	time.getTime() > new Date(_this.houseData.chooseDate[1])) {
 					// 	return true;
 					// }
-					if (time.getTime() < Date.now() - 86400000 || time.getTime() < (new Date(_this.houseData
-							.chooseDate[0]).getTime() - 28800000 )) {
+					if (time.getTime() < Date.now() - 86400000 ) {
 						return true;
 					}
 					if (_this.secondeTime != ''){
@@ -584,6 +581,7 @@
 	tr {
 		height: 20px;
 	}
+
 </style>
 
 <style scoped>
@@ -678,7 +676,7 @@
 	.unit-navbar__container__main .unit-navbar__nav .unit-navbar__nav__item .item--select {
 		font-weight: 600;
 		font-family: PingFangSC-Regular;
-		color: #fd8238;
+		color: #41ac52;
 	}
 
 	/*内容*/
@@ -1231,7 +1229,7 @@
 		font-size: 16px;
 		margin: 0;
 		color: #fff;
-		background-image: linear-gradient(-221deg, #ff721e, #ff9b3e);
+		background-image: linear-gradient(-221deg, #41ac52, #82cd5e);
 	}
 
 	.common__button_price {

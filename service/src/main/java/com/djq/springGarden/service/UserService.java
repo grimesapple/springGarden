@@ -3,6 +3,7 @@ package com.djq.springGarden.service;
 import java.util.List;
 
 import com.djq.springGarden.entity.User;
+import com.djq.springGarden.vo.UserVo;
 
 /**
  * 用户Service接口
@@ -14,10 +15,10 @@ public interface UserService {
     /**
      * 条件查询用户列表
      *
-     * @param user 用户
+     * @param userVo 用户
      * @return 用户集合
      */
-    List<User> select(User user);
+    List<User> select(UserVo userVo);
 
     /**
      * 条件查询用户:查询单个

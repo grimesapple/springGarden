@@ -20,6 +20,7 @@ import Property from "../components/Property";
 import UserList from "../components/UserList";
 import Notice from "../components/Notice";
 import CashBox from "../components/CashBox";
+import OrderAlipay from "../components/OrderAlipay";
 import Page404 from "../views/Page404";
 Vue.use(VueRouter)
 
@@ -46,6 +47,17 @@ const routes = [
       }
     },
   },
+  {
+    path: '/OrderAlipay',
+    name: 'OrderAlipay',
+    component:OrderAlipay,
+    props:function(route){
+      return {
+        htmlData:route.query.htmlData,
+      }
+    },
+  },
+  
   {
     path:'/Detail',
     name:"Detail",
@@ -173,6 +185,16 @@ const routes = [
           }
         },
       },
+        {
+        path:'/UserList',
+        name:"UserList",
+        component:UserList,
+        props:function(route){
+          return {
+            operation:route.params.operation,
+          }
+        },
+      },
 	  {
         path:'/OrderList/:operation',
         name:"OrderList",
@@ -194,9 +216,9 @@ const routes = [
 	    },
 	  },
 	  {
-	    path:'/UserList',
-	    name:"UserList",
-	    component:UserList,
+	    path:'/Property',
+	    name:"Property",
+	    component:Property,
 	    props:function(route){
 	      return {
 	        operation:route.params.operation,

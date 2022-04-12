@@ -185,7 +185,7 @@
 				idcard: '',
 				tableData: [],
 				/*表格数据*/
-				pageSize: 5,
+				pageSize: 10,
 				/*每页显示数量*/
 				total: 0,
 				/*房屋总数*/

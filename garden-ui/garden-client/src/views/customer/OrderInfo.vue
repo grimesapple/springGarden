@@ -1,10 +1,10 @@
 <template>
 	<article>
-		<el-menu class="el-menu-demo" mode="horizontal" background-color="#545c64" text-color="#fff"
-			active-text-color="#ffd04b" style="display: flex;justify-content: flex-end">
+		<el-menu class="el-menu-demo" mode="horizontal" background-color="#edf4ec" text-color="#41ac52"
+			active-text-color="#41ac52" style="display: flex;justify-content: flex-end">
 			<el-menu-item index="1"><a href="/">主页</a></el-menu-item>
 			<el-menu-item index="2"><a @click="loginOut">退出</a></el-menu-item>
-			<el-menu-item index="3"><a href="/MerchantManage" target="_blank">商户系统</a></el-menu-item>
+			<!-- <el-menu-item index="3"><a href="/MerchantManage" target="_blank">商户系统</a></el-menu-item> -->
 		</el-menu>
 		<div class="orderT-fill-page">
 			<div class="orderT-main">
@@ -50,12 +50,12 @@
 							</el-form-item>
 						</el-form>
 					</div>
-					<form action="http://localhost:8081/pay" method="post" v-show="false">
+<!-- 					<form >
 						订单名称：<input type="text" name="WIDsubject" v-model="totalPrice" required><br />
 						付款金额：<input type="text" name="WIDtotal_amount" v-model="totalPrice" required><br />
 						WIDbody：<input type="text" name="WIDbody" v-model="currentHouseData.title"><br />
 						<input type="submit" value="下单">
-					</form>
+					</form> -->
 					<el-button :type="isEdit?'info':'warning'" @click="isEdit=!isEdit" style="margin-right:50%">
 						{{isEdit?'关闭编辑':'编辑信息'}}
 					</el-button>
@@ -194,16 +194,24 @@
 					if (resp.data.code == 200) {
 						_this.$notify({
 							title: '成功',
-							message: '您已成功预定!',
+							message: '提交成功，跳转到支付页面',
 							type: 'success'
 						});
-						setTimeout(() => {
-							_this.$router.push({
-								path: "/Order/user"
-							})
-						}, 3000);
+						let orderinfo = {
+							total:_this.totalPrice,
+							title:_this.currentHouseData.house.subTitle
+							
+						}
+						axios.post(_this.API.Payment, orderinfo).then(function(resp) {
+							setTimeout(() => {
+								let routerData = _this.$router.resolve({path:'/orderAlipay',query: {htmlData: resp.data}})
+								window.open(routerData.href, '_blank')
+							}, 2000);
+						})
 					}
 				})
+				
+				
 			},
 			// Js
 			changeSelect() {

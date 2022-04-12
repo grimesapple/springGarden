@@ -18,7 +18,6 @@ const API = {
 
 	//地区接口，+cityName+"/"+type
 	GetRegion: ApiRootUrl + 'region/getRegion/',
-
 	GetNotice: ApiRootUrl + 'notice/getNotice/', //用户通知接口,+username
 	AddNotice: ApiRootUrl + 'notice/addNotice', //添加通知接口，notice
 	//======================房屋相关接口=======================
@@ -66,20 +65,26 @@ const API = {
 	ContinueIn: ApiRootUrl + 'order/continue', //修改订单接口，order
 	//取消预订
 	CancelPre: ApiRootUrl + 'order/cancelPre', //修改订单接口，order
+	//删除订单接口
+	DeleteOrder: ApiRootUrl + 'order/delete', 
 
 	UpdateOrder: ApiRootUrl + 'order/updateOrder', //修改订单接口，order
-	DeleteOrder: ApiRootUrl + 'order/deleteOrder/', //删除订单接口，id
+	
 	CancelOrder: ApiRootUrl + 'order/cancelOrder', //取消订单，order
 
 	//======================入住人信息相关接口=======================
 	//入住人信息列表查询
 	GetOrderItems: ApiRootUrl + 'orderitem/list',
 
-	GetCategory: ApiRootUrl + 'category/list',
 	GetCollect: ApiRootUrl + 'collect/getCollect/', //得到收藏接口，+this.$store.state.userInfo.username
 	AddCollect: ApiRootUrl + 'collect/addCollect/', //添加收藏接口，collect
 	DeleteCollect: ApiRootUrl + 'collect/deleteCollect/', //取消收藏接口，+this.collectionList[j].id
 
+	//======================支付=======================
+	Payment: ApiRootUrl + 'payment/pay',
+	
+	
+	
 	GetCommentTotal: ApiRootUrl +
 		'comment/getCommentTotal/', //得到房屋评论数量接口，+this.houseData.username+'/'+this.houseData.title
 	GetCommentList: ApiRootUrl +

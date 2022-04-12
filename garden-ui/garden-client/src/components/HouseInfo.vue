@@ -80,11 +80,11 @@
 		</section>
 		<section class="g-hcComModal-layout" v-show="active===1">
 			<div class="situation-item">
-				<div class="item-title" style="margin-top: 50px">
+			<!-- 	<div class="item-title" style="margin-top: 50px">
 					<h2>房间类型</h2>
 				</div>
 				<div class="item-contain">
-					<!-- <el-checkbox-group v-model="houseList" class="item-checkList">
+					<el-checkbox-group v-model="houseList" class="item-checkList">
 						<el-checkbox label="酒店式公寓" class="item-check"></el-checkbox>
 						<el-checkbox label="公寓" class="item-check"></el-checkbox>
 						<el-checkbox label="别墅" class="item-check"></el-checkbox>
@@ -94,13 +94,13 @@
 						<el-checkbox label="木屋" class="item-check"></el-checkbox>
 						<el-checkbox label="帐篷营地" class="item-check" style="margin-bottom: 20px"></el-checkbox>
 						<el-checkbox label="老洋房" class="item-check"></el-checkbox>
-					</el-checkbox-group> -->
+					</el-checkbox-group>
 					<el-select v-model="houseType" placeholder="请选择类型" size="small">
 						<el-option v-for="item in Options" :key="item.value" :label="item.value+'居'"
 							:value="item.value">
 						</el-option>
 					</el-select>
-				</div>
+				</div> -->
 
 				<div class="item-title">
 					<h2>配套设施</h2>
@@ -641,7 +641,7 @@
 					"subTitle": this.subTitle,
 					"bedNumber": this.bedNumber,
 					"people": this.peopleNumber,
-					"categoryId": this.houseType,
+					// "categoryId": this.houseType,
 					"imgs": this.imageUrl,
 					"orignalPrice": this.housePrice,
 					"promotePrice": this.promotePrice,

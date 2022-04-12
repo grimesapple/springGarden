@@ -33,11 +33,7 @@ public class ProductServiceImpl implements ProductService {
     @Resource
     private ProductMapper productMapper;
 
-    /**
-     * 类型
-     */
-    @Resource
-    private CategoryService categoryService;
+
 
     /**
      * 房间的图片
@@ -148,13 +144,11 @@ public class ProductServiceImpl implements ProductService {
             HashMap<String, Object> result = new HashMap<>();
             //房间id
             Integer proId = pro.getId();
-            //房间类型id
-            Integer categoryId = pro.getCategoryId();
 
 
             //价格
             if (productSearchVo.getStartPrice() != null && productSearchVo.getEndPrice() != null) {
-                if (pro.getOrignalPrice().compareTo(productSearchVo.getStartPrice()) < 0 || pro.getOrignalPrice().compareTo(productSearchVo.getEndPrice()) > 0) {
+                if (pro.getPromotePrice().compareTo(productSearchVo.getStartPrice()) < 0 || pro.getPromotePrice().compareTo(productSearchVo.getEndPrice()) > 0) {
                     //不符合条件 跳过;
                     continue;
                 }
@@ -203,16 +197,10 @@ public class ProductServiceImpl implements ProductService {
             productimage.setProductId(proId);
             List<Productimage> imageList = productimageMapper.select(productimage);
 
-            //房间的类型
-            Category category = new Category();
-            category.setId(pro.getCategoryId());
-            Category selectOne = categoryService.selectOne(category);
 
 
             //封装房间的信息
             result.put("house", pro);
-            //房间的类型
-            result.put("category", selectOne);
             //房间的图片列表
             result.put("img", imageList);
             //属性
@@ -255,11 +243,7 @@ public class ProductServiceImpl implements ProductService {
         for (Product pro : houses) {
             ProductVO productVO = Convert.convert(ProductVO.class, pro);
 //            ProductVO productVO = (ProductVO) pro;
-            //查询类型名字
-            Integer categoryId = pro.getCategoryId();
-            Category category = new Category();
-            category.setId(categoryId);
-            categoryService.selectOne(category);
+
 
             //查询图片信息
             Integer id = productVO.getId();
@@ -268,7 +252,6 @@ public class ProductServiceImpl implements ProductService {
             List<Productimage> images = productimageMapper.select(productimage);
 
             //封装返回结果
-            productVO.setTypeName(category.getTypeName());
             productVO.setImgs(images);
             houseList.add(productVO);
         }

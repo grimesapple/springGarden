@@ -119,18 +119,22 @@ public class OrderServiceImpl implements OrderService {
             String phone = orderTVo.getPhone();
             if (StringUtil.isNotEmpty(phone)) {
                 String mobile = orderitemReuslt.getMobile();
-                String substring = mobile.substring(mobile.length() - 4, mobile.length() - 1);
+                String substring = mobile.substring(mobile.length() - 4);
                 if (!phone.equals(substring)) {
                     continue;
                 }
             }
             //账号名称
             String username = orderTVo.getUsername();
-            if (username != null && userResult != null) {
+            if (StringUtil.isNotEmpty(username)) {
+                if (userResult == null) {
+                    continue;
+                }
                 String name = userResult.getName();
                 if (!username.equals(name)) {
                     continue;
                 }
+
             }
 
 

@@ -54,7 +54,8 @@
 							<div class="block">
 								<el-date-picker format="yyyy-MM-dd" value-format="yyyy-MM-dd" v-model="chooseDate"
 									type="daterange" range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期"
-									:picker-options="pickerOptions" @change="currentPage=1,searchHotelByAllFilters()" :clearable ="false">
+									:picker-options="pickerOptions" @change="currentPage=1,searchHotelByAllFilters()"
+									:clearable="false">
 								</el-date-picker>
 							</div>
 						</section>
@@ -76,33 +77,28 @@
 						</div>
 					</section>
 				</section>
-				
+
 				<section class="g-unitList-selectUI-layout">
 					<section class="selectUI">
 						<span class="title">配套</span>
 						<div class="el-select selectBox">
 							<el-dropdown trigger="click" @command="" placement="bottom">
 								<section @click="showMatching=!showMatching">
-									<el-input v-model="matchNumber" placeholder="请选择" :suffix-icon="!showMatching?
-				                    'el-icon-caret-bottom':'el-icon-caret-top'" :readonly=true></el-input>
+									<!-- 									<el-input v-model="matchNumber" placeholder="请选择" :suffix-icon="!showMatching?'el-icon-caret-bottom':'el-icon-caret-top'" :readonly="true">
+										
+									</el-input> -->
+									<el-select  v-model="propertyValue" multiple placeholder="请选择"
+										@change="matchingOptions('fix')" >
+										<el-option v-for="(item,index) in this.property" :key="item.id"
+											:label="item.name" :value="item.name">
+										</el-option>
+									</el-select>
 								</section>
 								<el-dropdown-menu slot="dropdown">
 									<div class="matching">
 										<el-checkbox-group v-model="matchingList" size="medium">
 											<el-checkbox v-for="(item,index) in this.property" :label="item.id"
 												class="matching-checkbox">{{item.name}}</el-checkbox>
-											<!-- <el-checkbox label="无线网络" class="matching-checkbox"></el-checkbox>
-											<el-checkbox label="电梯" class="matching-checkbox"></el-checkbox>
-											<el-checkbox label="热水淋浴" class="matching-checkbox"></el-checkbox>
-											<el-checkbox label="洗衣机" class="matching-checkbox"></el-checkbox>
-											<el-checkbox label="电视" class="matching-checkbox"></el-checkbox>
-											<el-checkbox label="空调" class="matching-checkbox"></el-checkbox>
-											<el-checkbox label="冰箱" class="matching-checkbox"></el-checkbox>
-											<el-checkbox label="浴缸" class="matching-checkbox"></el-checkbox>
-											<el-checkbox label="卫浴用品" class="matching-checkbox"></el-checkbox>
-											<el-checkbox label="投影设备" class="matching-checkbox"></el-checkbox>
-											<el-checkbox label="麻将机" class="matching-checkbox"></el-checkbox>
-											<el-checkbox label="免费停车" class="matching-checkbox"></el-checkbox> -->
 										</el-checkbox-group>
 										<div class="matching-options">
 											<el-dropdown-item command="close" class="dropdown-item">
@@ -176,7 +172,7 @@
 		<section id="fixedHeaderRoot" class="g-unitList-selected-layout"
 			:class="isFixedTop?'g-unitList-selected-isFixed':''">
 			<section class="selectedBox">
-<!-- 				<span v-show="this.chooseDate!=''">
+				<!-- 				<span v-show="this.chooseDate!=''">
 					<span class="el-tag el-tag--info">
 						{{this.chooseDate}} <i class="el-icon-close"
 							@click="chooseDate='',searchHotelByAllFilters()"></i>
@@ -218,12 +214,12 @@
 							@click="rentalType='',searchHotelByAllFilters()"></i>
 					</span>
 				</span> -->
-				<span v-show="allFilters.properties!=''">
-					<span class="el-tag el-tag--info" v-for="(item,key) in allFilters.properties" :key="key">
+<!-- 				<span v-show="propertyValue!=''">
+					<span class="el-tag el-tag--info" v-for="(item,key) in propertyValue" :key="key">
 						{{item}}<i class="el-icon-close"
-							@click="properties=[],matchNumber='',searchHotelByAllFilters()"></i>
+							@click="propertyValue[tiem],matchNumber='',matchingOptions('fix')"></i>
 					</span>
-				</span>
+				</span> -->
 				<span v-show="allFilters.houseList!=''">
 					<span class="el-tag el-tag--info" v-for="(item,key) in allFilters.houseList" :key="key">
 						{{item}} <i class="el-icon-close"
@@ -236,7 +232,7 @@
 		<section class="g-unitList-list-layout">
 			<section>
 				<!--排序-->
-<!-- 				<section class="sortBox">
+				<!-- 				<section class="sortBox">
 					<span class="anchor"><span class="houseNum">{{total}}套房屋符合条件</span></span>
 					<section class="sort">
 						<span :class="sortOrder=='price'?'currentSortType':''"
@@ -282,14 +278,17 @@
 								<div class="unit-desc-list-extra">
 									<ul class="unit-little-label-list">
 										<li class="unit-little-label-list-item" v-for="(resp,key) in item.property">
-											{{resp.propertyName}}</li>
+											{{resp.propertyName}}
+										</li>
 									</ul>
 								</div>
 								<div class="unit-price-content">
 									<p class="unit-price">
-										<span class="text">￥{{item.house.orignalPrice}}元</span>
+										<span>￥</span>
+										<span class="text">{{item.house.promotePrice}}</span>
 										<span class="text">/</span>
 										<span>晚</span>
+										<del class="textDel">{{item.house.orignalPrice}}</del>
 									</p>
 								</div>
 								<section class="tj-avatar-layout landlord-avatar">
@@ -300,11 +299,11 @@
 					</article>
 				</section>
 				<!--页码条-->
-				<div class="tj-pagination el-pagination is-background">
+				<!-- 				<div class="tj-pagination el-pagination is-background">
 					<el-pagination background layout="prev, pager, next" :total="total" :page-size="pageSize"
 						:current-page="currentPage" @current-change="pageChange">
 					</el-pagination>
-				</div>
+				</div> -->
 			</section>
 		</section>
 		<Footer></Footer>
@@ -376,11 +375,11 @@
 				/*户型*/
 				loading: false,
 				/*整个页面是否显示加载图标*/
-				housePrice: 20,
+				housePrice: 0,
 				/*房价*/
 				realHousePrice: '',
 				/*真实房价*/
-				customColor: '#ff9645',
+				customColor: '#41ac52',
 				/*进度条颜色*/
 				rentalType: '',
 				/*出租类型*/
@@ -391,7 +390,8 @@
 
 				/*配套列表*/
 				matchingList: [],
-
+				/*选中属性列表*/
+				propertyValue: [],
 				/*展示配套列表*/
 				property: [],
 				/*图片回显地址*/
@@ -439,10 +439,13 @@
 				/*用户收藏列表*/
 				pageSize: 6,
 				/*每页显示的内容个数*/
-				total: 1,
+
 				/*总内容个数*/
-				currentPage: 1,
+				total: 1,
 				/*当前页数*/
+				currentPage: 1,
+
+
 			}
 		},
 		created() {
@@ -450,7 +453,7 @@
 				this.getUserNotice(this.$store.state.userInfo.username) //得到用户通知
 			}
 			console.log(this.timeslot)
-			if (this.timeslot == ''|| this.timeslot == undefined) {
+			if (this.timeslot == '' || this.timeslot == undefined) {
 				//['2022-03-09', '2022-03-10']
 				let startTime = new Date();
 				let endTime = new Date();
@@ -540,6 +543,9 @@
 			},
 			/*选择房价，查询结果*/
 			searchOfHousePrice() {
+				if (this.housePrice == 0) {
+					return false;
+				}
 				if (this.housePrice < 40) {
 					this.realHousePrice = this.housePrice * 10
 				} else if (this.housePrice < 60) {
@@ -561,8 +567,17 @@
 					this.matchingList = []
 					this.matchNumber = ''
 				}
+				//设置查询属性
 				if (option == 'fix') {
-					this.matchNumber = this.matchingList.length + "项"
+					// this.matchNumber = this.matchingList.length + "项"
+					this.matchingList = []
+					for (let i = 0; i < this.propertyValue.length; i++) {
+						for (let j = 0; j < this.property.length; j++) {
+							if (this.propertyValue[i] == this.property[j].name){
+								this.matchingList.push(this.property[j].id)
+							}
+						}
+					}
 				}
 				this.searchHotelByAllFilters()
 			},
@@ -604,6 +619,8 @@
 				this.bedNumber = ''
 				this.startPrice = ''
 				this.endPrice = ''
+				this.realHousePrice = ''
+				this.housePrice = 0
 				// this.startTime = ''
 				// this.endTime = ''
 				// this.currentRegion = ''
@@ -892,7 +909,7 @@
 	}
 
 	.active {
-		color: #ff9645;
+		color: #41ac52;
 		font-weight: 600;
 		box-shadow: 0 2px 8px 0 rgba(255, 118, 50, .18);
 	}
@@ -1015,7 +1032,7 @@
 	.el-select>>>.el-input__inner {
 		border-style: none;
 		font-size: 18px;
-		color: #ff9645;
+		color: #41ac52;
 		text-align: center;
 		padding: 0;
 	}
@@ -1203,7 +1220,7 @@
 
 	.g-unitList-selected-layout .selectedBox .closeAll {
 		font-size: 14px;
-		color: #ff9645;
+		color: #41ac52;
 		letter-spacing: 0;
 		cursor: pointer;
 		display: inline-block;
@@ -1258,7 +1275,7 @@
 	}
 
 	.g-unitList-list-layout .sortBox .sort .currentSortType {
-		color: #ff9645;
+		color: #41ac52;
 	}
 
 	.g-unitList-list-layout .sortBox .sort>span {
@@ -1414,9 +1431,9 @@
 		border-radius: 2px;
 		white-space: nowrap;
 		padding: 0 5px;
-		color: rgb(255, 150, 69);
-		background: rgb(255, 245, 224);
-		border: 0px solid rgb(255, 176, 0);
+		color: rgb(65, 172, 82);
+		background: rgb(237, 244, 236);
+		border: 0px solid rgb(65, 172, 82);
 	}
 
 	.tj-unit-item .unit-item-content .unit-price-content {
@@ -1434,15 +1451,23 @@
 	.tj-unit-item .unit-item-content .unit-price-content .unit-price {
 		font-weight: 700;
 		font-size: 20px;
-		color: #fd8238;
+		color: #ff4d6a;
 		white-space: nowrap;
 		margin: 0 10px 0 0;
 		padding: 0;
 	}
 
 	.tj-unit-item .unit-item-content .unit-price-content .unit-price .text {
+		font-family: MThom, X-LocaleSpecific-Sans, Arial, sans-serif;
 		line-height: 35px;
 		font-size: 30px;
+	}
+
+	.tj-unit-item .unit-item-content .unit-price-content .unit-price .textDel {
+		color: #8a9094;
+		margin-left: 10px;
+		line-height: 35px;
+		font-size: 18px;
 	}
 
 	.tj-unit-item .unit-item-content .landlord-avatar {

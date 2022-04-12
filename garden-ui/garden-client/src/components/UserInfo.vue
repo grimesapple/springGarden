@@ -82,20 +82,9 @@
 					realname: '',
 					name: '',
 					cardid: '',
+					eamil:'',
 				},
 				rules: {
-					telphone: [{
-							required: true,
-							message: '请输电话号码',
-							trigger: 'blur'
-						},
-						{
-							min: 11,
-							max: 11,
-							message: '11位数字',
-							trigger: 'blur'
-						}
-					],
 					realname: [{
 							required: true,
 							message: '请输名称',
@@ -200,6 +189,7 @@
 						_this.ruleForm.realname = data.realname
 						_this.ruleForm.telphone = data.telphone
 						_this.ruleForm.cardid = data.cardid
+						_this.ruleForm.eamil = data.eamil
 					}
 				})
 			},

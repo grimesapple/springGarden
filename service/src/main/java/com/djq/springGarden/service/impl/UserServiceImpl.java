@@ -3,10 +3,14 @@ package com.djq.springGarden.service.impl;
 import java.util.List;
 
 import javax.annotation.Resource;
+
+import com.djq.springGarden.vo.UserVo;
+import com.mysql.cj.util.StringUtils;
 import org.springframework.stereotype.Service;
 import com.djq.springGarden.mapper.UserMapper;
 import com.djq.springGarden.entity.User;
 import com.djq.springGarden.service.UserService;
+import tk.mybatis.mapper.entity.Example;
 
 /**
  * 用户Service业务层处理
@@ -22,12 +26,22 @@ public class UserServiceImpl implements UserService {
     /**
      * 条件查询用户列表
      *
-     * @param user  用户
+     * @param userVo  用户
      * @return 用户
      */
     @Override
-    public List<User> select(User user) {
-        return userMapper.select(user);
+    public List<User> select(UserVo userVo) {
+        String phoneTail = userVo.getPhoneTail();
+        String name = userVo.getName();
+        Example example = new Example(User.class);
+        Example.Criteria criteria = example.createCriteria();
+        if (!StringUtils.isNullOrEmpty(phoneTail)) {
+            criteria.andLike("telphone","%"+phoneTail);
+        }
+        if (!StringUtils.isNullOrEmpty(name)) {
+            criteria.andLike("name","%"+name+"%");
+        }
+        return userMapper.selectByExample(example);
     }
 
     /**
@@ -79,7 +93,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public int register(User user) {
-        return userMapper.insert(user);
+        return userMapper.insertSelective(user);
     }
 
     /**

@@ -2,16 +2,14 @@
 <template>
 	<article style="height: 90%">
 		<div style="height: 50px;">
-			<el-page-header content="订单管理">
-			</el-page-header>
+			<span style="font-size: 23px;color: #303133; display: flex; margin-left: -5px;">订单管理</span>
 		</div>
 		<div class="loading" v-loading="loading" v-show="loading"></div>
 		<!--搜索-->
 		<div class="search">
 			<el-input class="inputS" placeholder="手机尾号" v-model="phone" style="width: 180px" clearable>
 			</el-input>
-			<el-input class="inputS" placeholder="账号名" v-model="username" style="width: 180px" clearable>
-			</el-input>
+			<!-- <el-input class="inputS" placeholder="账号名" v-model="username" style="width: 180px" clearable></el-input> -->
 			<el-select class="inputS" placeholder="订单状态" v-model="status" style="width: 180px" clearable>
 				<el-option label="离店" value="0"></el-option>
 				<el-option label="已预订" value="1"></el-option>
@@ -60,7 +58,7 @@
 					<span><b> {{ scope.row.totalCost }} 元</b></span>
 				</template>
 			</el-table-column>
-			<el-table-column prop="remark" label="备注" align="center"></el-table-column>
+			<!-- <el-table-column prop="remark" label="备注" align="center"></el-table-column> -->
 			<el-table-column label="操作" width="200px" align="center">
 				<template slot-scope="scope">
 					<el-button v-if="scope.row.status == 1" @click="stayIn(scope.row)" type="text"
@@ -108,7 +106,7 @@
 			return {
 				tableData: [],
 				/*表格数据*/
-				pageSize: 5,
+				pageSize: 10,
 				/*每页显示数量*/
 				total: 0,
 				/*房屋总数*/

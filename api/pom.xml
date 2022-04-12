@@ -16,6 +16,13 @@
     </properties>
 
     <dependencies>
+        <!--支付宝接口-->
+        <dependency>
+            <groupId>com.alipay.sdk</groupId>
+            <artifactId>alipay-sdk-java</artifactId>
+            <version>3.0.0</version>
+        </dependency>
+
         <dependency>
             <groupId>com.djq</groupId>
             <artifactId>service</artifactId>
@@ -26,6 +33,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+
 
 
 

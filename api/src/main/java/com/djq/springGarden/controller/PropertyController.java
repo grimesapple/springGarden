@@ -3,6 +3,8 @@ package com.djq.springGarden.controller;
 import java.util.List;
 
 import com.djq.springGarden.entity.Property;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageInfo;
 import org.springframework.web.bind.annotation.*;
 import com.djq.springGarden.service.PropertyService;
 import io.swagger.annotations.Api;
@@ -38,9 +40,9 @@ public class PropertyController {
                                              @RequestParam(value = "pageNum" , required = false, defaultValue = "1" ) Integer pageNum,
                                              @RequestParam(value = "pageSize" , required = false, defaultValue = "10" ) Integer pageSize) {
         HashMap<String, Object> map = new HashMap<>();
-        PageHelper.startPage(pageNum, pageSize);
+        Page<Property> info = PageHelper.startPage(pageNum, pageSize);
         List<Property> list = propertyService.select(property);
-        map.put("total" , list.size());
+        map.put("total" , info.getTotal());
         map.put("list" , list);
         return ResultVO.ok(map,"查询成功");
     }

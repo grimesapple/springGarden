@@ -10,9 +10,13 @@
             <h2 class="title"><i class="el-icon-s-custom"></i>个人中心</h2>
             <el-menu-item index="1">
                 <el-dropdown trigger="click">
-                    <div class="el-dropdown-link header-avatar">
+<!--                    <div class="el-dropdown-link header-avatar">
                         <img :src="$store.state.userInfo.headImg" >
-                    </div>
+                    </div> -->
+					<div class="el-dropdown-link">
+					   <span>{{$store.state.userInfo.username}}</span>
+					</div>
+					
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item><a href="/PersonalCenter" >个人中心</a></el-dropdown-item>
                         <el-dropdown-item @click.native="loginOut">退出登录</el-dropdown-item>
@@ -20,8 +24,8 @@
                 </el-dropdown>
             </el-menu-item>
             <el-menu-item index="2"><a href="/">回到主页</a></el-menu-item>
-			<el-menu-item index="3"><router-link to="/Administrator">管理系统</router-link></el-menu-item>
-            <el-menu-item index="3"><a href="/MerchantManage" >商户系统</a></el-menu-item>
+			<!-- <el-menu-item index="3"><router-link to="/Administrator">管理系统</router-link></el-menu-item>
+            <el-menu-item index="3"><a href="/MerchantManage" >商户系统</a></el-menu-item> -->
         </el-menu>
         <el-container style="height: 650px; border-bottom: 1px solid #eee">
             <!--侧边栏-->
@@ -118,7 +122,7 @@
         border-radius: 10px;
     }
     .title{
-        margin-right: 30%;
+        margin-right: 36%;
         color: #2e963d;
     }
 </style>

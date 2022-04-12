@@ -1,7 +1,7 @@
 <!--头部-->
 <template>
 	<!--顶部导航-->
-	<div :class="$route.path=='/'?'hc-home-header-wrapper':'hc-home-header-wrapper1'">
+	<div :class="classvalue">
 		<div class="hc-header">
 			<div class="logo-area">
 				<a href="/">
@@ -84,11 +84,20 @@
 		data() {
 			return {
 				showNoticeType: "system",
-				drawer: false
+				drawer: false,
+				classvalue : '',
 			}
 		},
 		created() {
-			
+			console.log("this.$route.path")
+			console.log(this.$route.path)
+			if (this.$route.path === '/'){
+				this.classvalue = 'hc-home-header-wrapper'
+			} else if (this.$route.path === '/Detail'){
+				this.classvalue = 'hc-home-header-wrapper'
+			} else {
+				this.classvalue = 'hc-home-header-wrapper1'
+			}
 		},
 		methods: {
 			handleClose(done) {

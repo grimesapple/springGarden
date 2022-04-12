@@ -39,10 +39,13 @@
 			</el-table-column>
 			<el-table-column label="操作"  align="center">
 				<template slot-scope="scope">
-					<el-button v-if="scope.row.status==1" size="mini"
-						@click="handleCancel(scope.$index, scope.row)">取消订单</el-button>
-					<el-button v-if="(scope.row.status==0||scope.row.status==3)" size="mini"
-						type="danger" @click="handleDelete(scope.$index, scope.row)">删除订单</el-button>
+					<el-popconfirm title="确定取消订单吗？" @confirm="handleCancel(scope.$index, scope.row)">
+						<el-button v-if="scope.row.status==1" slot="reference" size="mini">取消订单</el-button>
+					</el-popconfirm>
+					<el-popconfirm title="确定删除订单吗？" @confirm="handleDelete(scope.$index, scope.row)">
+						<el-button v-if="(scope.row.status==0||scope.row.status==3)" size="mini" type="danger" slot="reference">删除订单</el-button>
+					</el-popconfirm>
+					
 <!-- 					<el-button v-if="type=='user'&&scope.row.state==2" size="mini"
 						@click="dialogVisible=true,currentUsername=scope.row.username,currentTitle=scope.row.title">评论
 					</el-button> -->
@@ -96,14 +99,14 @@
 			//取消订单
 			async handleCancel(index, row) { 
 				console.log(row)
-				if (this.dateFormat(new Date()) >= row.endTime ) {
-					this.$message({
-						showClose: true,
-						message: '房间已经开始入住了，不能取消',
-						type: 'error'
-					})
-					return false
-				}
+				// if (this.dateFormat(new Date()) >= row.endTime ) {
+				// 	this.$message({
+				// 		showClose: true,
+				// 		message: '房间已经开始入住了，不能取消',
+				// 		type: 'error'
+				// 	})
+				// 	return false
+				// }
 				const _this = this
 				let data = {
 					id: row.orderId
@@ -149,7 +152,11 @@
 				await this.getOrder()
 			},
 			async handleDelete(index, row) { //删除订单
-				await axios.delete(this.API.DeleteOrder + row.id)
+				await axios.get(this.API.DeleteOrder,{
+					params:{
+						id:row.orderId
+					}
+				})
 				this.$message({
 					message: '删除成功',
 					type: 'success'

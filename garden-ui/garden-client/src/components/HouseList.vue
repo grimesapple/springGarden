@@ -2,31 +2,30 @@
 <template>
 	<article style="height: 90%">
 		<div style="height: 50px;">
-			<el-page-header content="房源管理">
-			</el-page-header>
+			<span style="font-size: 23px;color: #303133; display: flex; margin-left: -5px;">房源管理</span>
 		</div>
 		<div class="loading" v-loading="loading" v-show="loading"></div>
 		<!--搜索-->
 		<div class="search" v-if="operation=='seeAll'">
-			<el-input class="inputS" placeholder="房间名称" v-model="subTitle" clearable>
-			</el-input>
+			<el-input size="small" class="inputS" placeholder="房间号" v-model="name" clearable></el-input>
+			<el-input size="small" class="inputS" placeholder="房屋标题" v-model="subTitle" clearable></el-input>
+			<!-- <el-input size="small" class="inputS" oninput = "value=value.replace(/[^\d]/g,'')" placeholder="原价格" v-model="subTitle" clearable></el-input> -->
 			<div style="margin-left: 20px;height: 40px;padding-top: 5px">
 				<el-button type="primary" icon="el-icon-search" size="mini" @click="getHouseData()">搜索</el-button>
 			</div>
 			<span>共{{total}}条搜索结果</span>
 		</div>
 		<!-- 新增 -->
-		<!-- 		<div class="search" v-if="operation=='seeAll'">
+		<div class="search" v-if="operation=='seeAll'">
 			<div style="height: 40px;padding-top: 5px">
-				<el-button type="primary" icon="el-icon-plus" size="mini"
-					@click="dialogVisible = true,dialogType='add'">添加</el-button>
+				<el-button type="primary" icon="el-icon-plus" size="mini" @click="$router.push('/HouseInfo/addHouse')">添加</el-button>
 			</div>
-		</div> -->
+		</div>
 
 		<!--内容区域-->
 		<el-table :data="tableData" height="90%" border stripe>
-			<el-table-column prop="house.id" label="房屋id" width="70" align="center"></el-table-column>
-			<el-table-column prop="house.name" label="房屋名字" align="center"></el-table-column>
+			<el-table-column prop="house.id" type="index" label="序号" width="50" align="center"></el-table-column>
+			<el-table-column prop="house.name" label="房屋号" align="center"></el-table-column>
 			<el-table-column prop="house.subTitle" label="房屋标题" align="center"></el-table-column>
 			<el-table-column label="房屋照片" width="215" align="center">
 				<template slot-scope="scope">
@@ -39,10 +38,18 @@
 				</template>
 			</el-table-column>
 			<el-table-column prop="house.bedNumber" label="床数量" align="center"></el-table-column>
-			<el-table-column prop="house.people" label="最大入住人数" align="center"></el-table-column>
-			<el-table-column prop="house.orignalPrice" label="原价格(元/晚)" align="center"></el-table-column>
-			<el-table-column prop="house.promotePrice" label="促销价格(元/晚)" align="center"></el-table-column>
-			<el-table-column prop="tag" label="其他属性" align="center">
+			<el-table-column prop="house.people" label="宜住人数" align="center"></el-table-column>
+			<el-table-column prop="house.orignalPrice" label="原价格" align="center">
+				<template slot-scope="scope">
+					<span><b>{{scope.row.house.orignalPrice}}</b> <i style="font-size: 12px;">元/晚</i></span>
+				</template>
+			</el-table-column>
+			<el-table-column prop="house.promotePrice" label="促销价格" align="center" width="120px">
+				<template slot-scope="scope">
+					<span><b>{{scope.row.house.promotePrice}}</b> <i style="font-size: 12px;">元/晚</i></span>
+				</template>
+			</el-table-column>
+			<el-table-column prop="tag" label="其他属性" align="center" width="200px">
 				<template slot-scope="scope">
 					<el-tag size="mini" v-for="(imgItem,key) in scope.row.property" :key="key"
 						:type="key%2 === 1 ? 'primary' : 'success'" disable-transitions>{{imgItem.propertyName}}
@@ -57,7 +64,7 @@
 			<el-table-column label="操作" align="center">
 				<template slot-scope="scope">
 					<el-button @click=" set(form, scope.row)" type="text" size="small">修改</el-button>
-					<el-popconfirm title="这是一段内容确定删除吗？" @confirm="del(scope.row)">
+					<el-popconfirm title="确定删除吗？" @confirm="del(scope.row)">
 						<el-button type="text" size="small" slot="reference">删除</el-button>
 					</el-popconfirm>
 				</template>
@@ -129,18 +136,16 @@
 				loading: false,
 				/*状态*/
 				state: '',
-				/*房屋标题*/
-				subTitle: '',
 				/*图片回显地址*/
 				root: this.API.ShowImage,
+				/*搜索条件：房间号*/
+				name: "",
 				/*搜索条件：房屋标题*/
 				subTitle: "",
+				/*搜索条件：原价格*/
+				// orignalPrice: "",
 				/*搜索条件：选择日期*/
 				chooseDate: "",
-				/*搜索条件：房屋标题*/
-				subTitle: "",
-				/*搜索条件：房屋标题*/
-				subTitle: "",
 				//添加弹出框
 				dialogVisible: false,
 				dialogType: "",
@@ -228,12 +233,19 @@
 				}
 				this.loading = true
 				const _this = this
+				let data = {
+					pageNum: _this.currentPage,
+					pageSize: _this.pageSize
+				}
+				if (this.name != ''){
+					data.name = this.name;
+				}
+				if (this.subTitle != ''){
+					data.subTitle = this.subTitle;
+				}
 				if (this.operation == "seeAll") {
 					await axios.get(this.API.GetHouseByAdmin, {
-						params: {
-							pageNum: _this.currentPage,
-							pageSize: _this.pageSize
-						}
+						params: data
 					}).then(resp => {
 						console.log(resp.data)
 						_this.total = resp.data.result.total
@@ -380,14 +392,16 @@
 </script>
 
 <style>
- .el-tooltip__popper{
-    max-width:20%;
-  }
-  .el-tooltip__popper,.el-tooltip__popper.is-dark{
-    background:rgb(48, 65, 86) !important;
-    color: #fff !important;
-    line-height: 24px;
-  }
+	.el-tooltip__popper {
+		max-width: 20%;
+	}
+
+	.el-tooltip__popper,
+	.el-tooltip__popper.is-dark {
+		background: rgb(48, 65, 86) !important;
+		color: #fff !important;
+		line-height: 24px;
+	}
 </style>
 
 <style scoped>
@@ -413,9 +427,9 @@
 	}
 
 	.inputS {
-		margin-left: 20px;
+		margin-right: 20px;
 		height: 33px;
-		width: 175px;
+		width: 135px;
 	}
 
 	/*加载图标*/
@@ -429,7 +443,7 @@
 
 	/*查询*/
 	.search {
-		height: 45px;
+		height: 50px;
 		display: flex;
 	}
 

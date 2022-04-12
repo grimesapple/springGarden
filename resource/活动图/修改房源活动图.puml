@@ -1,14 +1,13 @@
 @startuml
+'https://plantuml.com/activity-diagram-beta
 
 start
 :进入房源管理页面;
-:点击房源信息的删除按钮;
-:弹出删除确认提示;
-if (是否确认?) is (是) then
-  :删除数据;
-  :刷新页面;
-else (取消)
-endif
+:点击房源信息的修改按钮;
+:跳转修改页面;
+:填写修改信息;
+:点击确认，关闭弹窗;
+:返回房源管理页面;
 stop
 
 @enduml

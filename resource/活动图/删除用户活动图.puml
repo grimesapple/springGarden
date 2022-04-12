@@ -6,7 +6,7 @@ start
 :弹出删除确认提示;
 if (是否确认?) is (是) then
   :删除数据;
-  :刷新页面;
+  :刷新页面; 
 else (取消)
 endif
 stop

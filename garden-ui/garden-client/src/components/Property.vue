@@ -2,8 +2,7 @@
 <template>
 	<article style="height: 90%">
 		<div style="height: 50px;">
-			<el-page-header content="房间属性">
-			</el-page-header>
+			<span style="font-size: 23px;color: #303133; display: flex; margin-left: -5px;">设施管理</span>
 		</div>
 		<div class="loading" v-loading="loading" v-show="loading"></div>
 		<!--搜索-->
@@ -11,9 +10,9 @@
 			<span>属性名称：</span>
 			<el-input placeholder="请输入内容" v-model="name" style="width: 250px" clearable>
 			</el-input>
-			<span>房间类型：</span>
+<!-- 			<span>房间类型：</span>
 			<el-input placeholder="请输入内容" v-model="name" style="width: 250px" clearable>
-			</el-input>
+			</el-input> -->
 
 			<div style="margin-left: 20px;height: 40px;padding-top: 5px">
 				<el-button type="primary" icon="el-icon-search" size="mini" @click="getData()">搜索</el-button>
@@ -31,14 +30,14 @@
 
 		<!--内容区域-->
 		<el-table :data="tableData" height="90%" border stripe>
-			<el-table-column prop="id" label="属性id" width="70" align="center"></el-table-column>
-			<el-table-column prop="cName" label="房间类型" align="center"></el-table-column>
+			<el-table-column prop="id" label="序号" width="70" type="index" align="center"></el-table-column>
+			<!-- <el-table-column prop="cName" label="房间类型" align="center"></el-table-column> -->
 			<el-table-column prop="name" label="属性名称" align="center"></el-table-column>
 			<el-table-column label="操作" align="center">
 				<template slot-scope="scope">
 					<el-button @click="dialogType='edit', set(form, scope.row), dialogVisible=true" type="text"
 						size="small">修改</el-button>
-					<el-popconfirm title="这是一段内容确定删除吗？" @confirm="del(scope.row)">
+					<el-popconfirm title="确定删除吗？" @confirm="del(scope.row)">
 						<el-button   type="text"  size="small" slot="reference" >删除</el-button>
 					</el-popconfirm>
 				</template>
@@ -51,9 +50,9 @@
 		<!-- 新增窗口 -->
 		<el-dialog :visible.sync="dialogVisible" width="28%">
 			<el-form ref="form" :model="form" label-width="80px">
-				<el-form-item label="房间类型">
+<!-- 				<el-form-item label="房间类型">
 					<el-input v-model="form.categoryId" placeholder="房间类型"></el-input>
-				</el-form-item>
+				</el-form-item> -->
 				<el-form-item label="属性名称">
 					<el-input v-model="form.name" placeholder="属性名称"></el-input>
 				</el-form-item>
@@ -77,7 +76,7 @@
 			return {
 				tableData: [],
 				/*表格数据*/
-				pageSize: 5,
+				pageSize: 11,
 				/*每页显示数量*/
 				total: 0,
 				/*房屋总数*/
